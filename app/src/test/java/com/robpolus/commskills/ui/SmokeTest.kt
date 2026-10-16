@@ -93,7 +93,8 @@ class SmokeTest {
     rule.onNodeWithText("Controleren").performClick()
     waitForText("Fout")
     waitForText("Volgende")
-    assertTrue(app.repository.data.value.progress.isNotEmpty())
+    val d = app.repository.data.value
+    assertTrue("lists=${d.lists.size} progress=${d.progress.size} streak=${d.streak} seeded=${d.seededAssets.size} t=${d.updatedAt}", d.progress.isNotEmpty())
   }
 
   @Test

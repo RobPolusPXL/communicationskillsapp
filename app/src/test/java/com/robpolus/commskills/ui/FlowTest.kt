@@ -38,6 +38,8 @@ class FlowTest {
     rule.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
   }
 
+  private fun dump() = "lists=${data.lists.size} progress=${data.progress.size} sessions=${data.sessions.size} exam=${data.examPassed} streak=${data.streak} t=${data.updatedAt}"
+
   private fun idle() = ShadowLooper.idleMainLooper(3, TimeUnit.SECONDS)
 
   private fun toHome() {
@@ -121,7 +123,7 @@ class FlowTest {
     solveMatch()
     waitForText("Foutloos!")
     val s = Learning.vocabularyView(data, Levels.VOCAB_MATCH).groupSession("trolley_problem")
-    assertEquals(1, s.completed)
+    assertEquals(dump(), 1, s.completed)
     assertTrue(s.lastPerfect)
     assertEquals(1, data.streak.current)
     assertNotNull(vm.result.value)
@@ -149,7 +151,7 @@ class FlowTest {
     rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives) }
     solveMatch()
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
-    assertTrue(Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
+    assertTrue(dump(), Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
     assertTrue(data.examPassed.contains(Levels.VOCAB_MATCH))
   }
 
@@ -197,7 +199,7 @@ class FlowTest {
       rule.runOnIdle { assertEquals("Foutloos!", vm.result.value!!.title); vm.clearResult() }
     }
     val view = com.robpolus.commskills.domain.Grammar.view(data, app.grammar)
-    assertTrue(view.mixedUnlocked())
+    assertTrue(dump() + " sessions=" + data.sessions, view.mixedUnlocked())
     assertTrue("niveau moet 70% halen na 4 perfecte sessies is niet gegarandeerd", view.percentage() > 0.25)
     assertEquals(4, data.sessions.values.count { it.perfectCount == 1 })
     // Examen: eerst voldoende voortgang opbouwen.

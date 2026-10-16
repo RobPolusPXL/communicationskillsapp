@@ -11,8 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 /**
  * Houdt alle app-gegevens in het geheugen ([data]) en bewaart elke wijziging in een bestand.
@@ -27,7 +25,7 @@ class AppRepository(
   private val state = MutableStateFlow(load())
   val data: StateFlow<AppData> = state.asStateFlow()
 
-  private val writeLock = Mutex()
+  private val writeLock = Any()
 
   private fun load(): AppData {
     if (!file.exists()) return AppData()
@@ -68,28 +66,32 @@ class AppRepository(
     scope.launch(Dispatchers.IO) {
       for (request in saveRequests) {
         delay(SAVE_DELAY_MS)
-        writeLock.withLock {
-          val latest = state.value
-          val tmp = File(file.parentFile, file.name + ".tmp")
-          tmp.writeText(Codec.encode(latest))
-          if (!tmp.renameTo(file)) {
-            file.delete()
-            tmp.renameTo(file)
-          }
-          val notify = notifyNext
-          notifyNext = true
-          if (notify) onSaved(latest)
-        }
+        val latest = writeNow()
+        val notify = notifyNext
+        notifyNext = true
+        if (notify && latest != null) onSaved(latest)
       }
     }
   }
 
   /** Schrijft meteen weg (bij het verlaten van de app). */
   fun flushNow() {
+    writeNow()
+  }
+
+  /** Schrijft de nieuwste gegevens weg; een mislukte schrijfactie mag de app nooit laten crashen. */
+  private fun writeNow(): AppData? = synchronized(writeLock) {
     val latest = state.value
-    File(file.parentFile, file.name + ".tmp").also {
-      it.writeText(Codec.encode(latest))
-      if (!it.renameTo(file)) { file.delete(); it.renameTo(file) }
+    try {
+      val tmp = File(file.parentFile, file.name + ".tmp")
+      tmp.writeText(Codec.encode(latest))
+      if (!tmp.renameTo(file)) {
+        file.delete()
+        tmp.renameTo(file)
+      }
+      latest
+    } catch (e: java.io.IOException) {
+      null
     }
   }
 
