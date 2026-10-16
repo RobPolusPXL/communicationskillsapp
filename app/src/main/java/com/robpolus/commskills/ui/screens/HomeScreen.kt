@@ -127,8 +127,8 @@ private fun RouteCard(title: String, subtitle: String, badge: String?, color: Co
   val shape = RoundedCornerShape(24.dp)
   Box(Modifier.fillMaxWidth().clip(shape).background(edge).clickable(onClick = onClick)) {
     Column(
-      Modifier.fillMaxWidth().padding(bottom = 6.dp).clip(shape).background(color).padding(24.dp),
-      verticalArrangement = Arrangement.spacedBy(4.dp),
+      Modifier.fillMaxWidth().padding(bottom = 6.dp).height(170.dp).clip(shape).background(color).padding(24.dp),
+      verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
     ) {
       Text(title, style = MaterialTheme.typography.headlineMedium, color = Color.White, fontWeight = FontWeight.Black)
       Text(subtitle, style = MaterialTheme.typography.bodyLarge, color = Color.White.copy(alpha = 0.92f))
