@@ -248,7 +248,11 @@ fun SelectTick(selected: Boolean, color: Color) {
 @Composable
 fun BottomActions(content: @Composable ColumnScope.() -> Unit) {
   Column(
-    Modifier.fillMaxWidth().background(Color.White).border(2.dp, Color(0xFFE8EBF2)).padding(horizontal = 14.dp, vertical = 12.dp),
+    Modifier.fillMaxWidth().background(Color.White)
+      .drawBehind {
+        drawLine(Color(0xFFE8EBF2), androidx.compose.ui.geometry.Offset(0f, 0f), androidx.compose.ui.geometry.Offset(size.width, 0f), strokeWidth = 4.dp.toPx())
+      }
+      .padding(horizontal = 14.dp, vertical = 12.dp),
     verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
     content = content,
   )
