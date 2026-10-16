@@ -73,10 +73,10 @@ fun HomeScreen(
       }
       Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         RoundIcon(Color(0xFFFFF1C2), "Trofeeën", onTrophies) {
-          Icon(Icons.Filled.EmojiEvents, contentDescription = null, tint = Color(0xFFE0A000))
+          Icon(Icons.Filled.EmojiEvents, contentDescription = "Trofeeën", tint = Color(0xFFE0A000))
         }
         RoundIcon(Color(0xFFD9F3EF), "Instellingen", onSettings) {
-          Icon(Icons.Filled.Settings, contentDescription = null, tint = Color(0xFF0C7D70))
+          Icon(Icons.Filled.Settings, contentDescription = "Instellingen", tint = Color(0xFF0C7D70))
         }
       }
     }

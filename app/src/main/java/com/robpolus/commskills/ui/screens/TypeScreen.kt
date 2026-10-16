@@ -89,7 +89,7 @@ fun TypeScreen(
     val promptEdge = if (ui.grammar) com.robpolus.commskills.ui.theme.Orange2Dark else com.robpolus.commskills.ui.theme.BlueDark
     ChunkyCard(edge = promptEdge, fill = promptColor) {
       Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(ui.promptLabel.uppercase(), style = MaterialTheme.typography.labelMedium, color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.85f))
+        Text(ui.promptLabel, style = MaterialTheme.typography.labelMedium, color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.85f))
         Text(
           ui.prompt,
           style = if (ui.grammar) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.headlineMedium,
