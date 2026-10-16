@@ -35,7 +35,6 @@ class SmokeTest {
 
   private fun toHome() {
     rule.waitUntil(15_000) { app.repository.data.value.lists.size == 7 }
-    rule.onNodeWithText("Doorgaan").performClick()
     waitForText("Vocabulary")
   }
 

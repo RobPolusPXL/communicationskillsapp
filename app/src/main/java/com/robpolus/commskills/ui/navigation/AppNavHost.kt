@@ -5,6 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import android.content.Context
+import android.content.ContextWrapper
+import kotlinx.coroutines.launch
+import com.robpolus.commskills.ui.screens.AccountSettings
 import androidx.compose.ui.platform.LocalContext
 import com.robpolus.commskills.CommSkillsApp
 import com.robpolus.commskills.ui.screens.GrammarOverviewScreen
@@ -56,7 +64,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
   val data by vm.data.collectAsState()
   val importState by vm.importState.collectAsState()
   val practice: PracticeViewModel = viewModel(factory = viewModelFactory { initializer { PracticeViewModel(application) } })
-  val grammar = (LocalContext.current.applicationContext as CommSkillsApp).grammar
+  val grammar = (application as CommSkillsApp).grammar
   val matchUi by practice.match.collectAsState()
   val typeUi by practice.type.collectAsState()
   val result by practice.result.collectAsState()
@@ -74,10 +82,42 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
       nav.navigate(Routes.RESULT) { popUpTo(base) { inclusive = false } }
     }
   }
-  NavHost(navController = nav, startDestination = Routes.LOGIN) {
+  val app = application as CommSkillsApp
+  val activity = LocalContext.current.findActivity()
+  val scope = rememberCoroutineScope()
+  var loginError by remember { mutableStateOf<String?>(null) }
+  var loginBusy by remember { mutableStateOf(false) }
+  var signedInEmail by remember { mutableStateOf(app.cloud.email) }
+
+  fun signIn(onDone: () -> Unit = {}) {
+    val a = activity ?: return
+    loginBusy = true
+    loginError = null
+    scope.launch {
+      try {
+        if (app.cloud.signIn(a)) {
+          signedInEmail = app.cloud.email
+          onDone()
+        } else {
+          loginError = "Inloggen is niet beschikbaar: Firebase is niet volledig ingesteld."
+        }
+      } catch (e: Exception) {
+        loginError = "Inloggen is mislukt. Probeer opnieuw."
+      } finally {
+        loginBusy = false
+      }
+    }
+  }
+
+  val start = if (app.cloud.needsLogin()) Routes.LOGIN else Routes.HOME
+  NavHost(navController = nav, startDestination = start) {
     composable(Routes.LOGIN) {
       LoginScreen(
-        onContinue = {
+        error = loginError,
+        busy = loginBusy,
+        onGoogle = { signIn { nav.navigate(Routes.HOME) { popUpTo(Routes.LOGIN) { inclusive = true } } } },
+        onLocal = {
+          app.cloud.chooseLocalOnly()
           nav.navigate(Routes.HOME) { popUpTo(Routes.LOGIN) { inclusive = true } }
         },
       )
@@ -176,8 +216,30 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onConfirmImport = vm::confirmImport,
         onCancelImport = vm::cancelImport,
         onBack = { nav.popBackStack() },
-        extra = { ReminderSettings(data.settings, vm::setReminder) },
+        extra = {
+          AccountSettings(
+            configured = app.cloud.configured,
+            email = signedInEmail,
+            onSignIn = { signIn() },
+            onSignOut = {
+              scope.launch {
+                app.cloud.signOut(application)
+                signedInEmail = null
+              }
+            },
+          )
+          ReminderSettings(data.settings, vm::setReminder)
+        },
       )
     }
   }
+}
+
+private fun Context.findActivity(): android.app.Activity? {
+  var c: Context? = this
+  while (c is ContextWrapper) {
+    if (c is android.app.Activity) return c
+    c = c.baseContext
+  }
+  return null
 }

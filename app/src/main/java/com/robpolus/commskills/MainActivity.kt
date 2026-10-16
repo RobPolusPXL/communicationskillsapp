@@ -17,4 +17,11 @@ class MainActivity : ComponentActivity() {
       }
     }
   }
+
+  override fun onStop() {
+    super.onStop()
+    val app = application as CommSkillsApp
+    app.repository.flushNow()
+    if (app.cloud.signedIn) app.cloud.flush()
+  }
 }

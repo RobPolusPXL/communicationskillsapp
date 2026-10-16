@@ -1,6 +1,7 @@
 package com.robpolus.commskills
 
 import android.app.Application
+import com.robpolus.commskills.cloud.CloudSync
 import com.robpolus.commskills.data.AppRepository
 import com.robpolus.commskills.data.BundledLists
 import com.robpolus.commskills.data.GrammarParser
@@ -19,6 +20,9 @@ class CommSkillsApp : Application() {
   lateinit var repository: AppRepository
     private set
 
+  lateinit var cloud: CloudSync
+    private set
+
   /** De bundel-oefeningen voor Grammar (if-zinnen). */
   val grammar: List<GrammarExercise> by lazy {
     try {
@@ -32,8 +36,10 @@ class CommSkillsApp : Application() {
     super.onCreate()
     if (::repository.isInitialized) return // onCreate mag veilig twee keer aangeroepen worden (bv. in tests)
     repository = AppRepository(File(filesDir, "appdata.json"), appScope)
+    cloud = CloudSync(this, repository, appScope)
     appScope.launch(Dispatchers.IO) {
       repository.update { BundledLists.seed(assets, it) }
+      if (cloud.signedIn) cloud.start()
       ReminderScheduler.schedule(this@CommSkillsApp, repository.data.value)
     }
   }

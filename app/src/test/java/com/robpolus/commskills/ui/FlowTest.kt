@@ -44,7 +44,6 @@ class FlowTest {
 
   private fun toHome() {
     rule.waitUntil(15_000) { data.lists.size == 7 }
-    rule.onNodeWithText("Doorgaan").performClick()
     waitForText("Vocabulary")
   }
 
