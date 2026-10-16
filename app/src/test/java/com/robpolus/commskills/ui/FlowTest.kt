@@ -38,7 +38,7 @@ class FlowTest {
     rule.onAllNodesWithText(text).fetchSemanticsNodes().isNotEmpty()
   }
 
-  private fun dump() = "lists=${data.lists.size} progress=${data.progress.size} sessions=${data.sessions.size} exam=${data.examPassed} streak=${data.streak} t=${data.updatedAt}"
+  private fun dump() = "same=${vm.data === app.repository.data} vmProgress=${vm.data.value.progress.size} vmStreak=${vm.data.value.streak.current} lists=${data.lists.size} progress=${data.progress.size} sessions=${data.sessions.size} exam=${data.examPassed} streak=${data.streak} t=${data.updatedAt}"
 
   private fun idle() = ShadowLooper.idleMainLooper(3, TimeUnit.SECONDS)
 
