@@ -3,6 +3,8 @@ package com.robpolus.commskills
 import android.app.Application
 import com.robpolus.commskills.data.AppRepository
 import com.robpolus.commskills.data.BundledLists
+import com.robpolus.commskills.data.GrammarParser
+import com.robpolus.commskills.domain.GrammarExercise
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +17,15 @@ class CommSkillsApp : Application() {
 
   lateinit var repository: AppRepository
     private set
+
+  /** De bundel-oefeningen voor Grammar (if-zinnen). */
+  val grammar: List<GrammarExercise> by lazy {
+    try {
+      assets.open("grammar/conditionals.json").use { GrammarParser.parse(it.readBytes().toString(Charsets.UTF_8)) }
+    } catch (e: Exception) {
+      emptyList()
+    }
+  }
 
   override fun onCreate() {
     super.onCreate()

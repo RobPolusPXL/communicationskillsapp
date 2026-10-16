@@ -2,6 +2,10 @@ package com.robpolus.commskills.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.robpolus.commskills.CommSkillsApp
+import com.robpolus.commskills.ui.screens.GrammarOverviewScreen
+import com.robpolus.commskills.ui.screens.GrammarScreen
 import com.robpolus.commskills.domain.Levels
 import com.robpolus.commskills.ui.PracticeViewModel
 import com.robpolus.commskills.ui.screens.ExamHearts
@@ -35,6 +39,7 @@ object Routes {
   const val TYPE = "practice/type"
   const val RESULT = "practice/result"
   const val OVERVIEW = "overview/{level}/{listId}"
+  const val GRAMMAR_OVERVIEW = "grammar/overview/{type}"
 
   fun overview(level: String, listId: String) = "overview/$level/$listId"
 }
@@ -45,6 +50,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
   val data by vm.data.collectAsState()
   val importState by vm.importState.collectAsState()
   val practice: PracticeViewModel = viewModel()
+  val grammar = (LocalContext.current.applicationContext as CommSkillsApp).grammar
   val matchUi by practice.match.collectAsState()
   val typeUi by practice.type.collectAsState()
   val result by practice.result.collectAsState()
@@ -58,7 +64,8 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
   // Zodra een sessie klaar is, naar het resultaat.
   LaunchedEffect(result) {
     if (result != null && nav.currentDestination?.route != Routes.RESULT) {
-      nav.navigate(Routes.RESULT) { popUpTo(Routes.VOCABULARY) { inclusive = false } }
+      val base = if (result?.level == Levels.GRAMMAR) Routes.GRAMMAR else Routes.VOCABULARY
+      nav.navigate(Routes.RESULT) { popUpTo(base) { inclusive = false } }
     }
   }
   NavHost(navController = nav, startDestination = Routes.LOGIN) {
@@ -132,7 +139,27 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         },
       )
     }
-    composable(Routes.GRAMMAR) { PlaceholderScreen("Grammar") { nav.popBackStack() } }
+    composable(Routes.GRAMMAR) {
+      GrammarScreen(
+        data = data,
+        exercises = grammar,
+        onBack = { nav.popBackStack() },
+        onPlay = { groups ->
+          practice.startGrammar(groups)
+          nav.navigate(Routes.TYPE)
+        },
+        onOverview = { type -> nav.navigate("grammar/overview/$type") },
+        onExam = { level -> startExam(level) },
+      )
+    }
+    composable(Routes.GRAMMAR_OVERVIEW) { entry ->
+      GrammarOverviewScreen(
+        data = data,
+        exercises = grammar,
+        type = entry.arguments?.getString("type")?.toIntOrNull() ?: 0,
+        onBack = { nav.popBackStack() },
+      )
+    }
     composable(Routes.TROPHIES) { TrophiesScreen(data) { nav.popBackStack() } }
     composable(Routes.SETTINGS) {
       SettingsScreen(

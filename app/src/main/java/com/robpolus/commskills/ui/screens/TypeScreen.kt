@@ -83,8 +83,17 @@ fun TypeScreen(
       topExtra()
     }
     Text(ui.promptLabel, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    Text(ui.prompt, style = MaterialTheme.typography.headlineMedium)
-    ui.typeHint?.let { Text("($it)", color = MaterialTheme.colorScheme.onSurfaceVariant) }
+    Text(
+      ui.prompt,
+      style = if (ui.grammar) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.headlineMedium,
+    )
+    ui.hint?.let {
+      Text(
+        if (it.startsWith("(")) it else "($it)",
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.primary,
+      )
+    }
 
     OutlinedTextField(
       value = text,
@@ -140,9 +149,9 @@ private fun FeedbackCard(f: TypeFeedback) {
       } else if (f.correctAnswer.isNotBlank()) {
         Text("Antwoord: ${f.correctAnswer}", style = MaterialTheme.typography.bodyMedium)
       }
-      if (f.definition.isNotBlank()) {
+      if (f.explanation.isNotBlank()) {
         Spacer(Modifier.height(2.dp))
-        Text(f.definition, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(f.explanation, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
       }
     }
   }

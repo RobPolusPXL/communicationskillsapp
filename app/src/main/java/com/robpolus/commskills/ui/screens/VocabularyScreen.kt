@@ -46,7 +46,7 @@ import com.robpolus.commskills.domain.AppData
 import com.robpolus.commskills.domain.Learning
 import com.robpolus.commskills.domain.Levels
 import com.robpolus.commskills.domain.Scoring
-import com.robpolus.commskills.ui.DirectionChoice
+import com.robpolus.commskills.domain.DirectionChoice
 import com.robpolus.commskills.ui.theme.Line
 
 private val levelTitles = mapOf(

@@ -1,0 +1,1062 @@
+{
+ "exercises": [
+  {
+   "id": "c0-01",
+   "type": 0,
+   "text": "If you heat ice, it ___.",
+   "hint": "(to melt)",
+   "answers": [
+    "melts"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-02",
+   "type": 0,
+   "text": "If you mix blue and yellow, you ___ green.",
+   "hint": "(to get)",
+   "answers": [
+    "get"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-03",
+   "type": 0,
+   "text": "Plants ___ if they don't get any water.",
+   "hint": "(to die)",
+   "answers": [
+    "die"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-04",
+   "type": 0,
+   "text": "If I drink coffee after dinner, I ___ well.",
+   "hint": "(to NOT sleep)",
+   "answers": [
+    "don't sleep",
+    "do not sleep"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Ontkenning in de present simple: do/does + not."
+  },
+  {
+   "id": "c0-05",
+   "type": 0,
+   "text": "Water ___ if you heat it to 100 degrees Celsius.",
+   "hint": "(to boil)",
+   "answers": [
+    "boils"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Derde persoon enkelvoud: +s."
+  },
+  {
+   "id": "c0-06",
+   "type": 0,
+   "text": "If it ___, the streets get wet.",
+   "hint": "(to rain)",
+   "answers": [
+    "rains"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Derde persoon enkelvoud: +s."
+  },
+  {
+   "id": "c0-07",
+   "type": 0,
+   "text": "If my alarm ___, I oversleep.",
+   "hint": "(to NOT ring)",
+   "answers": [
+    "doesn't ring",
+    "does not ring"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Ontkenning in de present simple: does + not (derde persoon)."
+  },
+  {
+   "id": "c0-08",
+   "type": 0,
+   "text": "If you press this button, the machine ___.",
+   "hint": "(to start)",
+   "answers": [
+    "starts"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-09",
+   "type": 0,
+   "text": "My phone ___ if the battery is empty.",
+   "hint": "(to switch off)",
+   "answers": [
+    "switches off"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Werkwoorden op -ch krijgen -es."
+  },
+  {
+   "id": "c0-10",
+   "type": 0,
+   "text": "If customers ___ unhappy, they leave bad reviews.",
+   "hint": "(to be)",
+   "answers": [
+    "are"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-11",
+   "type": 0,
+   "text": "If the temperature drops below zero, water ___ into ice.",
+   "hint": "(to turn)",
+   "answers": [
+    "turns"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-12",
+   "type": 0,
+   "text": "If she ___ a headache, she takes an aspirin.",
+   "hint": "(to have)",
+   "answers": [
+    "has"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Have wordt has bij he/she/it."
+  },
+  {
+   "id": "c0-13",
+   "type": 0,
+   "text": "If children ___ too much sugar, they get restless.",
+   "hint": "(to eat)",
+   "answers": [
+    "eat"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-14",
+   "type": 0,
+   "text": "If you ___ a plant, it dries out.",
+   "hint": "(to NOT water)",
+   "answers": [
+    "don't water",
+    "do not water"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Ontkenning in de present simple: do + not."
+  },
+  {
+   "id": "c0-15",
+   "type": 0,
+   "text": "If I ___ late, I take a taxi home.",
+   "hint": "(to work)",
+   "answers": [
+    "work"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-16",
+   "type": 0,
+   "text": "The printer ___ if the paper tray is empty.",
+   "hint": "(to stop)",
+   "answers": [
+    "stops"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-17",
+   "type": 0,
+   "text": "If you ___ your finger, it bleeds.",
+   "hint": "(to cut)",
+   "answers": [
+    "cut"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Cut is in de present simple dezelfde vorm als de infinitief."
+  },
+  {
+   "id": "c0-18",
+   "type": 0,
+   "text": "If the bus ___ late, we take the tram.",
+   "hint": "(to be)",
+   "answers": [
+    "is"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-19",
+   "type": 0,
+   "text": "If employees ___ appreciated, they work harder.",
+   "hint": "(to feel)",
+   "answers": [
+    "feel"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-20",
+   "type": 0,
+   "text": "My laptop ___ if I open too many programs.",
+   "hint": "(to freeze)",
+   "answers": [
+    "freezes"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-21",
+   "type": 0,
+   "text": "If you ___ salt to water, it boils at a higher temperature.",
+   "hint": "(to add)",
+   "answers": [
+    "add"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-22",
+   "type": 0,
+   "text": "If he ___ enough sleep, he gets grumpy.",
+   "hint": "(to NOT get)",
+   "answers": [
+    "doesn't get",
+    "does not get"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Ontkenning in de present simple: does + not (derde persoon)."
+  },
+  {
+   "id": "c0-23",
+   "type": 0,
+   "text": "If you ___ 'Save', the document is stored.",
+   "hint": "(to press)",
+   "answers": [
+    "press"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-24",
+   "type": 0,
+   "text": "If the sun ___, the solar panels produce electricity.",
+   "hint": "(to shine)",
+   "answers": [
+    "shines"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple."
+  },
+  {
+   "id": "c0-25",
+   "type": 0,
+   "text": "If people ___, their muscles get weaker.",
+   "hint": "(to NOT exercise)",
+   "answers": [
+    "don't exercise",
+    "do not exercise"
+   ],
+   "explain": "Type 0 (altijd waar): if + present simple, present simple. Ontkenning in de present simple: do + not."
+  },
+  {
+   "id": "c1-01",
+   "type": 1,
+   "text": "If it rains tomorrow, we ___ at home.",
+   "hint": "(to stay)",
+   "answers": [
+    "will stay",
+    "'ll stay"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-02",
+   "type": 1,
+   "text": "If she ___ him, she will tell him the news.",
+   "hint": "(to see)",
+   "answers": [
+    "sees"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-03",
+   "type": 1,
+   "text": "If you ___, you will miss the train.",
+   "hint": "(to NOT hurry)",
+   "answers": [
+    "don't hurry",
+    "do not hurry"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-04",
+   "type": 1,
+   "text": "I ___ you if I get the job.",
+   "hint": "(to call)",
+   "answers": [
+    "will call",
+    "'ll call"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-05",
+   "type": 1,
+   "text": "If the weather ___ nice on Saturday, we will have a barbecue.",
+   "hint": "(to be)",
+   "answers": [
+    "is"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-06",
+   "type": 1,
+   "text": "If he ___ harder, he will fail the exam.",
+   "hint": "(to NOT study)",
+   "answers": [
+    "doesn't study",
+    "does not study"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-07",
+   "type": 1,
+   "text": "She ___ late if the train is delayed.",
+   "hint": "(to be)",
+   "answers": [
+    "will be",
+    "'ll be"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-08",
+   "type": 1,
+   "text": "If you customize your CV, your chances of finding a job ___.",
+   "hint": "(to increase)",
+   "answers": [
+    "will increase",
+    "'ll increase"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-09",
+   "type": 1,
+   "text": "If they ___ with the plan, the project will be postponed.",
+   "hint": "(to NOT agree)",
+   "answers": [
+    "don't agree",
+    "do not agree"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-10",
+   "type": 1,
+   "text": "I ___ to the party if I have to work.",
+   "hint": "(to NOT go)",
+   "answers": [
+    "won't go",
+    "will not go"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. Ontkenning van will: won't / will not."
+  },
+  {
+   "id": "c1-11",
+   "type": 1,
+   "text": "If we leave now, we ___ on time.",
+   "hint": "(to arrive)",
+   "answers": [
+    "will arrive",
+    "'ll arrive"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-12",
+   "type": 1,
+   "text": "If the manager ___ my proposal, I will start next week.",
+   "hint": "(to like)",
+   "answers": [
+    "likes"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-13",
+   "type": 1,
+   "text": "You ___ better if you drink some water.",
+   "hint": "(to feel)",
+   "answers": [
+    "will feel",
+    "'ll feel"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-14",
+   "type": 1,
+   "text": "If I ___ her address, I will send her an invitation.",
+   "hint": "(to find)",
+   "answers": [
+    "find"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-15",
+   "type": 1,
+   "text": "What ___ if you don't pass the exam?",
+   "hint": "(you - to do)",
+   "answers": [
+    "will you do"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. Vraag: will + onderwerp + infinitief."
+  },
+  {
+   "id": "c1-16",
+   "type": 1,
+   "text": "If it ___ too cold, we won't go for a walk.",
+   "hint": "(to be)",
+   "answers": [
+    "is"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-17",
+   "type": 1,
+   "text": "The company ___ customers if it doesn't improve its service.",
+   "hint": "(to lose)",
+   "answers": [
+    "will lose",
+    "'ll lose"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-18",
+   "type": 1,
+   "text": "If you ___ the stove, you will burn your hand.",
+   "hint": "(to touch)",
+   "answers": [
+    "touch"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-19",
+   "type": 1,
+   "text": "If he ___, I will forgive him.",
+   "hint": "(to apologise)",
+   "answers": [
+    "apologises",
+    "apologizes"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. Derde persoon enkelvoud: +s."
+  },
+  {
+   "id": "c1-20",
+   "type": 1,
+   "text": "We ___ on time if we don't work together.",
+   "hint": "(to NOT finish)",
+   "answers": [
+    "won't finish",
+    "will not finish"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. Ontkenning van will: won't / will not."
+  },
+  {
+   "id": "c1-21",
+   "type": 1,
+   "text": "If she ___ the interview, she will get the job.",
+   "hint": "(to pass)",
+   "answers": [
+    "passes"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. Werkwoorden op -s krijgen -es."
+  },
+  {
+   "id": "c1-22",
+   "type": 1,
+   "text": "I ___ you a lift if you wait five minutes.",
+   "hint": "(to give)",
+   "answers": [
+    "will give",
+    "'ll give"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c1-23",
+   "type": 1,
+   "text": "If the printer ___ again, we will buy a new one.",
+   "hint": "(to break)",
+   "answers": [
+    "breaks"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-24",
+   "type": 1,
+   "text": "If you ___ the report today, the client will be happy.",
+   "hint": "(to send)",
+   "answers": [
+    "send"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief. In de if-zin staat de present simple, niet will."
+  },
+  {
+   "id": "c1-25",
+   "type": 1,
+   "text": "They ___ the match if they play like last week.",
+   "hint": "(to win)",
+   "answers": [
+    "will win",
+    "'ll win"
+   ],
+   "explain": "Type 1 (waarschijnlijk): if + present simple, will + infinitief."
+  },
+  {
+   "id": "c2-01",
+   "type": 2,
+   "text": "If I ___ rich and famous, I would help people in need.",
+   "hint": "(to be)",
+   "answers": [
+    "were"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Hypothetisch (niet echt) → 'were', ook bij I/he/she/it."
+  },
+  {
+   "id": "c2-02",
+   "type": 2,
+   "text": "If I won a lot of money, I ___ a big house in the country.",
+   "hint": "(to buy)",
+   "answers": [
+    "would buy",
+    "'d buy"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-03",
+   "type": 2,
+   "text": "If you ___ so much, you would feel a lot better.",
+   "hint": "(to NOT smoke)",
+   "answers": [
+    "didn't smoke",
+    "did not smoke"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Ontkenning in de past simple: did + not."
+  },
+  {
+   "id": "c2-04",
+   "type": 2,
+   "text": "Where ___ if you could live anywhere in the world?",
+   "hint": "(you - to live)",
+   "answers": [
+    "would you live"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Vraag: would + onderwerp + infinitief."
+  },
+  {
+   "id": "c2-05",
+   "type": 2,
+   "text": "I would be careful if I ___ you.",
+   "hint": "(to be)",
+   "answers": [
+    "were"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Hypothetisch (niet echt) → 'were', ook bij I/he/she/it."
+  },
+  {
+   "id": "c2-06",
+   "type": 2,
+   "text": "If he were here right now, he ___ us.",
+   "hint": "(to help)",
+   "answers": [
+    "would help",
+    "'d help"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-07",
+   "type": 2,
+   "text": "If I ___ more time, I would learn Spanish.",
+   "hint": "(to have)",
+   "answers": [
+    "had"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-08",
+   "type": 2,
+   "text": "She ___ around the world if she didn't have to work.",
+   "hint": "(to travel)",
+   "answers": [
+    "would travel",
+    "'d travel"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-09",
+   "type": 2,
+   "text": "If they ___ closer, we would see them more often.",
+   "hint": "(to live)",
+   "answers": [
+    "lived"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-10",
+   "type": 2,
+   "text": "I ___ that job if I were you.",
+   "hint": "(to NOT accept)",
+   "answers": [
+    "wouldn't accept",
+    "would not accept"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Ontkenning van would: wouldn't / would not."
+  },
+  {
+   "id": "c2-11",
+   "type": 2,
+   "text": "If it snowed tomorrow, I ___ skiing.",
+   "hint": "(to go)",
+   "answers": [
+    "would go",
+    "'d go"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-12",
+   "type": 2,
+   "text": "If she ___ French, she could work in Paris.",
+   "hint": "(to speak)",
+   "answers": [
+    "spoke"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-13",
+   "type": 2,
+   "text": "Would you invite me over if I ___ more polite?",
+   "hint": "(to be)",
+   "answers": [
+    "were"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Hypothetisch (niet echt) → 'were', ook bij I/he/she/it."
+  },
+  {
+   "id": "c2-14",
+   "type": 2,
+   "text": "If we ___ a car, we would cycle to work.",
+   "hint": "(to NOT have)",
+   "answers": [
+    "didn't have",
+    "did not have"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Ontkenning in de past simple: did + not."
+  },
+  {
+   "id": "c2-15",
+   "type": 2,
+   "text": "What ___ if your boss offered you a promotion?",
+   "hint": "(you - to say)",
+   "answers": [
+    "would you say"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Vraag: would + onderwerp + infinitief."
+  },
+  {
+   "id": "c2-16",
+   "type": 2,
+   "text": "If I ___ the answer, I would tell you.",
+   "hint": "(to know)",
+   "answers": [
+    "knew"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-17",
+   "type": 2,
+   "text": "He ___ happier if he changed jobs.",
+   "hint": "(to be)",
+   "answers": [
+    "would be",
+    "'d be"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-18",
+   "type": 2,
+   "text": "If my sister ___ more, she would move to a bigger flat.",
+   "hint": "(to earn)",
+   "answers": [
+    "earned"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-19",
+   "type": 2,
+   "text": "If you ___ so hard, you would have more free time.",
+   "hint": "(to NOT work)",
+   "answers": [
+    "didn't work",
+    "did not work"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Ontkenning in de past simple: did + not."
+  },
+  {
+   "id": "c2-20",
+   "type": 2,
+   "text": "We ___ a translator if everyone spoke English.",
+   "hint": "(to NOT need)",
+   "answers": [
+    "wouldn't need",
+    "would not need"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Ontkenning van would: wouldn't / would not."
+  },
+  {
+   "id": "c2-21",
+   "type": 2,
+   "text": "If the company ___ more flexible, more people would apply.",
+   "hint": "(to be)",
+   "answers": [
+    "were"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Hypothetisch (niet echt) → 'were'."
+  },
+  {
+   "id": "c2-22",
+   "type": 2,
+   "text": "If it ___ possible, I would work from home every day.",
+   "hint": "(to be)",
+   "answers": [
+    "were"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Hypothetisch (niet echt) → 'were'."
+  },
+  {
+   "id": "c2-23",
+   "type": 2,
+   "text": "I ___ a new phone if mine broke.",
+   "hint": "(to buy)",
+   "answers": [
+    "would buy",
+    "'d buy"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-24",
+   "type": 2,
+   "text": "If she ___ a car, she wouldn't take the bus.",
+   "hint": "(to have)",
+   "answers": [
+    "had"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief."
+  },
+  {
+   "id": "c2-25",
+   "type": 2,
+   "text": "Suppose your car broke down in the middle of nowhere, what ___?",
+   "hint": "(you - to do)",
+   "answers": [
+    "would you do"
+   ],
+   "explain": "Type 2 (onwaarschijnlijk): if + past simple, would + infinitief. Vraag: would + onderwerp + infinitief."
+  },
+  {
+   "id": "c3-01",
+   "type": 3,
+   "text": "If I had known he was so lazy, I ___ him to join our project team.",
+   "hint": "(to NOT ask)",
+   "answers": [
+    "wouldn't have asked",
+    "would not have asked"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord."
+  },
+  {
+   "id": "c3-02",
+   "type": 3,
+   "text": "If she ___ earlier, she would not have missed the train.",
+   "hint": "(to wake up)",
+   "answers": [
+    "had woken up",
+    "'d woken up"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord (woken)."
+  },
+  {
+   "id": "c3-03",
+   "type": 3,
+   "text": "If I had found her address, I ___ her an invitation.",
+   "hint": "(to send)",
+   "answers": [
+    "would have sent",
+    "'d have sent"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord."
+  },
+  {
+   "id": "c3-04",
+   "type": 3,
+   "text": "If she ___ for the test, she wouldn't have failed it.",
+   "hint": "(to study)",
+   "answers": [
+    "had studied",
+    "'d studied"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord."
+  },
+  {
+   "id": "c3-05",
+   "type": 3,
+   "text": "We wouldn't have got lost if you ___ me the wrong directions.",
+   "hint": "(to NOT give)",
+   "answers": [
+    "hadn't given",
+    "had not given"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord, ontkenning: hadn't."
+  },
+  {
+   "id": "c3-06",
+   "type": 3,
+   "text": "If I had studied harder at school, I ___ to university.",
+   "hint": "(to go)",
+   "answers": [
+    "would have gone",
+    "'d have gone"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord (gone)."
+  },
+  {
+   "id": "c3-07",
+   "type": 3,
+   "text": "If it ___ yesterday, we would have gone to the beach.",
+   "hint": "(to NOT rain)",
+   "answers": [
+    "hadn't rained",
+    "had not rained"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord, ontkenning: hadn't."
+  },
+  {
+   "id": "c3-08",
+   "type": 3,
+   "text": "She ___ the exam if she had had more time.",
+   "hint": "(to finish)",
+   "answers": [
+    "would have finished",
+    "'d have finished"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord."
+  },
+  {
+   "id": "c3-09",
+   "type": 3,
+   "text": "If they ___ earlier, they wouldn't have missed the flight.",
+   "hint": "(to leave)",
+   "answers": [
+    "had left",
+    "'d left"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord (left)."
+  },
+  {
+   "id": "c3-10",
+   "type": 3,
+   "text": "If you ___ me, I would have helped you.",
+   "hint": "(to tell)",
+   "answers": [
+    "had told",
+    "'d told"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord (told)."
+  },
+  {
+   "id": "c3-11",
+   "type": 3,
+   "text": "He ___ his job if he had been on time.",
+   "hint": "(to NOT lose)",
+   "answers": [
+    "wouldn't have lost",
+    "would not have lost"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord, ontkenning: wouldn't."
+  },
+  {
+   "id": "c3-12",
+   "type": 3,
+   "text": "If we had saved more money, we ___ the house.",
+   "hint": "(to buy)",
+   "answers": [
+    "would have bought",
+    "'d have bought"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord (bought)."
+  },
+  {
+   "id": "c3-13",
+   "type": 3,
+   "text": "If I had realized the scanner wasn't compatible, I ___ it.",
+   "hint": "(to NOT buy)",
+   "answers": [
+    "wouldn't have bought",
+    "would not have bought"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord, ontkenning: wouldn't."
+  },
+  {
+   "id": "c3-14",
+   "type": 3,
+   "text": "If the manager ___ the report, he would have noticed the mistake.",
+   "hint": "(to read)",
+   "answers": [
+    "had read",
+    "'d read"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord (read)."
+  },
+  {
+   "id": "c3-15",
+   "type": 3,
+   "text": "They ___ the game if they had played better.",
+   "hint": "(to win)",
+   "answers": [
+    "would have won",
+    "'d have won"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord (won)."
+  },
+  {
+   "id": "c3-16",
+   "type": 3,
+   "text": "If you ___ your keys, we would have been home earlier.",
+   "hint": "(to NOT forget)",
+   "answers": [
+    "hadn't forgotten",
+    "had not forgotten"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord, ontkenning: hadn't."
+  },
+  {
+   "id": "c3-17",
+   "type": 3,
+   "text": "If I had seen the message, I ___ you back.",
+   "hint": "(to call)",
+   "answers": [
+    "would have called",
+    "'d have called"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord."
+  },
+  {
+   "id": "c3-18",
+   "type": 3,
+   "text": "She would have passed her driving test if she ___ less nervous.",
+   "hint": "(to be)",
+   "answers": [
+    "had been",
+    "'d been"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + been."
+  },
+  {
+   "id": "c3-19",
+   "type": 3,
+   "text": "If the weather had been better, we ___ lunch outside.",
+   "hint": "(to have)",
+   "answers": [
+    "would have had",
+    "'d have had"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + had (voltooid deelwoord van have)."
+  },
+  {
+   "id": "c3-20",
+   "type": 3,
+   "text": "If he ___ sooner, she would have forgiven him.",
+   "hint": "(to apologise)",
+   "answers": [
+    "had apologised",
+    "'d apologised",
+    "had apologized",
+    "'d apologized"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord."
+  },
+  {
+   "id": "c3-21",
+   "type": 3,
+   "text": "We ___ the deadline if we had started earlier.",
+   "hint": "(to NOT miss)",
+   "answers": [
+    "wouldn't have missed",
+    "would not have missed"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord, ontkenning: wouldn't."
+  },
+  {
+   "id": "c3-22",
+   "type": 3,
+   "text": "If I ___ the other road, I would have arrived on time.",
+   "hint": "(to take)",
+   "answers": [
+    "had taken",
+    "'d taken"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord (taken)."
+  },
+  {
+   "id": "c3-23",
+   "type": 3,
+   "text": "If the client had agreed, we ___ the contract last week.",
+   "hint": "(to sign)",
+   "answers": [
+    "would have signed",
+    "'d have signed"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. Hoofdzin type 3: would have + voltooid deelwoord."
+  },
+  {
+   "id": "c3-24",
+   "type": 3,
+   "text": "If you ___ me, I would have told you the truth.",
+   "hint": "(to ask)",
+   "answers": [
+    "had asked",
+    "'d asked"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + voltooid deelwoord."
+  },
+  {
+   "id": "c3-25",
+   "type": 3,
+   "text": "I would have called you if I ___ your number.",
+   "hint": "(to have)",
+   "answers": [
+    "had had",
+    "'d had"
+   ],
+   "explain": "Type 3 (onmogelijk, verleden): if + past perfect, would have + voltooid deelwoord. If-zin type 3: had + had (voltooid deelwoord van have)."
+  }
+ ]
+}

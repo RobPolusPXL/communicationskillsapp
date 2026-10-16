@@ -43,7 +43,7 @@ fun ResultScreen(result: ResultUi?, onDone: () -> Unit, onExam: ((String) -> Uni
         )
         Text(
           when {
-            result.message != null -> "${result.mistakes.size} fout${if (result.mistakes.size == 1) "" else "e"} antwoord${if (result.mistakes.size == 1) "" else "en"}."
+            result.isExam -> "${result.mistakes.size} fout${if (result.mistakes.size == 1) "" else "e"} antwoord${if (result.mistakes.size == 1) "" else "en"}."
             result.perfect -> "100%: alle ${result.total} zonder fout."
             else -> "${result.total - result.mistakes.size} van ${result.total} meteen goed."
           },
@@ -76,10 +76,10 @@ fun ResultScreen(result: ResultUi?, onDone: () -> Unit, onExam: ((String) -> Uni
       }
       if (result.mistakes.isNotEmpty()) {
         item { Text("Om te herhalen", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 12.dp)) }
-        items(result.mistakes, key = { it.group + "/" + it.word.id }) { e ->
+        items(result.mistakes, key = { it.key }) { e ->
           Column {
-            Text(e.word.en + (e.word.type?.let { " ($it)" } ?: ""), style = MaterialTheme.typography.titleSmall, color = Wrong)
-            Text(e.word.nl.joinToString(", "), color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(e.title, style = MaterialTheme.typography.titleSmall, color = Wrong)
+            Text(e.detail, color = MaterialTheme.colorScheme.onSurfaceVariant)
             HorizontalDivider(Modifier.padding(top = 6.dp))
           }
         }
