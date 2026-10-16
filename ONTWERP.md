@@ -109,7 +109,7 @@ Een correct-met-melding telt als juist.
 
 **Kleur van een woord:** rood onder 0,5 · oranje 0,5–0,8 · groen vanaf 0,8. Nog nooit gespeeld = grijs.
 
-**Kleur van een lijst:** rood onder 0,5 · groen vanaf 0,7 · **goud** bij 100% (alle woorden score 1).
+**Kleur van een lijst:** rood onder 0,5 · oranje 0,5–0,7 · groen vanaf 0,7 · **goud** als de laatste volledige sessie van die lijst foutloos was (100%). Het voortschrijdend gemiddelde bereikt nooit exact 1, dus 100% is gekoppeld aan een foutloze sessie. Die foutloze sessies tellen ook voor de trofee met de 100%-teller.
 
 **Niveaupercentage (de 70%):** gemiddelde woordscore over **alle woorden van alle lijsten van het niveau**; woorden die nog nooit gespeeld zijn tellen als 0. Daardoor moet je dus alles gespeeld hebben om 70% te halen, wat past bij de regel dat de mix pas na alle lijsten opengaat.
 
