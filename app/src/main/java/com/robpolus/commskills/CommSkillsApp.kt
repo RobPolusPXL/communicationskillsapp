@@ -30,6 +30,7 @@ class CommSkillsApp : Application() {
 
   override fun onCreate() {
     super.onCreate()
+    if (::repository.isInitialized) return // onCreate mag veilig twee keer aangeroepen worden (bv. in tests)
     repository = AppRepository(File(filesDir, "appdata.json"), appScope)
     appScope.launch(Dispatchers.IO) {
       repository.update { BundledLists.seed(assets, it) }
