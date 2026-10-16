@@ -60,6 +60,3 @@ dependencies {
   debugImplementation(libs.androidx.compose.ui.tooling)
 }
 
-tasks.withType<Test> {
-  failFast = true
-}
