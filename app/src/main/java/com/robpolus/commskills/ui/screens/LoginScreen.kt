@@ -35,13 +35,9 @@ fun LoginScreen(error: String?, busy: Boolean, onGoogle: () -> Unit, onLocal: ()
       textAlign = TextAlign.Center,
     )
     Spacer(Modifier.height(32.dp))
-    Button(onClick = onGoogle, enabled = !busy, modifier = Modifier.fillMaxWidth().height(52.dp)) {
-      Text(if (busy) "Bezig…" else "Inloggen met Google")
-    }
+    ChunkyButton(if (busy) "Bezig…" else "Inloggen met Google", onClick = onGoogle, enabled = !busy)
     Spacer(Modifier.height(8.dp))
-    OutlinedButton(onClick = onLocal, enabled = !busy, modifier = Modifier.fillMaxWidth().height(48.dp)) {
-      Text("Zonder account (enkel op dit toestel)")
-    }
+    ChunkyOutlineButton("Zonder account (enkel op dit toestel)", onClick = onLocal, enabled = !busy)
     if (error != null) {
       Spacer(Modifier.height(12.dp))
       Text(error, color = MaterialTheme.colorScheme.error, textAlign = TextAlign.Center)

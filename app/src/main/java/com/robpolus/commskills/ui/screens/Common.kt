@@ -1,6 +1,20 @@
 package com.robpolus.commskills.ui.screens
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import com.robpolus.commskills.ui.theme.Line
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -87,5 +101,61 @@ fun ExamHearts(exam: com.robpolus.commskills.ui.ExamUi?) {
         modifier = Modifier.padding(horizontal = 1.dp),
       )
     }
+  }
+}
+
+
+private val ChunkyShape = RoundedCornerShape(18.dp)
+
+/** Knop met een dikke onderrand (voelt ingedrukt bij het tikken). */
+@Composable
+fun ChunkyButton(
+  text: String,
+  onClick: () -> Unit,
+  modifier: Modifier = Modifier,
+  color: Color = com.robpolus.commskills.ui.theme.Blue,
+  edge: Color = com.robpolus.commskills.ui.theme.BlueDark,
+  textColor: Color = Color.White,
+  enabled: Boolean = true,
+) {
+  val c = if (enabled) color else Color(0xFFE8EBF2)
+  val e = if (enabled) edge else com.robpolus.commskills.ui.theme.EdgeGrey
+  val t = if (enabled) textColor else Color(0xFF9AA3B2)
+  Box(modifier.fillMaxWidth().clip(ChunkyShape).background(e).clickable(enabled = enabled, onClick = onClick)) {
+    Box(
+      Modifier.fillMaxWidth().padding(bottom = 5.dp).clip(ChunkyShape).background(c).padding(vertical = 15.dp, horizontal = 12.dp),
+      contentAlignment = Alignment.Center,
+    ) {
+      Text(text, color = t, fontWeight = FontWeight.Black, style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
+    }
+  }
+}
+
+/** Lichte knop (wit met grijze onderrand) voor secundaire acties. */
+@Composable
+fun ChunkyOutlineButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true) =
+  ChunkyButton(
+    text, onClick, modifier,
+    color = Color.White,
+    edge = com.robpolus.commskills.ui.theme.EdgeGrey,
+    textColor = com.robpolus.commskills.ui.theme.Blue,
+    enabled = enabled,
+  )
+
+/** Kaart met dikke onderrand; [edge] kleurt rand en onderkant, [fill] de vulling. */
+@Composable
+fun ChunkyCard(
+  modifier: Modifier = Modifier,
+  edge: Color = Line,
+  fill: Color = Color.White,
+  onClick: (() -> Unit)? = null,
+  content: @Composable ColumnScope.() -> Unit,
+) {
+  val base = modifier.fillMaxWidth().clip(ChunkyShape).background(edge)
+  Box(if (onClick != null) base.clickable(onClick = onClick) else base) {
+    Column(
+      Modifier.fillMaxWidth().padding(bottom = 4.dp).clip(ChunkyShape).background(fill).border(2.dp, edge, ChunkyShape),
+      content = content,
+    )
   }
 }

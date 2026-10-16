@@ -47,6 +47,7 @@ data class MatchUi(
   val flash: Pair<String, String>?,
   /** Uitleg van de geselecteerde Engelse tegel (voor de (i)-knop). */
   val selectedDefinition: String?,
+  val combo: Int = 0,
 )
 
 data class TypeFeedback(
@@ -120,6 +121,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   private val mistakes = linkedMapOf<String, MistakeLine>()
   private val mistakeGroups = mutableSetOf<String>()
 
+  private var combo = 0
   private var typing: TypingSession<Question>? = null
   private var serial = 0
 
@@ -189,6 +191,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     matchEntries = emptyList()
     typing = null
     flash = null
+    combo = 0
     serial = 0
     mistakes.clear()
     mistakeGroups.clear()
@@ -218,6 +221,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val engine = matchExam
     when (val event = session.select(side, id)) {
       is MatchEvent.Mismatch -> {
+        combo = 0
         engine?.loseLife()
         publishExam()
         flash = event.enId to event.nlId
@@ -228,6 +232,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
         }
       }
       is MatchEvent.Matched -> {
+        combo++
         engine?.record(true)
         publishExam()
         if (session.round?.isComplete == true) {
@@ -278,13 +283,14 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     _match.value = MatchUi(
       round = session.roundNumber + 1,
       rounds = session.totalRounds,
-      repeat = session.roundNumber >= SessionBuilder.rounds(matchEntries).size,
+      repeat = session.roundNumber >= SessionBuilder.rounds(matchEntries, SessionBuilder.MATCH_ROUND_SIZE).size,
       en = round.enTiles.map { Tile(it.id, it.en, round.isMatched(Side.EN, it.id)) },
       nl = round.nlTiles.map { Tile(it.id, round.nlText(it), round.isMatched(Side.NL, it.id)) },
       selectedEn = selectedEn,
       selectedNl = round.selectedNl,
       flash = flash,
       selectedDefinition = selectedEn?.let { id -> round.words.firstOrNull { it.id == id }?.definition },
+      combo = combo,
     )
   }
 

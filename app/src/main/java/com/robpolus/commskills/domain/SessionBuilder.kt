@@ -10,6 +10,9 @@ object SessionBuilder {
   /** Aantal woorden/zinnen per oefensessie; de zwakste en nog niet geoefende komen eerst. */
   const val SESSION_SIZE = 10
 
+  /** Aantal paren per matchscherm. */
+  const val MATCH_ROUND_SIZE = 5
+
   /** Aantal woorden per vocabulary-sessie: de helft zwakste, de helft willekeurig. */
   const val VOCAB_SESSION_SIZE = 40
 

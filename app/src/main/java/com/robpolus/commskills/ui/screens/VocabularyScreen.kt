@@ -110,10 +110,10 @@ fun VocabularyScreen(
         item { Text("Kies één of meer lijsten", style = MaterialTheme.typography.titleMedium) }
         items(data.lists, key = { it.id }) { list ->
           val checked = list.id in selected
-          Card(
-            modifier = Modifier.fillMaxWidth().clickable { selected = if (checked) selected - list.id else selected + list.id },
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = BorderStroke(2.dp, if (checked) MaterialTheme.colorScheme.primary else Line),
+          ChunkyCard(
+            edge = if (checked) com.robpolus.commskills.ui.theme.Blue else Line,
+            fill = if (checked) com.robpolus.commskills.ui.theme.BlueContainer else androidx.compose.ui.graphics.Color.White,
+            onClick = { selected = if (checked) selected - list.id else selected + list.id },
           ) {
             Row(Modifier.padding(horizontal = 8.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
               Checkbox(checked = checked, onCheckedChange = { selected = if (it) selected + list.id else selected - list.id })
@@ -134,10 +134,10 @@ fun VocabularyScreen(
         }
         item {
           val mixedOpen = view.mixedUnlocked()
-          Card(
-            modifier = Modifier.fillMaxWidth().clickable(enabled = mixedOpen && unlocked) { onPlay(level, null, direction) },
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = BorderStroke(2.dp, Line),
+          ChunkyCard(
+            edge = if (mixedOpen) com.robpolus.commskills.ui.theme.Teal else Line,
+            fill = if (mixedOpen) com.robpolus.commskills.ui.theme.Teal.copy(alpha = 0.10f) else androidx.compose.ui.graphics.Color.White,
+            onClick = if (mixedOpen && unlocked) ({ onPlay(level, null, direction) }) else null,
           ) {
             Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
               Column(Modifier.weight(1f)) {
@@ -167,26 +167,20 @@ fun VocabularyScreen(
 
       Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         val words = data.lists.filter { it.id in selected }.sumOf { it.words.size }
-        Button(
+        ChunkyButton(
+          text = when {
+            selected.isEmpty() -> "Kies een lijst om te starten"
+            selected.size == 1 -> "Oefenen (${minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
+            else -> "${selected.size} lijsten combineren (${minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
+          },
           onClick = { onPlay(level, data.lists.map { it.id }.filter { it in selected }, direction) },
           enabled = selected.isNotEmpty() && unlocked,
-          modifier = Modifier.fillMaxWidth().height(52.dp),
-        ) {
-          Text(
-            when {
-              selected.isEmpty() -> "Kies een lijst om te starten"
-              selected.size == 1 -> "Oefenen (${minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
-              else -> "${selected.size} lijsten combineren (${minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
-            },
-          )
-        }
-        if (onExam != null) OutlinedButton(
+        )
+        if (onExam != null) ChunkyOutlineButton(
+          text = if (view.examAvailable()) "Examen doen" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)",
           onClick = { onExam(level) },
           enabled = view.examAvailable() && unlocked,
-          modifier = Modifier.fillMaxWidth().height(48.dp),
-        ) {
-          Text(if (view.examAvailable()) "Examen doen" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)")
-        }
+        )
       }
     }
   }
@@ -219,13 +213,11 @@ private fun LevelTile(
   modifier: Modifier,
   onClick: () -> Unit,
 ) {
-  Card(
-    onClick = onClick,
+  ChunkyCard(
     modifier = modifier,
-    colors = CardDefaults.cardColors(
-      containerColor = if (selected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surface,
-    ),
-    border = BorderStroke(2.dp, if (selected) MaterialTheme.colorScheme.primary else Line),
+    edge = if (selected) com.robpolus.commskills.ui.theme.Blue else Line,
+    fill = if (selected) com.robpolus.commskills.ui.theme.BlueContainer else androidx.compose.ui.graphics.Color.White,
+    onClick = onClick,
   ) {
     Column(Modifier.padding(14.dp)) {
       Row(verticalAlignment = Alignment.CenterVertically) {

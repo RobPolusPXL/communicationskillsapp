@@ -79,7 +79,7 @@ class MatchSession(
   private val random: Random = Random.Default,
 ) {
   private val allEntries = entries
-  private val plannedRounds: MutableList<List<Entry>> = SessionBuilder.rounds(entries).toMutableList()
+  private val plannedRounds: MutableList<List<Entry>> = SessionBuilder.rounds(entries, SessionBuilder.MATCH_ROUND_SIZE).toMutableList()
   private var repeatPlanned = false
   private val firstTryMistakes = linkedSetOf<Entry>()
   private var unscored: Set<Entry> = emptySet()
@@ -136,7 +136,7 @@ class MatchSession(
       var extra = 0
       while (repeat.size < MIN_ROUND && extra < padding.size) repeat += padding[extra++]
       unscored = allEntries.toSet() // herhaling telt niet mee
-      plannedRounds += SessionBuilder.rounds(repeat)
+      plannedRounds += SessionBuilder.rounds(repeat, SessionBuilder.MATCH_ROUND_SIZE)
       currentEntries = plannedRounds[roundNumber]
       round = MatchRound(currentEntries.map(Entry::word), random)
     } else {

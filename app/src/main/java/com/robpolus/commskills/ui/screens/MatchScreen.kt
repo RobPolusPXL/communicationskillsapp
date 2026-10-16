@@ -61,22 +61,30 @@ fun MatchScreen(
 
   Column(Modifier.fillMaxSize().systemBarsPadding().padding(16.dp)) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-      IconButton(onClick = { confirmQuit = true }) { Icon(Icons.Filled.Close, contentDescription = "Stoppen") }
+      IconButton(onClick = { confirmQuit = true }) { Icon(Icons.Filled.Close, contentDescription = "Stoppen", tint = Color(0xFF9AA3B2)) }
       LinearProgressIndicator(
         progress = { ((ui.round - 1).toFloat() / ui.rounds).coerceIn(0f, 1f) },
-        modifier = Modifier.weight(1f).height(12.dp).clip(RoundedCornerShape(6.dp)),
+        modifier = Modifier.weight(1f).height(14.dp).clip(RoundedCornerShape(7.dp)),
         color = Correct,
         trackColor = Line,
       )
       topExtra()
     }
-    Spacer(Modifier.height(8.dp))
+    Spacer(Modifier.height(10.dp))
     Text(
       if (ui.repeat) "Herhaling van foute woorden" else "Verbind de woorden die bij elkaar horen",
-      style = MaterialTheme.typography.titleMedium,
+      style = MaterialTheme.typography.titleLarge,
     )
-    Spacer(Modifier.height(12.dp))
-    Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    Spacer(Modifier.height(6.dp))
+    Text(
+      "COMBO ×${ui.combo}",
+      style = MaterialTheme.typography.labelLarge,
+      color = Color.White,
+      modifier = Modifier.clip(RoundedCornerShape(10.dp))
+        .background(if (ui.combo >= 3) com.robpolus.commskills.ui.theme.Orange2 else Color(0xFFB8BFCC))
+        .padding(horizontal = 10.dp, vertical = 3.dp),
+    )
+    Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
       TileColumn(ui.en, ui.selectedEn, ui.flash?.first, Modifier.weight(1f)) { onSelect(Side.EN, it) }
       TileColumn(ui.nl, ui.selectedNl, ui.flash?.second, Modifier.weight(1f)) { onSelect(Side.NL, it) }
     }
@@ -118,7 +126,7 @@ private fun TileColumn(
   modifier: Modifier,
   onClick: (String) -> Unit,
 ) {
-  Column(modifier, verticalArrangement = Arrangement.spacedBy(10.dp)) {
+  Column(modifier, verticalArrangement = Arrangement.spacedBy(14.dp)) {
     for (tile in tiles) {
       val isSelected = tile.id == selected
       val isFlash = tile.id == flash
@@ -142,17 +150,17 @@ private fun TileColumn(
         else -> Line
       }
       Box(
-        Modifier.fillMaxWidth().heightIn(min = 60.dp).clip(shape).background(edge)
+        Modifier.fillMaxWidth().heightIn(min = 72.dp).clip(shape).background(edge)
           .clickable(enabled = !tile.matched) { onClick(tile.id) },
       ) {
         Box(
-          Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(bottom = 4.dp).clip(shape)
+          Modifier.fillMaxWidth().heightIn(min = 68.dp).padding(bottom = 4.dp).clip(shape)
             .background(container).border(2.dp, border, shape).padding(12.dp),
           contentAlignment = Alignment.Center,
         ) {
           Text(
             tile.text,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.titleMedium,
             fontWeight = if (isSelected || tile.matched) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.Center,
             color = when {

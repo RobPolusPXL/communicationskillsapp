@@ -37,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
@@ -78,22 +79,30 @@ fun TypeScreen(
       IconButton(onClick = { confirmQuit = true }) { Icon(Icons.Filled.Close, contentDescription = "Stoppen") }
       LinearProgressIndicator(
         progress = { (ui.completed.toFloat() / ui.total.coerceAtLeast(1)).coerceIn(0f, 1f) },
-        modifier = Modifier.weight(1f).height(10.dp),
+        modifier = Modifier.weight(1f).height(14.dp).clip(androidx.compose.foundation.shape.RoundedCornerShape(7.dp)),
+        color = Correct,
         trackColor = Line,
       )
       topExtra()
     }
-    Text(ui.promptLabel, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
-    Text(
-      ui.prompt,
-      style = if (ui.grammar) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.headlineMedium,
-    )
-    ui.hint?.let {
-      Text(
-        if (it.startsWith("(")) it else "($it)",
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.primary,
-      )
+    val promptColor = if (ui.grammar) com.robpolus.commskills.ui.theme.Orange2 else com.robpolus.commskills.ui.theme.Blue
+    val promptEdge = if (ui.grammar) com.robpolus.commskills.ui.theme.Orange2Dark else com.robpolus.commskills.ui.theme.BlueDark
+    ChunkyCard(edge = promptEdge, fill = promptColor) {
+      Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(ui.promptLabel.uppercase(), style = MaterialTheme.typography.labelMedium, color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.85f))
+        Text(
+          ui.prompt,
+          style = if (ui.grammar) MaterialTheme.typography.headlineSmall else MaterialTheme.typography.headlineMedium,
+          color = androidx.compose.ui.graphics.Color.White,
+        )
+        ui.hint?.let {
+          Text(
+            if (it.startsWith("(")) it else "($it)",
+            style = MaterialTheme.typography.titleMedium,
+            color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.9f),
+          )
+        }
+      }
     }
 
     OutlinedTextField(
@@ -109,16 +118,15 @@ fun TypeScreen(
 
     val feedback = ui.feedback
     if (feedback == null) {
-      Button(onClick = { onSubmit(text) }, enabled = text.isNotBlank(), modifier = Modifier.fillMaxWidth().height(52.dp)) {
-        Text("Controleren")
-      }
+      ChunkyButton("Controleren", onClick = { onSubmit(text) }, enabled = text.isNotBlank())
     } else {
       FeedbackCard(feedback)
-      Button(
+      ChunkyButton(
+        "Volgende",
         onClick = onNext,
-        modifier = Modifier.fillMaxWidth().height(52.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = if (feedback.correct) Correct else Wrong),
-      ) { Text("Volgende") }
+        color = if (feedback.correct) Correct else Wrong,
+        edge = if (feedback.correct) com.robpolus.commskills.ui.theme.GreenEdge else com.robpolus.commskills.ui.theme.CoralDark,
+      )
     }
   }
 

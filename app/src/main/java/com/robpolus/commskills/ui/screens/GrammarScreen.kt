@@ -56,7 +56,7 @@ fun GrammarScreen(
   var selected by rememberSaveable { mutableStateOf(setOf<String>()) }
   val view = Grammar.view(data, exercises)
 
-  ScreenScaffold("Grammar", onBack, accent = com.robpolus.commskills.ui.theme.Purple) { padding ->
+  ScreenScaffold("Grammar", onBack, accent = com.robpolus.commskills.ui.theme.Orange2Dark) { padding ->
     Column(Modifier.padding(padding)) {
       LazyColumn(
         modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
@@ -79,10 +79,10 @@ fun GrammarScreen(
         items(Grammar.types, key = { it }) { type ->
           val group = Grammar.groupId(type)
           val checked = group in selected
-          Card(
-            modifier = Modifier.fillMaxWidth().clickable { selected = if (checked) selected - group else selected + group },
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = BorderStroke(2.dp, if (checked) MaterialTheme.colorScheme.primary else Line),
+          ChunkyCard(
+            edge = if (checked) com.robpolus.commskills.ui.theme.Orange2 else Line,
+            fill = if (checked) com.robpolus.commskills.ui.theme.Orange2.copy(alpha = 0.12f) else androidx.compose.ui.graphics.Color.White,
+            onClick = { selected = if (checked) selected - group else selected + group },
           ) {
             Row(Modifier.padding(horizontal = 8.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
               Checkbox(checked = checked, onCheckedChange = { selected = if (it) selected + group else selected - group })
@@ -101,10 +101,10 @@ fun GrammarScreen(
         }
         item {
           val open = view.mixedUnlocked()
-          Card(
-            modifier = Modifier.fillMaxWidth().clickable(enabled = open) { onPlay(null) },
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-            border = BorderStroke(2.dp, Line),
+          ChunkyCard(
+            edge = if (open) com.robpolus.commskills.ui.theme.Teal else Line,
+            fill = if (open) com.robpolus.commskills.ui.theme.Teal.copy(alpha = 0.10f) else androidx.compose.ui.graphics.Color.White,
+            onClick = if (open) ({ onPlay(null) }) else null,
           ) {
             Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
               Column(Modifier.weight(1f)) {
@@ -123,26 +123,22 @@ fun GrammarScreen(
       }
       Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         val count = exercises.count { Grammar.groupId(it.type) in selected }
-        Button(
+        ChunkyButton(
+          text = when {
+            selected.isEmpty() -> "Kies een type om te starten"
+            selected.size == 1 -> "Oefenen (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
+            else -> "${selected.size} types combineren (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
+          },
           onClick = { onPlay(Grammar.types.map { Grammar.groupId(it) }.filter { it in selected }) },
           enabled = selected.isNotEmpty(),
-          modifier = Modifier.fillMaxWidth().height(52.dp),
-        ) {
-          Text(
-            when {
-              selected.isEmpty() -> "Kies een type om te starten"
-              selected.size == 1 -> "Oefenen (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
-              else -> "${selected.size} types combineren (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
-            },
-          )
-        }
-        if (onExam != null) OutlinedButton(
+          color = com.robpolus.commskills.ui.theme.Orange2,
+          edge = com.robpolus.commskills.ui.theme.Orange2Dark,
+        )
+        if (onExam != null) ChunkyOutlineButton(
+          text = if (view.examAvailable()) "Examen doen (21 vragen)" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)",
           onClick = { onExam(com.robpolus.commskills.domain.Levels.GRAMMAR) },
           enabled = view.examAvailable(),
-          modifier = Modifier.fillMaxWidth().height(48.dp),
-        ) {
-          Text(if (view.examAvailable()) "Examen doen (21 vragen)" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)")
-        }
+        )
       }
     }
   }
@@ -153,7 +149,7 @@ fun GrammarScreen(
 fun GrammarOverviewScreen(data: AppData, exercises: List<GrammarExercise>, type: Int, onBack: () -> Unit) {
   val view = Grammar.view(data, exercises)
   val group = Grammar.groupId(type)
-  ScreenScaffold(Grammar.title(type), onBack, accent = com.robpolus.commskills.ui.theme.Purple) { padding ->
+  ScreenScaffold(Grammar.title(type), onBack, accent = com.robpolus.commskills.ui.theme.Orange2Dark) { padding ->
     LazyColumn(Modifier.padding(padding).padding(horizontal = 16.dp)) {
       item {
         Text(

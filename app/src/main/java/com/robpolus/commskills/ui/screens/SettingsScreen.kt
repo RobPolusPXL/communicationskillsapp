@@ -53,9 +53,7 @@ fun SettingsScreen(
       item {
         Text("Woordenlijsten", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
         Spacer(Modifier.height(4.dp))
-        Button(onClick = { picker.launch(docxTypes) }, modifier = Modifier.fillMaxWidth()) {
-          Text("Nieuwe lijst importeren (Word)")
-        }
+        ChunkyButton("Nieuwe lijst importeren (Word)", onClick = { picker.launch(docxTypes) })
         Spacer(Modifier.height(8.dp))
       }
       items(data.lists, key = { it.id }) { list ->
