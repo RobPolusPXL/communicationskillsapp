@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import com.robpolus.commskills.domain.SessionBuilder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -174,8 +175,8 @@ fun VocabularyScreen(
           Text(
             when {
               selected.isEmpty() -> "Kies een lijst om te starten"
-              selected.size == 1 -> "Oefenen ($words woorden)"
-              else -> "${selected.size} lijsten combineren ($words woorden)"
+              selected.size == 1 -> "Oefenen (${minOf(words, SessionBuilder.SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
+              else -> "${selected.size} lijsten combineren (${minOf(words, SessionBuilder.SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
             },
           )
         }

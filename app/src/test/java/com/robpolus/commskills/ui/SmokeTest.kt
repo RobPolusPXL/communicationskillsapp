@@ -63,8 +63,8 @@ class SmokeTest {
     rule.onNodeWithText("Vocabulary").performClick()
     waitForText("Kies één of meer lijsten")
     rule.onNodeWithText("Trolley problem").performClick()
-    waitForText("Oefenen (23 woorden)")
-    rule.onNodeWithText("Oefenen (23 woorden)").performClick()
+    waitForText("Oefenen (10 van 23 woorden)")
+    rule.onNodeWithText("Oefenen (10 van 23 woorden)").performClick()
     waitForText("Verbind de woorden die bij elkaar horen")
   }
 
@@ -85,8 +85,8 @@ class SmokeTest {
     rule.onNodeWithText("Grammar").performClick()
     waitForText("Kies één of meer types")
     rule.onNodeWithText("Type 0").performClick()
-    waitForText("Oefenen (25 zinnen)")
-    rule.onNodeWithText("Oefenen (25 zinnen)").performClick()
+    waitForText("Oefenen (10 van 25 zinnen)")
+    rule.onNodeWithText("Oefenen (10 van 25 zinnen)").performClick()
     waitForText("Vul de zin aan")
     rule.onNodeWithText("Ontbrekend deel").performTextInput("zzz")
     rule.onNodeWithText("Controleren").performClick()

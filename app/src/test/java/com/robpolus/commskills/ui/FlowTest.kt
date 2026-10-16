@@ -117,7 +117,7 @@ class FlowTest {
   @Test
   fun perfectMatchSessionShowsResultAndTrophy() {
     toHome()
-    openVocabularyList("Trolley problem", "Oefenen (23 woorden)")
+    openVocabularyList("Trolley problem", "Oefenen (10 van 23 woorden)")
     waitForText("Verbind de woorden die bij elkaar horen")
     solveMatch()
     waitForText("Foutloos!")
@@ -132,7 +132,7 @@ class FlowTest {
   @Test
   fun matchMistakesAreRepeatedAndSessionIsNotPerfect() {
     toHome()
-    openVocabularyList("Trolley problem", "Oefenen (23 woorden)")
+    openVocabularyList("Trolley problem", "Oefenen (10 van 23 woorden)")
     waitForText("Verbind de woorden die bij elkaar horen")
     solveMatch(wrong = 1)
     waitForText("Sessie klaar")
@@ -199,7 +199,7 @@ class FlowTest {
     }
     val view = com.robpolus.commskills.domain.Grammar.view(data, app.grammar)
     assertTrue(dump() + " sessions=" + data.sessions, view.mixedUnlocked())
-    assertTrue("niveau moet 70% halen na 4 perfecte sessies is niet gegarandeerd", view.percentage() > 0.25)
+    assertTrue("niveau moet 70% halen na 4 perfecte sessies is niet gegarandeerd", view.percentage() > 0.05)
     assertEquals(4, data.sessions.values.count { it.perfectCount == 1 })
     // Examen: eerst voldoende voortgang opbouwen.
     app.repository.update { d ->

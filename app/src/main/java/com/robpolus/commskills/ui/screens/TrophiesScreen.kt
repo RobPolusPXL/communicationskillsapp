@@ -30,7 +30,7 @@ import com.robpolus.commskills.ui.theme.Line
 @Composable
 fun TrophiesScreen(data: AppData, onBack: () -> Unit) {
   val trophies = Trophies.all(data)
-  ScreenScaffold("Trofeeën", onBack) { padding ->
+  ScreenScaffold("Trofeeën", onBack, accent = com.robpolus.commskills.ui.theme.Sun) { padding ->
     LazyColumn(
       modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
       verticalArrangement = Arrangement.spacedBy(10.dp),

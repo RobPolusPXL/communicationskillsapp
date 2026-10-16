@@ -1,7 +1,15 @@
 package com.robpolus.commskills.ui.screens
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import com.robpolus.commskills.ui.theme.Blue
+import com.robpolus.commskills.ui.theme.BlueDark
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,8 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -58,7 +64,8 @@ fun MatchScreen(
       IconButton(onClick = { confirmQuit = true }) { Icon(Icons.Filled.Close, contentDescription = "Stoppen") }
       LinearProgressIndicator(
         progress = { ((ui.round - 1).toFloat() / ui.rounds).coerceIn(0f, 1f) },
-        modifier = Modifier.weight(1f).height(10.dp),
+        modifier = Modifier.weight(1f).height(12.dp).clip(RoundedCornerShape(6.dp)),
+        color = Correct,
         trackColor = Line,
       )
       topExtra()
@@ -118,7 +125,7 @@ private fun TileColumn(
       val border = when {
         tile.matched -> Correct
         isFlash -> Wrong
-        isSelected -> MaterialTheme.colorScheme.primary
+        isSelected -> Blue
         else -> Line
       }
       val container = when {
@@ -127,20 +134,33 @@ private fun TileColumn(
         isSelected -> MaterialTheme.colorScheme.primaryContainer
         else -> Color.White
       }
-      Card(
-        onClick = { onClick(tile.id) },
-        enabled = !tile.matched,
-        modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp),
-        colors = CardDefaults.cardColors(containerColor = container, disabledContainerColor = container),
-        border = BorderStroke(2.dp, border),
+      val shape = RoundedCornerShape(16.dp)
+      val edge = when {
+        tile.matched -> Correct
+        isFlash -> Wrong
+        isSelected -> Blue
+        else -> Line
+      }
+      Box(
+        Modifier.fillMaxWidth().heightIn(min = 60.dp).clip(shape).background(edge)
+          .clickable(enabled = !tile.matched) { onClick(tile.id) },
       ) {
-        Column(Modifier.fillMaxWidth().padding(10.dp).heightIn(min = 36.dp), verticalArrangement = Arrangement.Center) {
+        Box(
+          Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(bottom = 4.dp).clip(shape)
+            .background(container).border(2.dp, border, shape).padding(12.dp),
+          contentAlignment = Alignment.Center,
+        ) {
           Text(
             tile.text,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = if (isSelected || tile.matched) FontWeight.Bold else FontWeight.Normal,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-            color = if (tile.matched) Correct else MaterialTheme.colorScheme.onSurface,
+            color = when {
+              tile.matched -> Correct
+              isFlash -> Wrong
+              isSelected -> BlueDark
+              else -> MaterialTheme.colorScheme.onSurface
+            },
           )
         }
       }

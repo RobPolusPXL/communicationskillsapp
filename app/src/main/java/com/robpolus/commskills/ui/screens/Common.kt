@@ -42,11 +42,22 @@ fun WordColor.color(): Color = when (this) {
 /** Scherm met titelbalk en terugknop. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ScreenScaffold(title: String, onBack: () -> Unit, content: @Composable (PaddingValues) -> Unit) {
+fun ScreenScaffold(
+  title: String,
+  onBack: () -> Unit,
+  accent: Color = com.robpolus.commskills.ui.theme.Blue,
+  content: @Composable (PaddingValues) -> Unit,
+) {
   Scaffold(
     topBar = {
       TopAppBar(
         title = { Text(title) },
+        colors = androidx.compose.material3.TopAppBarDefaults.topAppBarColors(
+          containerColor = accent,
+          titleContentColor = Color.White,
+          navigationIconContentColor = Color.White,
+          actionIconContentColor = Color.White,
+        ),
         navigationIcon = {
           IconButton(onClick = onBack) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Terug")

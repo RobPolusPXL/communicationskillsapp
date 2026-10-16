@@ -7,6 +7,9 @@ import kotlin.random.Random
 data class Entry(val group: String, val word: Word)
 
 object SessionBuilder {
+  /** Aantal woorden/zinnen per oefensessie; de zwakste en nog niet geoefende komen eerst. */
+  const val SESSION_SIZE = 10
+
 
   /**
    * Sessie over de gekozen groepen: alle woorden, gewogen volgorde

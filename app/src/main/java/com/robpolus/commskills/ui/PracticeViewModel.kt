@@ -143,7 +143,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
 
   fun startGrammar(groupIds: List<String>?) {
     begin(Levels.GRAMMAR)
-    val questions = Grammar.sessionExercises(data.value, grammar, groupIds).map { GrammarQuestion(it) }
+    val questions = Grammar.sessionExercises(data.value, grammar, groupIds).take(SessionBuilder.SESSION_SIZE).map { GrammarQuestion(it) }
     typing = TypingSession(questions)
     publishType(null)
   }
@@ -195,8 +195,8 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   }
 
   private fun entriesFor(level: String, groupIds: List<String>?): List<Entry> =
-    if (groupIds == null) SessionBuilder.mixedEntries(data.value, level)
-    else SessionBuilder.vocabularyEntries(data.value, level, groupIds)
+    (if (groupIds == null) SessionBuilder.mixedEntries(data.value, level)
+    else SessionBuilder.vocabularyEntries(data.value, level, groupIds)).take(SessionBuilder.SESSION_SIZE)
 
   private fun allWords() = data.value.lists.flatMap { it.words }
 

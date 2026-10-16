@@ -44,7 +44,7 @@ fun SettingsScreen(
   val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
     if (uri != null) onPickFile(uri)
   }
-  ScreenScaffold("Instellingen", onBack) { padding ->
+  ScreenScaffold("Instellingen", onBack, accent = com.robpolus.commskills.ui.theme.Teal) { padding ->
     LazyColumn(
       modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
       verticalArrangement = Arrangement.spacedBy(6.dp),

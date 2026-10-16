@@ -17,7 +17,7 @@ fun AccountSettings(configured: Boolean, email: String?, onSignIn: () -> Unit, o
     Text("Account", style = MaterialTheme.typography.titleMedium)
     when {
       !configured -> Text(
-        "Online opslag is niet ingesteld. Je voortgang staat alleen op dit toestel.",
+        "Inloggen is nog niet ingesteld: de app mist het bestand google-services.json (zie README, stap Firebase). Je voortgang staat voorlopig alleen op dit toestel.",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
       )

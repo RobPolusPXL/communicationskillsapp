@@ -1,6 +1,5 @@
 package com.robpolus.commskills.ui.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,8 +13,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import com.robpolus.commskills.ui.theme.Blue
+import com.robpolus.commskills.ui.theme.BlueDark
+import com.robpolus.commskills.ui.theme.Purple
+import com.robpolus.commskills.ui.theme.PurpleDark
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -84,28 +92,20 @@ fun HomeScreen(
     )
 
     Spacer(Modifier.height(24.dp))
-    RouteCard("Vocabulary", "Woorden leren: matchen en typen", onVocabulary)
+    RouteCard("Vocabulary", "Woorden leren: matchen en typen", Blue, BlueDark, onVocabulary)
     Spacer(Modifier.height(16.dp))
-    RouteCard("Grammar", "If-zinnen: type 0, 1, 2 en 3", onGrammar)
+    RouteCard("Grammar", "If-zinnen: type 0, 1, 2 en 3", Purple, PurpleDark, onGrammar)
   }
 }
 
 @Composable
-private fun RouteCard(title: String, subtitle: String, onClick: () -> Unit) {
-  Card(
-    onClick = onClick,
-    modifier = Modifier.fillMaxWidth(),
-    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    border = BorderStroke(2.dp, Line),
-  ) {
-    Column(Modifier.padding(20.dp)) {
-      Text(title, style = MaterialTheme.typography.titleLarge)
+private fun RouteCard(title: String, subtitle: String, color: Color, edge: Color, onClick: () -> Unit) {
+  val shape = RoundedCornerShape(20.dp)
+  Box(Modifier.fillMaxWidth().clip(shape).background(edge).clickable(onClick = onClick)) {
+    Column(Modifier.fillMaxWidth().padding(bottom = 5.dp).clip(shape).background(color).padding(22.dp)) {
+      Text(title, style = MaterialTheme.typography.headlineSmall, color = Color.White, fontWeight = FontWeight.Bold)
       Spacer(Modifier.height(4.dp))
-      Text(
-        subtitle,
-        style = MaterialTheme.typography.bodyMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-      )
+      Text(subtitle, style = MaterialTheme.typography.bodyMedium, color = Color.White.copy(alpha = 0.9f))
     }
   }
 }

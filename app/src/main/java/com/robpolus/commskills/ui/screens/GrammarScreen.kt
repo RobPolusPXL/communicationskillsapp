@@ -29,6 +29,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import com.robpolus.commskills.domain.SessionBuilder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,7 +56,7 @@ fun GrammarScreen(
   var selected by rememberSaveable { mutableStateOf(setOf<String>()) }
   val view = Grammar.view(data, exercises)
 
-  ScreenScaffold("Grammar", onBack) { padding ->
+  ScreenScaffold("Grammar", onBack, accent = com.robpolus.commskills.ui.theme.Purple) { padding ->
     Column(Modifier.padding(padding)) {
       LazyColumn(
         modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
@@ -130,8 +131,8 @@ fun GrammarScreen(
           Text(
             when {
               selected.isEmpty() -> "Kies een type om te starten"
-              selected.size == 1 -> "Oefenen ($count zinnen)"
-              else -> "${selected.size} types combineren ($count zinnen)"
+              selected.size == 1 -> "Oefenen (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
+              else -> "${selected.size} types combineren (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
             },
           )
         }
@@ -152,7 +153,7 @@ fun GrammarScreen(
 fun GrammarOverviewScreen(data: AppData, exercises: List<GrammarExercise>, type: Int, onBack: () -> Unit) {
   val view = Grammar.view(data, exercises)
   val group = Grammar.groupId(type)
-  ScreenScaffold(Grammar.title(type), onBack) { padding ->
+  ScreenScaffold(Grammar.title(type), onBack, accent = com.robpolus.commskills.ui.theme.Purple) { padding ->
     LazyColumn(Modifier.padding(padding).padding(horizontal = 16.dp)) {
       item {
         Text(
