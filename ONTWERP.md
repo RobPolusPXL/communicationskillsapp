@@ -194,3 +194,13 @@ Alle 🔶-punten hierboven, samengevat:
 6. Zelf gecombineerde lijsten tellen als gespeeld (§ 6)
 7. Herinnering overslaan als er al geoefend is (§ 9)
 8. 25 oefenzinnen per if-type en nalezen door Rob (§ 11)
+
+## 16. Afwijkingen tijdens de bouw
+- Voortgang wordt per niveau bijgehouden (sleutel `niveau|lijst|woord`), niet globaal per woord; dubbele woorden in verschillende lijsten tellen per lijst.
+- Trofeeën worden afgeleid uit de data, niet apart opgeslagen.
+- Cloud: één Firestore-document `users/{uid}/data/state`; nieuwste `updatedAt` wint (een vers toestel neemt de cloud over).
+- Firebase is optioneel: zonder `app/google-services.json` draait de app lokaal zonder login.
+- minSdk 26.
+- NL→EN: een ander Engels woord met dezelfde Nederlandse vertaling telt ook goed (met melding).
+- Tweekolomstabellen met zinnen (business_writing) worden niet geïmporteerd.
+- Een Nederlands lidwoord vooraan is nog niet optioneel.
