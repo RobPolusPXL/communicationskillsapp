@@ -13,6 +13,9 @@ enum class Note {
 
   /** Bij een werkwoord ontbreekt "to": voor 100% correct moet het "to …" zijn. */
   MISSING_TO,
+
+  /** Een ander Engels woord met dezelfde Nederlandse vertaling: ook goed. */
+  SYNONYM,
 }
 
 sealed class AnswerResult {

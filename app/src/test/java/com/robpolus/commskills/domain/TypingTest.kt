@@ -99,6 +99,22 @@ class TypingTest {
     assertEquals("to pursue", toEnglish.correctText)
   }
 
+  @Test
+  fun englishSynonymWithSameDutchTranslationIsAccepted() {
+    val improve = w("improve", "verbeteren")
+    val enhance = w("enhance", "verbeteren", "versterken")
+    val other = w("road", "weg")
+    val entries = listOf(improve, enhance, other).map { Entry("l", it) }
+    val qs = VocabQuestion.from(entries, DirectionChoice.NL_EN)
+    val q = qs.first { it.id == "improve" }
+    assertEquals(AnswerResult.Correct(emptySet()), q.check(checker, "improve"))
+    assertEquals(AnswerResult.Correct(setOf(Note.SYNONYM)), q.check(checker, "enhance"))
+    assertFalse(q.check(checker, "road").isCorrect)
+    // andere richting: geen synoniemen
+    val toDutch = VocabQuestion.from(entries, DirectionChoice.EN_NL).first { it.id == "improve" }
+    assertFalse(toDutch.check(checker, "versterken").isCorrect)
+  }
+
   private val ex = GrammarExercise("c2-01", 2, "If I ___ rich, I would help.", "(to be)", listOf("were"), "Type 2")
 
   @Test

@@ -136,7 +136,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
 
   fun startType(level: String, groupIds: List<String>?, choice: DirectionChoice) {
     begin(level)
-    val questions = VocabQuestion.from(entriesFor(level, groupIds), choice)
+    val questions = VocabQuestion.from(entriesFor(level, groupIds), choice, pool = allWords())
     typing = TypingSession(questions)
     publishType(null)
   }
@@ -160,7 +160,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       }
       Levels.VOCAB_TYPE -> {
         val entries = SessionBuilder.examEntries(data.value, level, ExamEngine.VOCABULARY_QUESTIONS)
-        typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED), ExamEngine.vocabulary())
+        typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED, pool = allWords()), ExamEngine.vocabulary())
         publishType(null)
       }
       else -> {
@@ -197,6 +197,8 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   private fun entriesFor(level: String, groupIds: List<String>?): List<Entry> =
     if (groupIds == null) SessionBuilder.mixedEntries(data.value, level)
     else SessionBuilder.vocabularyEntries(data.value, level, groupIds)
+
+  private fun allWords() = data.value.lists.flatMap { it.words }
 
   private fun publishExam() {
     val e = examEngine ?: return

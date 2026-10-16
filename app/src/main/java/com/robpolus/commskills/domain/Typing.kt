@@ -20,7 +20,12 @@ sealed interface Question {
   fun check(checker: AnswerChecker, given: String): AnswerResult
 }
 
-data class VocabQuestion(val entry: Entry, val direction: Direction) : Question {
+data class VocabQuestion(
+  val entry: Entry,
+  val direction: Direction,
+  /** Andere woorden met een gelijke Nederlandse vertaling; bij NL→EN zijn hun Engelse woorden ook goed. */
+  val synonyms: List<Word> = emptyList(),
+) : Question {
   private val word get() = entry.word
   private val toDutch get() = direction == Direction.EN_NL
 
@@ -33,18 +38,38 @@ data class VocabQuestion(val entry: Entry, val direction: Direction) : Question 
   override val correctText get() = if (toDutch) word.nl.joinToString(", ") else word.en
   override val explanation get() = word.definition
 
-  override fun check(checker: AnswerChecker, given: String) = checker.checkWord(given, word, direction)
+  override fun check(checker: AnswerChecker, given: String): AnswerResult {
+    val own = checker.checkWord(given, word, direction)
+    if (own.isCorrect || direction != Direction.NL_EN) return own
+    for (other in synonyms) {
+      val r = checker.checkWord(given, other, Direction.NL_EN)
+      if (r is AnswerResult.Correct) return AnswerResult.Correct(r.notes + Note.SYNONYM)
+    }
+    return own
+  }
 
   companion object {
-    fun from(entries: List<Entry>, choice: DirectionChoice, random: Random = Random.Default) =
-      entries.map { e ->
+    /** [pool]: alle bekende woorden, om synoniemen (zelfde Nederlandse vertaling) te vinden. */
+    fun from(
+      entries: List<Entry>,
+      choice: DirectionChoice,
+      random: Random = Random.Default,
+      pool: List<Word> = entries.map { it.word },
+    ): List<VocabQuestion> {
+      val byDutch = HashMap<String, MutableList<Word>>()
+      for (w in pool) for (nl in w.nl) byDutch.getOrPut(nl.lowercase()) { mutableListOf() }.add(w)
+      return entries.map { e ->
         val dir = when (choice) {
           DirectionChoice.EN_NL -> Direction.EN_NL
           DirectionChoice.NL_EN -> Direction.NL_EN
           DirectionChoice.MIXED -> if (random.nextBoolean()) Direction.EN_NL else Direction.NL_EN
         }
-        VocabQuestion(e, dir)
+        val synonyms = e.word.nl.flatMap { byDutch[it.lowercase()].orEmpty() }
+          .filter { it.id != e.word.id || it.en != e.word.en }
+          .distinctBy { it.en }
+        VocabQuestion(e, dir, synonyms)
       }
+    }
   }
 }
 

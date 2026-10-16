@@ -52,6 +52,7 @@ fun noteText(note: Note): String = when (note) {
   Note.TYPO -> "Let op: er zit een typfout in."
   Note.MISSING_ACCENT -> "Let op: er ontbreekt een accent."
   Note.MISSING_TO -> "Voor 100% correct moet het ‘to …’ zijn."
+  Note.SYNONYM -> "Ook goed: een ander woord met dezelfde vertaling."
 }
 
 @Composable
