@@ -88,7 +88,7 @@ fun GrammarScreen(
             fill = if (checked) OrangeLight else Color.White,
             onClick = { selected = if (checked) selected - group else selected + group },
           ) {
-            Row(Modifier.padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(horizontal = 14.dp, vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
               Box(
                 Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(typeColors[type]),
                 contentAlignment = Alignment.Center,
@@ -122,7 +122,7 @@ fun GrammarScreen(
             fill = if (open) TealLight else Color.White,
             onClick = if (open) ({ onPlay(null) }) else null,
           ) {
-            Row(Modifier.padding(horizontal = 12.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(horizontal = 14.dp, vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
               Column(Modifier.weight(1f)) {
                 Text("Gemixt", style = MaterialTheme.typography.titleSmall)
                 Text(

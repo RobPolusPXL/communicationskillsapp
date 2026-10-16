@@ -123,7 +123,7 @@ fun VocabularyScreen(
             fill = if (checked) BlueContainer else Color.White,
             onClick = { selected = if (checked) selected - list.id else selected + list.id },
           ) {
-            Row(Modifier.padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(horizontal = 14.dp, vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
               val avg = view.groupAverage(list.id)
               ProgressRing(avg.toFloat(), color.color(), "${(avg * 100).toInt()}%")
               Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
@@ -152,7 +152,7 @@ fun VocabularyScreen(
             fill = if (mixedOpen) TealLight else Color.White,
             onClick = if (mixedOpen && unlocked) ({ onPlay(level, null, direction) }) else null,
           ) {
-            Row(Modifier.padding(horizontal = 12.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(horizontal = 14.dp, vertical = 18.dp), verticalAlignment = Alignment.CenterVertically) {
               Column(Modifier.weight(1f)) {
                 Text("Gemixt", style = MaterialTheme.typography.titleSmall)
                 Text(
