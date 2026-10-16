@@ -1,6 +1,12 @@
 package com.robpolus.commskills.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.robpolus.commskills.ui.AppViewModel
+import com.robpolus.commskills.ui.screens.SettingsScreen
+import com.robpolus.commskills.ui.screens.TrophiesScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +26,9 @@ object Routes {
 
 @Composable
 fun AppNavHost(nav: NavHostController = rememberNavController()) {
+  val vm: AppViewModel = viewModel()
+  val data by vm.data.collectAsState()
+  val importState by vm.importState.collectAsState()
   NavHost(navController = nav, startDestination = Routes.LOGIN) {
     composable(Routes.LOGIN) {
       LoginScreen(
@@ -30,6 +39,8 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
     }
     composable(Routes.HOME) {
       HomeScreen(
+        data = data,
+        today = vm.today(),
         onVocabulary = { nav.navigate(Routes.VOCABULARY) },
         onGrammar = { nav.navigate(Routes.GRAMMAR) },
         onTrophies = { nav.navigate(Routes.TROPHIES) },
@@ -38,7 +49,17 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
     }
     composable(Routes.VOCABULARY) { PlaceholderScreen("Vocabulary") { nav.popBackStack() } }
     composable(Routes.GRAMMAR) { PlaceholderScreen("Grammar") { nav.popBackStack() } }
-    composable(Routes.TROPHIES) { PlaceholderScreen("Trofeeën") { nav.popBackStack() } }
-    composable(Routes.SETTINGS) { PlaceholderScreen("Instellingen") { nav.popBackStack() } }
+    composable(Routes.TROPHIES) { TrophiesScreen(data) { nav.popBackStack() } }
+    composable(Routes.SETTINGS) {
+      SettingsScreen(
+        data = data,
+        importState = importState,
+        onPickFile = vm::importDocx,
+        onRename = vm::renameImport,
+        onConfirmImport = vm::confirmImport,
+        onCancelImport = vm::cancelImport,
+        onBack = { nav.popBackStack() },
+      )
+    }
   }
 }

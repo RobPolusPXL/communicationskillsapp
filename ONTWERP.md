@@ -3,7 +3,7 @@
 Bouwt voort op [ANALYSE.md](ANALYSE.md). Alles wat in de analyse beslist is, wordt hier niet herhaald. Dit document vult de punten in die Rob aan de ontwikkelaar overliet (§ 14 van de analyse). Zulke **voorstellen** zijn gemarkeerd met 🔶 en wachten op zijn akkoord.
 
 ## 1. Architectuur
-- Android, Kotlin, Jetpack Compose, Gradle (zelfde basis als de maaltijdplanner; minSdk 24, targetSdk 36).
+- Android, Kotlin, Jetpack Compose, Gradle (zelfde basis als de maaltijdplanner; minSdk 26, targetSdk 36).
 - **MVVM** met drie lagen: `ui` (Compose-schermen + ViewModels), `domain` (regels: antwoordcontrole, score, ontgrendeling, examen), `data` (Firebase, import, assets).
 - **Google-login** via Firebase Auth. **Firestore** met offline-persistentie: online bewaard, maar werkt ook zonder internet en synchroniseert achteraf. Er is geen aparte lokale database nodig.
 - Domeinlogica is zuiver Kotlin zonder Android-afhankelijkheden, zodat ze met gewone unit tests getest kan worden.

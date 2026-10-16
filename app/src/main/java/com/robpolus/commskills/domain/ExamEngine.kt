@@ -29,6 +29,13 @@ class ExamEngine(val totalQuestions: Int, val lives: Int = LIVES) {
     return status
   }
 
+  /** Een leven kwijt zonder dat een vraag afgewerkt is (fout koppelen bij matchen). */
+  fun loseLife(): ExamStatus {
+    if (status != ExamStatus.IN_PROGRESS) return status
+    livesLeft--
+    return status
+  }
+
   companion object {
     const val LIVES = 3
     const val VOCABULARY_QUESTIONS = 12

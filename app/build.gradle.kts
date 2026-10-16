@@ -9,7 +9,7 @@ android {
 
   defaultConfig {
     applicationId = "com.robpolus.commskills"
-    minSdk = 24
+    minSdk = 26
     targetSdk = 36
     versionCode = 1
     versionName = "0.1.0"
@@ -47,6 +47,7 @@ dependencies {
   implementation(libs.kotlinx.coroutines.android)
 
   testImplementation(libs.junit)
+  testImplementation(libs.json)
   testImplementation(libs.kotlinx.coroutines.test)
 
   debugImplementation(libs.androidx.compose.ui.tooling)

@@ -49,4 +49,14 @@ class ExamEngineTest {
     assertEquals(2, exam.answered)
     assertEquals(3, exam.livesLeft)
   }
+
+  @Test
+  fun loseLifeDoesNotCountAsAnsweredQuestion() {
+    val e = ExamEngine(2)
+    e.loseLife()
+    assertEquals(2, e.livesLeft)
+    assertEquals(0, e.answered)
+    e.loseLife(); e.loseLife()
+    assertEquals(ExamStatus.FAILED, e.status)
+  }
 }

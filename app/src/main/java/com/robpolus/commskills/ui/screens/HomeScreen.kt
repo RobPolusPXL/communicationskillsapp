@@ -24,11 +24,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.material3.LinearProgressIndicator
+import com.robpolus.commskills.domain.AppData
+import com.robpolus.commskills.domain.Stats
+import com.robpolus.commskills.ui.theme.Correct
 import com.robpolus.commskills.ui.theme.Line
+import java.time.LocalDate
 import com.robpolus.commskills.ui.theme.Streak
 
 @Composable
 fun HomeScreen(
+  data: AppData,
+  today: LocalDate,
   onVocabulary: () -> Unit,
   onGrammar: () -> Unit,
   onTrophies: () -> Unit,
@@ -47,8 +54,8 @@ fun HomeScreen(
     ) {
       Row(verticalAlignment = Alignment.CenterVertically) {
         Icon(Icons.Filled.LocalFireDepartment, contentDescription = null, tint = Streak)
-        // Placeholder: de echte streak volgt bij de streak-stap.
-        Text(" 0 dagen", style = MaterialTheme.typography.titleMedium)
+        val days = Stats.effectiveStreak(data.streak, today)
+        Text(" $days ${if (days == 1) "dag" else "dagen"}", style = MaterialTheme.typography.titleMedium)
       }
       Row {
         IconButton(onClick = onTrophies) {
@@ -61,11 +68,19 @@ fun HomeScreen(
     }
 
     Spacer(Modifier.height(8.dp))
-    // Placeholder: het echte dagdoel volgt bij de dagdoel-stap.
+    val seconds = Stats.todaySeconds(data, today)
+    val reached = seconds >= Stats.DAILY_GOAL_SECONDS
     Text(
-      "Dagdoel: 0 / 10 min",
+      if (reached) "Dagdoel gehaald! ${formatMinutes(seconds)} min" else "Dagdoel: ${formatMinutes(seconds)} / 10:00 min",
       style = MaterialTheme.typography.bodyMedium,
-      color = MaterialTheme.colorScheme.onSurfaceVariant,
+      color = if (reached) Correct else MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+    Spacer(Modifier.height(6.dp))
+    LinearProgressIndicator(
+      progress = { (seconds.toFloat() / Stats.DAILY_GOAL_SECONDS).coerceIn(0f, 1f) },
+      modifier = Modifier.fillMaxWidth().height(8.dp),
+      color = if (reached) Correct else MaterialTheme.colorScheme.primary,
+      trackColor = Line,
     )
 
     Spacer(Modifier.height(24.dp))
