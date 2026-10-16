@@ -76,7 +76,7 @@ class SmokeTest {
     rule.onNodeWithText("Typen").performClick()
     waitForText("Ben je zeker?")
     rule.onNodeWithText("Ja, toch openen").performClick()
-    waitForText("Niveau Typen: 0% (examen vanaf 70%)")
+    waitForText("Niveau Typen")
   }
 
   @Test

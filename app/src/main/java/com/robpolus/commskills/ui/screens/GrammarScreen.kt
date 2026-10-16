@@ -43,6 +43,21 @@ import com.robpolus.commskills.domain.AppData
 import com.robpolus.commskills.domain.Grammar
 import com.robpolus.commskills.domain.GrammarExercise
 import com.robpolus.commskills.ui.theme.Line
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.robpolus.commskills.ui.theme.Blue
+import com.robpolus.commskills.ui.theme.Correct
+import com.robpolus.commskills.ui.theme.Orange2
+import com.robpolus.commskills.ui.theme.Orange2Dark
+import com.robpolus.commskills.ui.theme.Teal
+import com.robpolus.commskills.ui.theme.Wrong
+
+private val OrangeLight = Color(0xFFFFF0DB)
+private val TealLight = Color(0xFFDCF4F1)
+private val typeColors = listOf(Correct, Blue, Orange2, Wrong)
 
 @Composable
 fun GrammarScreen(
@@ -56,57 +71,58 @@ fun GrammarScreen(
   var selected by rememberSaveable { mutableStateOf(setOf<String>()) }
   val view = Grammar.view(data, exercises)
 
-  ScreenScaffold("Grammar", onBack, accent = com.robpolus.commskills.ui.theme.Orange2Dark) { padding ->
+  ScreenScaffold("Grammar", onBack, accent = Orange2Dark) { padding ->
     Column(Modifier.padding(padding)) {
       LazyColumn(
-        modifier = Modifier.weight(1f).padding(horizontal = 16.dp),
+        modifier = Modifier.weight(1f).padding(horizontal = 14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
       ) {
-        item {
-          Text(
-            "If-zinnen: ${(view.percentage() * 100).toInt()}% (examen vanaf 70%)",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(top = 8.dp),
-          )
-          Spacer(Modifier.height(6.dp))
-          LinearProgressIndicator(
-            progress = { view.percentage().toFloat().coerceIn(0f, 1f) },
-            modifier = Modifier.fillMaxWidth().height(8.dp),
-            trackColor = Line,
-          )
-        }
-        item { Text("Kies één of meer types", style = MaterialTheme.typography.titleMedium) }
+        item { Spacer(Modifier.height(2.dp)) }
+        item { LevelProgressCard("If-zinnen", view.percentage(), Orange2, OrangeLight) }
+        item { Text("Kies één of meer types", style = MaterialTheme.typography.titleSmall, color = Color(0xFF44526A)) }
         items(Grammar.types, key = { it }) { type ->
           val group = Grammar.groupId(type)
           val checked = group in selected
           ChunkyCard(
-            edge = if (checked) com.robpolus.commskills.ui.theme.Orange2 else Line,
-            fill = if (checked) com.robpolus.commskills.ui.theme.Orange2.copy(alpha = 0.12f) else androidx.compose.ui.graphics.Color.White,
+            edge = if (checked) Orange2 else Line,
+            fill = if (checked) OrangeLight else Color.White,
             onClick = { selected = if (checked) selected - group else selected + group },
           ) {
-            Row(Modifier.padding(horizontal = 8.dp, vertical = 6.dp), verticalAlignment = Alignment.CenterVertically) {
-              Checkbox(checked = checked, onCheckedChange = { selected = if (it) selected + group else selected - group })
-              Column(Modifier.weight(1f)) {
+            Row(Modifier.padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+              Box(
+                Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(typeColors[type]),
+                contentAlignment = Alignment.Center,
+              ) { Text("$type", color = Color.White, fontWeight = FontWeight.Black, fontSize = 22.sp) }
+              Column(Modifier.weight(1f).padding(horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(Grammar.title(type), style = MaterialTheme.typography.titleSmall)
                 Text(
-                  "${Grammar.subtitle(type)} · ${(view.groupAverage(group) * 100).toInt()}%",
+                  Grammar.subtitle(type),
                   style = MaterialTheme.typography.bodySmall,
                   color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
+                val avg = view.groupAverage(group).toFloat()
+                Box(Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)).background(Color(0xFFE8EBF2))) {
+                  Box(
+                    Modifier.fillMaxWidth(avg.coerceIn(0f, 1f)).height(6.dp).clip(RoundedCornerShape(3.dp))
+                      .background(view.groupColor(group).color()),
+                  )
+                }
               }
-              Box(Modifier.size(18.dp).clip(CircleShape).background(view.groupColor(group).color()))
-              IconButton(onClick = { onOverview(type) }) { Icon(Icons.Filled.Info, contentDescription = "Overzicht") }
+              IconButton(onClick = { onOverview(type) }, modifier = Modifier.size(36.dp)) {
+                Icon(Icons.Filled.Info, contentDescription = "Overzicht", tint = Color(0xFF9AA3B2))
+              }
+              SelectTick(checked, Orange2)
             }
           }
         }
         item {
           val open = view.mixedUnlocked()
           ChunkyCard(
-            edge = if (open) com.robpolus.commskills.ui.theme.Teal else Line,
-            fill = if (open) com.robpolus.commskills.ui.theme.Teal.copy(alpha = 0.10f) else androidx.compose.ui.graphics.Color.White,
+            edge = if (open) Teal else Line,
+            fill = if (open) TealLight else Color.White,
             onClick = if (open) ({ onPlay(null) }) else null,
           ) {
-            Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.padding(horizontal = 12.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
               Column(Modifier.weight(1f)) {
                 Text("Gemixt", style = MaterialTheme.typography.titleSmall)
                 Text(
@@ -115,24 +131,25 @@ fun GrammarScreen(
                   color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
               }
-              if (!open) Icon(Icons.Filled.Lock, contentDescription = "Vergrendeld")
+              if (!open) Icon(Icons.Filled.Lock, contentDescription = "Vergrendeld", tint = Color(0xFF9AA3B2))
             }
           }
         }
-        item { Spacer(Modifier.height(8.dp)) }
+        item { Spacer(Modifier.height(4.dp)) }
       }
-      Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      BottomActions {
         val count = exercises.count { Grammar.groupId(it.type) in selected }
+        val shown = minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }
         ChunkyButton(
           text = when {
             selected.isEmpty() -> "Kies een type om te starten"
-            selected.size == 1 -> "Oefenen (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
-            else -> "${selected.size} types combineren (${minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }} zinnen)"
+            selected.size == 1 -> "Oefenen ($shown zinnen)"
+            else -> "${selected.size} types combineren ($shown zinnen)"
           },
           onClick = { onPlay(Grammar.types.map { Grammar.groupId(it) }.filter { it in selected }) },
           enabled = selected.isNotEmpty(),
-          color = com.robpolus.commskills.ui.theme.Orange2,
-          edge = com.robpolus.commskills.ui.theme.Orange2Dark,
+          color = Orange2,
+          edge = Orange2Dark,
         )
         if (onExam != null) ChunkyOutlineButton(
           text = if (view.examAvailable()) "Examen doen (21 vragen)" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)",
@@ -144,7 +161,6 @@ fun GrammarScreen(
   }
 }
 
-/** Alle zinnen van één type, per zin rood/oranje/groen, met het juiste antwoord ingevuld. */
 @Composable
 fun GrammarOverviewScreen(data: AppData, exercises: List<GrammarExercise>, type: Int, onBack: () -> Unit) {
   val view = Grammar.view(data, exercises)

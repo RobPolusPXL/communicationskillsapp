@@ -1,6 +1,10 @@
 package com.robpolus.commskills.ui.screens
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -158,4 +162,94 @@ fun ChunkyCard(
       content = content,
     )
   }
+}
+
+/** Ronde voortgangsring met het percentage in het midden. */
+@Composable
+fun ProgressRing(progress: Float, color: Color, label: String, modifier: Modifier = Modifier, size: androidx.compose.ui.unit.Dp = 44.dp) {
+  Box(
+    modifier
+      .size(size)
+      .drawBehind {
+        val stroke = 5.dp.toPx()
+        val inset = stroke / 2
+        val arcSize = androidx.compose.ui.geometry.Size(this.size.width - stroke, this.size.height - stroke)
+        val topLeft = androidx.compose.ui.geometry.Offset(inset, inset)
+        drawArc(Color(0xFFE8EBF2), 0f, 360f, false, topLeft, arcSize, style = androidx.compose.ui.graphics.drawscope.Stroke(stroke))
+        if (progress > 0f) {
+          drawArc(
+            color, -90f, 360f * progress.coerceIn(0f, 1f), false, topLeft, arcSize,
+            style = androidx.compose.ui.graphics.drawscope.Stroke(stroke, cap = androidx.compose.ui.graphics.StrokeCap.Round),
+          )
+        }
+      },
+    contentAlignment = Alignment.Center,
+  ) {
+    Text(label, fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFF44526A))
+  }
+}
+
+/** Voortgangsbalk met een gestreepte lijn op 70% (de grens voor het examen). */
+@Composable
+fun ThresholdBar(progress: Float, color: Color, modifier: Modifier = Modifier) {
+  Box(
+    modifier
+      .fillMaxWidth()
+      .height(16.dp)
+      .drawBehind {
+        val r = androidx.compose.ui.geometry.CornerRadius(size.height / 2)
+        drawRoundRect(Color.White, cornerRadius = r)
+        if (progress > 0f) {
+          val w = (size.width * progress.coerceIn(0f, 1f)).coerceAtLeast(size.height)
+          drawRoundRect(color, size = androidx.compose.ui.geometry.Size(w, size.height), cornerRadius = r)
+        }
+        val x = size.width * 0.7f
+        drawLine(
+          Color(0xFF243044).copy(alpha = 0.55f),
+          androidx.compose.ui.geometry.Offset(x, -4.dp.toPx()),
+          androidx.compose.ui.geometry.Offset(x, size.height + 4.dp.toPx()),
+          strokeWidth = 3.dp.toPx(),
+          pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(8f, 8f)),
+        )
+      },
+  )
+}
+
+/** Kaart bovenaan een niveau: titel, balk met examengrens en het percentage. */
+@Composable
+fun LevelProgressCard(title: String, progress: Double, color: Color, light: Color) {
+  Column(
+    Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(light).padding(horizontal = 16.dp, vertical = 14.dp),
+    verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(10.dp),
+  ) {
+    Text(title, style = MaterialTheme.typography.titleMedium)
+    ThresholdBar(progress.toFloat(), color)
+    androidx.compose.foundation.layout.Row(Modifier.fillMaxWidth(), horizontalArrangement = androidx.compose.foundation.layout.Arrangement.SpaceBetween) {
+      Text("${(progress * 100).toInt()}%", style = MaterialTheme.typography.labelLarge, color = Color(0xFF44526A))
+      Text("examen vanaf 70%", style = MaterialTheme.typography.labelMedium, color = Color(0xFF44526A))
+    }
+  }
+}
+
+/** Rond vinkje voor een gekozen item. */
+@Composable
+fun SelectTick(selected: Boolean, color: Color) {
+  Box(
+    Modifier.size(26.dp).clip(androidx.compose.foundation.shape.CircleShape)
+      .background(if (selected) color else Color.White)
+      .border(3.dp, if (selected) color else Line, androidx.compose.foundation.shape.CircleShape),
+    contentAlignment = Alignment.Center,
+  ) {
+    if (selected) Text("✓", color = Color.White, fontWeight = FontWeight.Black, fontSize = 14.sp)
+  }
+}
+
+/** Vaste onderbalk met de hoofdknoppen. */
+@Composable
+fun BottomActions(content: @Composable ColumnScope.() -> Unit) {
+  Column(
+    Modifier.fillMaxWidth().background(Color.White).border(2.dp, Color(0xFFE8EBF2)).padding(horizontal = 14.dp, vertical = 12.dp),
+    verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp),
+    content = content,
+  )
 }
