@@ -154,7 +154,7 @@ fun ChunkyCard(
   val base = modifier.fillMaxWidth().clip(ChunkyShape).background(edge)
   Box(if (onClick != null) base.clickable(onClick = onClick) else base) {
     Column(
-      Modifier.fillMaxWidth().padding(bottom = 4.dp).clip(ChunkyShape).background(fill).border(2.dp, edge, ChunkyShape),
+      Modifier.fillMaxWidth().padding(bottom = 4.dp).clip(ChunkyShape).background(Color.White).background(fill).border(2.dp, edge, ChunkyShape),
       content = content,
     )
   }

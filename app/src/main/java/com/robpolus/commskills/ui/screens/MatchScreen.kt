@@ -155,7 +155,7 @@ private fun TileColumn(
       ) {
         Box(
           Modifier.fillMaxWidth().heightIn(min = 68.dp).padding(bottom = 4.dp).clip(shape)
-            .background(container).border(2.dp, border, shape).padding(12.dp),
+            .background(Color.White).background(container).border(2.dp, border, shape).padding(12.dp),
           contentAlignment = Alignment.Center,
         ) {
           Text(
