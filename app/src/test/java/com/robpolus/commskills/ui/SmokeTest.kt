@@ -19,7 +19,7 @@ import org.robolectric.annotation.Config
 
 /** Start de echte app (Robolectric) en klikt door de belangrijkste schermen. */
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [35])
+@Config(sdk = [35], qualifiers = "w411dp-h2600dp-xxhdpi")
 class SmokeTest {
 
   @get:Rule
