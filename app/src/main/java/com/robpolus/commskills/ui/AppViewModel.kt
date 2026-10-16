@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.robpolus.commskills.CommSkillsApp
 import com.robpolus.commskills.domain.AppData
 import com.robpolus.commskills.importer.DocxListImporter
+import com.robpolus.commskills.notify.ReminderScheduler
 import com.robpolus.commskills.importer.ImportException
 import com.robpolus.commskills.importer.ImportedList
 import com.robpolus.commskills.importer.ListMerge
@@ -33,6 +34,13 @@ open class AppViewModel(application: Application) : AndroidViewModel(application
   fun today(): LocalDate = LocalDate.now()
 
   fun update(transform: (AppData) -> AppData) = repository.update(transform)
+
+  // --- herinneringen -----------------------------------------------------------------------------
+
+  fun setReminder(enabled: Boolean, hour: Int, minute: Int) {
+    repository.update { it.copy(settings = it.settings.copy(reminderEnabled = enabled, reminderHour = hour, reminderMinute = minute)) }
+    ReminderScheduler.schedule(getApplication(), repository.data.value)
+  }
 
   // --- lijsten importeren ------------------------------------------------------------------------
 

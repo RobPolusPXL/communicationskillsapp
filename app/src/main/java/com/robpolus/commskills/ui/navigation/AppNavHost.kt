@@ -18,6 +18,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.robpolus.commskills.ui.AppViewModel
+import com.robpolus.commskills.ui.screens.ReminderSettings
 import com.robpolus.commskills.ui.screens.SettingsScreen
 import com.robpolus.commskills.ui.screens.TrophiesScreen
 import androidx.navigation.NavHostController
@@ -170,6 +171,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onConfirmImport = vm::confirmImport,
         onCancelImport = vm::cancelImport,
         onBack = { nav.popBackStack() },
+        extra = { ReminderSettings(data.settings, vm::setReminder) },
       )
     }
   }

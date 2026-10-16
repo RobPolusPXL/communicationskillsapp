@@ -5,6 +5,7 @@ import com.robpolus.commskills.data.AppRepository
 import com.robpolus.commskills.data.BundledLists
 import com.robpolus.commskills.data.GrammarParser
 import com.robpolus.commskills.domain.GrammarExercise
+import com.robpolus.commskills.notify.ReminderScheduler
 import java.io.File
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,7 @@ class CommSkillsApp : Application() {
     repository = AppRepository(File(filesDir, "appdata.json"), appScope)
     appScope.launch(Dispatchers.IO) {
       repository.update { BundledLists.seed(assets, it) }
+      ReminderScheduler.schedule(this@CommSkillsApp, repository.data.value)
     }
   }
 }
