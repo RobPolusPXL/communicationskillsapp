@@ -27,7 +27,7 @@ sealed class AnswerResult {
 
 /**
  * Controleert getypte antwoorden volgens de regels uit ANALYSE.md / ONTWERP.md § 4:
- * - één juiste vertaling volstaat;
+ * - één juiste vertaling volstaat; tekst tussen haakjes in een woord is optioneel (zie [Variants]);
  * - hoofdletters tellen enkel waar de referentie zelf een hoofdletter heeft;
  * - accenten zijn niet vereist (enkel een melding);
  * - bij NL→EN zijn "to", "a" en "an" optioneel (zonder "to": melding);
@@ -39,9 +39,14 @@ class AnswerChecker {
   fun checkWord(given: String, word: Word, direction: Direction): AnswerResult =
     when (direction) {
       Direction.EN_NL ->
-        check(given, word.nl, lenientPrefixes = false, display = word.nl.joinToString(", "))
+        check(
+          given,
+          word.nl.flatMap { Variants.expandOptional(it) },
+          lenientPrefixes = false,
+          display = word.nl.joinToString(", "),
+        )
       Direction.NL_EN ->
-        check(given, listOf(word.en), lenientPrefixes = true, display = word.en)
+        check(given, Variants.expandOptional(word.en), lenientPrefixes = true, display = word.en)
     }
 
   /**
@@ -64,7 +69,7 @@ class AnswerChecker {
   // ---------------------------------------------------------------------------------------------
 
   private fun matchOne(givenRaw: String, referenceRaw: String, lenient: Boolean): Set<Note>? {
-    var ref = clean(stripType(referenceRaw))
+    var ref = clean(referenceRaw)
     var given = clean(givenRaw)
     if (ref.isEmpty() || given.isEmpty()) return null
 
@@ -138,8 +143,6 @@ class AnswerChecker {
   }
 
   // ---------------------------------------------------------------------------------------------
-
-  private fun stripType(s: String): String = s.replace(Regex("\\s*\\([^)]*\\)\\s*$"), "")
 
   private fun clean(s: String): String =
     s.replace('-', ' ')

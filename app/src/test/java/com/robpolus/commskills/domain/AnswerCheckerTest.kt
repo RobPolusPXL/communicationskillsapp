@@ -80,9 +80,28 @@ class AnswerCheckerTest {
   }
 
   @Test
-  fun typeInReferenceIsIgnored() {
-    val w = word("pursue (v)", "nastreven")
-    assertTrue(checker.checkWord("pursue", w, Direction.NL_EN).isCorrect)
+  fun textInParenthesesIsOptionalInEnglish() {
+    val w = word("touch (upon)", "aanstippen")
+    assertEquals(correct(), checker.checkWord("touch", w, Direction.NL_EN))
+    assertEquals(correct(), checker.checkWord("touch upon", w, Direction.NL_EN))
+    assertEquals(AnswerResult.Wrong("touch (upon)"), checker.checkWord("touch on", w, Direction.NL_EN))
+  }
+
+  @Test
+  fun textInParenthesesIsOptionalInDutch() {
+    val w = word("to pursue", "(na)streven", "streven(d) naar")
+    assertTrue(checker.checkWord("nastreven", w, Direction.EN_NL).isCorrect)
+    assertTrue(checker.checkWord("streven", w, Direction.EN_NL).isCorrect)
+    assertTrue(checker.checkWord("strevend naar", w, Direction.EN_NL).isCorrect)
+    assertTrue(checker.checkWord("streven naar", w, Direction.EN_NL).isCorrect)
+  }
+
+  @Test
+  fun optionalToInsideParenthesesWithVerb() {
+    val w = word("to aspire (to)", "streven naar")
+    assertEquals(correct(), checker.checkWord("to aspire to", w, Direction.NL_EN))
+    assertEquals(correct(), checker.checkWord("to aspire", w, Direction.NL_EN))
+    assertEquals(correct(Note.MISSING_TO), checker.checkWord("aspire to", w, Direction.NL_EN))
   }
 
   @Test
