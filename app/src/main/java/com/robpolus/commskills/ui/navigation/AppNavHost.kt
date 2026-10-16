@@ -1,6 +1,9 @@
 package com.robpolus.commskills.ui.navigation
 
+import android.app.Application
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import com.robpolus.commskills.CommSkillsApp
@@ -47,10 +50,12 @@ object Routes {
 
 @Composable
 fun AppNavHost(nav: NavHostController = rememberNavController()) {
-  val vm: AppViewModel = viewModel()
+  val application = LocalContext.current.applicationContext as Application
+  // Eigen factories: de standaard factory onthoudt statisch de eerste Application (stoort tests).
+  val vm: AppViewModel = viewModel(factory = viewModelFactory { initializer { AppViewModel(application) } })
   val data by vm.data.collectAsState()
   val importState by vm.importState.collectAsState()
-  val practice: PracticeViewModel = viewModel()
+  val practice: PracticeViewModel = viewModel(factory = viewModelFactory { initializer { PracticeViewModel(application) } })
   val grammar = (LocalContext.current.applicationContext as CommSkillsApp).grammar
   val matchUi by practice.match.collectAsState()
   val typeUi by practice.type.collectAsState()
