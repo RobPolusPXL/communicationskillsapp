@@ -195,8 +195,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   }
 
   private fun entriesFor(level: String, groupIds: List<String>?): List<Entry> =
-    (if (groupIds == null) SessionBuilder.mixedEntries(data.value, level)
-    else SessionBuilder.vocabularyEntries(data.value, level, groupIds)).take(SessionBuilder.SESSION_SIZE)
+    SessionBuilder.vocabularySession(data.value, level, groupIds)
 
   private fun allWords() = data.value.lists.flatMap { it.words }
 

@@ -63,8 +63,8 @@ class SmokeTest {
     rule.onNodeWithText("Vocabulary").performClick()
     waitForText("Kies één of meer lijsten")
     rule.onNodeWithText("Trolley problem").performClick()
-    waitForText("Oefenen (10 van 23 woorden)")
-    rule.onNodeWithText("Oefenen (10 van 23 woorden)").performClick()
+    waitForText("Oefenen (23 woorden)")
+    rule.onNodeWithText("Oefenen (23 woorden)").performClick()
     waitForText("Verbind de woorden die bij elkaar horen")
   }
 

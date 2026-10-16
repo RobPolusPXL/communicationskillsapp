@@ -117,7 +117,7 @@ class FlowTest {
   @Test
   fun perfectMatchSessionShowsResultAndTrophy() {
     toHome()
-    openVocabularyList("Trolley problem", "Oefenen (10 van 23 woorden)")
+    openVocabularyList("Trolley problem", "Oefenen (23 woorden)")
     waitForText("Verbind de woorden die bij elkaar horen")
     solveMatch()
     waitForText("Foutloos!")
@@ -132,7 +132,7 @@ class FlowTest {
   @Test
   fun matchMistakesAreRepeatedAndSessionIsNotPerfect() {
     toHome()
-    openVocabularyList("Trolley problem", "Oefenen (10 van 23 woorden)")
+    openVocabularyList("Trolley problem", "Oefenen (23 woorden)")
     waitForText("Verbind de woorden die bij elkaar horen")
     solveMatch(wrong = 1)
     waitForText("Sessie klaar")

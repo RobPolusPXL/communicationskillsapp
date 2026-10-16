@@ -41,6 +41,28 @@ class SessionBuilderTest {
   }
 
   @Test
+  fun vocabularySessionIsHalfWeakestHalfRandom() {
+    var d = AppData(lists = listOf(WordList("a", "A", (1..100).map { w("w$it", "n$it") })))
+    // w1..w20 goed gekend, de rest ongespeeld (score 0)
+    for (i in 1..20) repeat(10) { d = Learning.recordAnswer(d, Levels.VOCAB_TYPE, "a", "w$i", true) }
+    var knownInSession = 0
+    repeat(50) { run ->
+      val s = SessionBuilder.vocabularySession(d, Levels.VOCAB_TYPE, listOf("a"), random = Random(run))
+      assertEquals(40, s.size)
+      assertEquals(40, s.map { it.word.id }.toSet().size)
+      knownInSession += s.count { it.word.id.removePrefix("w").toInt() <= 20 }
+    }
+    // zwakste helft (20) bestaat uit ongespeelde woorden; de gekende komen enkel via de willekeurige helft
+    assertTrue(knownInSession / 50.0 < 6.0)
+  }
+
+  @Test
+  fun smallChoiceGivesAllWords() {
+    val s = SessionBuilder.vocabularySession(sampleData(), Levels.VOCAB_TYPE, null, random = Random(3))
+    assertEquals(5, s.size)
+  }
+
+  @Test
   fun examEntriesAreUnique() {
     val e = SessionBuilder.examEntries(sampleData(), Levels.VOCAB_MATCH, 4, Random(2))
     assertEquals(4, e.size)

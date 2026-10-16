@@ -175,8 +175,8 @@ fun VocabularyScreen(
           Text(
             when {
               selected.isEmpty() -> "Kies een lijst om te starten"
-              selected.size == 1 -> "Oefenen (${minOf(words, SessionBuilder.SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
-              else -> "${selected.size} lijsten combineren (${minOf(words, SessionBuilder.SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
+              selected.size == 1 -> "Oefenen (${minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
+              else -> "${selected.size} lijsten combineren (${minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }} woorden)"
             },
           )
         }
