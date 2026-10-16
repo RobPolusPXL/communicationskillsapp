@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.robpolus.commskills.domain.Levels
 import com.robpolus.commskills.ui.PracticeViewModel
+import com.robpolus.commskills.ui.screens.ExamHearts
 import com.robpolus.commskills.ui.screens.MatchScreen
 import com.robpolus.commskills.ui.screens.ResultScreen
 import com.robpolus.commskills.ui.screens.TypeScreen
@@ -47,6 +48,12 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
   val matchUi by practice.match.collectAsState()
   val typeUi by practice.type.collectAsState()
   val result by practice.result.collectAsState()
+  val examUi by practice.exam.collectAsState()
+
+  fun startExam(level: String) {
+    practice.startExam(level)
+    nav.navigate(if (level == Levels.VOCAB_MATCH) Routes.MATCH else Routes.TYPE)
+  }
 
   // Zodra een sessie klaar is, naar het resultaat.
   LaunchedEffect(result) {
@@ -86,6 +93,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
           }
         },
         onOverview = { level, listId -> nav.navigate(Routes.overview(level, listId)) },
+        onExam = { level -> startExam(level) },
       )
     }
     composable(Routes.OVERVIEW) { entry ->
@@ -101,6 +109,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         ui = matchUi,
         onSelect = practice::selectTile,
         onQuit = { practice.abandon(); nav.popBackStack() },
+        topExtra = { ExamHearts(examUi) },
       )
     }
     composable(Routes.TYPE) {
@@ -109,10 +118,19 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onSubmit = practice::submitAnswer,
         onNext = practice::nextQuestion,
         onQuit = { practice.abandon(); nav.popBackStack() },
+        topExtra = { ExamHearts(examUi) },
       )
     }
     composable(Routes.RESULT) {
-      ResultScreen(result = result, onDone = { practice.clearResult(); nav.popBackStack() })
+      ResultScreen(
+        result = result,
+        onDone = { practice.clearResult(); nav.popBackStack() },
+        onExam = { level ->
+          practice.clearResult()
+          nav.popBackStack()
+          startExam(level)
+        },
+      )
     }
     composable(Routes.GRAMMAR) { PlaceholderScreen("Grammar") { nav.popBackStack() } }
     composable(Routes.TROPHIES) { TrophiesScreen(data) { nav.popBackStack() } }

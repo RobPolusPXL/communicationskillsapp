@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -58,3 +59,22 @@ fun ScreenScaffold(title: String, onBack: () -> Unit, content: @Composable (Padd
 }
 
 fun formatMinutes(seconds: Int): String = "${seconds / 60}:${(seconds % 60).toString().padStart(2, '0')}"
+
+/** Levens en voortgang bovenaan een examen. */
+@Composable
+fun ExamHearts(exam: com.robpolus.commskills.ui.ExamUi?) {
+  if (exam == null) return
+  androidx.compose.foundation.layout.Row(
+    verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+    modifier = Modifier.padding(start = 12.dp),
+  ) {
+    repeat(3) { i ->
+      Icon(
+        androidx.compose.material.icons.Icons.Filled.Favorite,
+        contentDescription = null,
+        tint = if (i < exam.lives) Wrong else Grey,
+        modifier = Modifier.padding(horizontal = 1.dp),
+      )
+    }
+  }
+}

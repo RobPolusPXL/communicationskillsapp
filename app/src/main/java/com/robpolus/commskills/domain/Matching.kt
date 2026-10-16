@@ -103,6 +103,19 @@ class MatchSession(
 
   fun select(side: Side, id: String): MatchEvent = round?.select(side, id) ?: MatchEvent.Ignored
 
+  /**
+   * Uitkomst van een onvoltooide ronde (bij een mislukt examen): enkel woorden die al gekoppeld
+   * of fout gekoppeld zijn, de rest is niet aan bod gekomen.
+   */
+  fun partialOutcome(): List<Pair<Entry, Boolean>> {
+    val current = round ?: return emptyList()
+    return currentEntries.mapNotNull { entry ->
+      val id = entry.word.id
+      val touched = current.isMatched(Side.EN, id) || id in current.mistakenIds
+      if (touched && entry !in unscored) entry to (id !in current.mistakenIds) else null
+    }
+  }
+
   /** Sluit de huidige (volledig gekoppelde) ronde af en start de volgende. */
   fun advance(): RoundOutcome {
     val current = round ?: return RoundOutcome(emptyList())

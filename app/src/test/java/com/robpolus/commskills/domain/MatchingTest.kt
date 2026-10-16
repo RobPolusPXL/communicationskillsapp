@@ -112,4 +112,15 @@ class MatchingTest {
   fun emptySessionIsFinished() {
     assertTrue(MatchSession(emptyList()).finished)
   }
+
+  @Test
+  fun partialOutcomeOnlyHasTouchedWords() {
+    val s = MatchSession(entries(4), repeatMistakes = false, random = Random(4))
+    val round = s.round!!
+    val ids = round.words.map { it.id }
+    s.select(Side.EN, ids[0]); s.select(Side.NL, ids[0])           // juist
+    s.select(Side.EN, ids[1]); s.select(Side.NL, ids[2])           // fout: ids[1] en ids[2]
+    val partial = s.partialOutcome().associate { it.first.word.id to it.second }
+    assertEquals(mapOf(ids[0] to true, ids[1] to false, ids[2] to false), partial)
+  }
 }

@@ -42,11 +42,19 @@ fun ResultScreen(result: ResultUi?, onDone: () -> Unit, onExam: ((String) -> Uni
           modifier = Modifier.fillMaxWidth(),
         )
         Text(
-          if (result.perfect) "100%: alle ${result.total} zonder fout." else "${result.total - result.mistakes.size} van ${result.total} meteen goed.",
+          when {
+            result.message != null -> "${result.mistakes.size} fout${if (result.mistakes.size == 1) "" else "e"} antwoord${if (result.mistakes.size == 1) "" else "en"}."
+            result.perfect -> "100%: alle ${result.total} zonder fout."
+            else -> "${result.total - result.mistakes.size} van ${result.total} meteen goed."
+          },
           modifier = Modifier.fillMaxWidth(),
           textAlign = TextAlign.Center,
           style = MaterialTheme.typography.bodyLarge,
         )
+        result.message?.let {
+          Spacer(Modifier.height(8.dp))
+          Text(it, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center, style = MaterialTheme.typography.bodyLarge)
+        }
         result.levelPercentage?.let {
           Spacer(Modifier.height(8.dp))
           Text(
