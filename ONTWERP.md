@@ -157,7 +157,7 @@ Trofeeën:
 - Een `.docx` is een zip met XML. `DocxListImporter` leest de tabellen met kolommen *Word and Type* · *Explanation/Definition* · *Dutch Translation*, zonder zware bibliotheken.
 - Opvangen van de bekende bijzonderheden: dubbele kolommen door samengevoegde cellen, meerdere tabellen in één bestand, kop-rijen herkennen, Nederlandse varianten splitsen op komma's, `to …`/`a …` en het type `(v)` uit het Engelse veld halen.
 - Na het inlezen een **voorbeeldscherm** met aantal woorden en eventuele problemen vóór bevestigen. Dubbele woorden binnen een lijst worden gemeld.
-- De 7 bestaande lijsten worden via dezelfde importer toegevoegd; de Word-bestanden zelf komen **niet** in de repo.
+- De 7 bestaande lijsten worden via dezelfde importer toegevoegd. Rob heeft bevestigd dat de Word-lijsten gerust in de repo mogen (niet geheim of gevoelig).
 
 ## 11. Grammar-oefeningen bijmaken 🔶
 Aantal: **25 oefenzinnen per if-type** (100 in totaal), zelf geschreven, in dezelfde stijl als de cursus: invullen van een werkwoordsvorm met het werkwoord tussen haakjes. Alle zinnen worden door Rob nagelezen vóór ze in de app komen; elke zin krijgt een correcte antwoordenlijst (varianten zoals `'d`/`would`) en een korte uitleg.
@@ -168,7 +168,7 @@ Aantal: **25 oefenzinnen per if-type** (100 in totaal), zelf geschreven, in deze
 - **Git flow:** `main` = werkend, `develop` = integratie, `feature/*` per onderdeel. Pipeline via GitHub Actions bouwt en test bij elke pull request naar `develop` en `main`; een rode build blokkeert de merge.
 
 ## 13. Privacy en repo
-- De repo is **publiek**. Cursusmateriaal (Word-lijsten, PDF) en geheimen (sleutels, `google-services.json` zoals bij de maaltijdplanner buiten git houden) komen er niet in.
+- De repo is **publiek**. De Word-lijsten mogen er volgens Rob in; geheimen (sleutels, keystores) komen er niet in. Of `google-services.json` in git komt, wordt bij de Firebase-stap bepaald.
 - Firestore-regels: een gebruiker leest en schrijft enkel zijn eigen `users/{uid}/…`.
 
 ## 14. Bouwvolgorde (voorstel) 🔶
