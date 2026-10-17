@@ -32,6 +32,6 @@ class ListMergeTest {
     d = ListMerge.apply(d, imported("Een", word("a", "x2"), word("c", "z")))
     assertEquals(1, d.lists.size)
     assertEquals(listOf("a", "c"), d.lists[0].words.map { it.id })
-    assertEquals(0.3, Learning.vocabularyView(d, Levels.VOCAB_MATCH).score("een", "a"), 1e-9)
+    assertEquals(0.5, Learning.vocabularyView(d, Levels.VOCAB_MATCH).score("een", "a"), 1e-9)
   }
 }

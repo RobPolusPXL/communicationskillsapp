@@ -6,7 +6,7 @@ enum class ListColor { GREY, RED, ORANGE, GREEN, GOLD }
 
 object Scoring {
   /** Gewicht van het nieuwste antwoord in het voortschrijdend gemiddelde. */
-  const val ALPHA = 0.3
+  const val ALPHA = 0.5
 
   /** Vanaf dit niveaupercentage mag het examen gedaan worden. */
   const val EXAM_THRESHOLD = 0.7

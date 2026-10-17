@@ -18,7 +18,7 @@ class LearningTest {
     assertEquals(1, p.correct)
     assertEquals(1, p.wrong)
     assertTrue(p.played)
-    assertEquals(0.7 * 0.3 + 0.3 * 0.0, p.score, 1e-9)
+    assertEquals(0.5 * 0.5 + 0.5 * 0.0, p.score, 1e-9)
   }
 
   @Test
@@ -36,14 +36,16 @@ class LearningTest {
     repeat(20) { for ((g, ids) in Learning.vocabularyGroups(d)) ids.forEach { d = Learning.recordAnswer(d, level, g, it, true) } }
     assertEquals(1.0, Learning.vocabularyView(d, level).percentage(), 0.01)
     val half = Learning.recordAnswer(sampleData(), level, "a", "one", true)
-    assertEquals(0.3 / 5, Learning.vocabularyView(half, level).percentage(), 1e-9)
+    assertEquals(0.5 / 5, Learning.vocabularyView(half, level).percentage(), 1e-9)
   }
 
   @Test
   fun levelReachedWhenPercentageHitsSeventy() {
     var d = AppData(lists = listOf(WordList("a", "A", listOf(w("one", "een")))))
     assertFalse(level in d.levelReached)
-    repeat(4) { d = Learning.recordAnswer(d, level, "a", "one", true) } // 1-0.7^4 = 0.76
+    d = Learning.recordAnswer(d, level, "a", "one", true) // 0.5
+    assertFalse(level in d.levelReached)
+    d = Learning.recordAnswer(d, level, "a", "one", true) // 0.75
     assertTrue(level in d.levelReached)
     assertTrue(Learning.vocabularyView(d, level).examAvailable())
   }

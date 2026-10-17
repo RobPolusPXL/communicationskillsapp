@@ -11,12 +11,12 @@ class ScoringTest {
   fun correctAnswersRaiseTheScore() {
     var score = 0.0
     repeat(3) { score = Scoring.update(score, true) }
-    assertEquals(1 - Math.pow(0.7, 3.0), score, 1e-9)
+    assertEquals(1 - Math.pow(0.5, 3.0), score, 1e-9)
   }
 
   @Test
   fun wrongAnswerLowersTheScore() {
-    assertEquals(0.7, Scoring.update(1.0, false), 1e-9)
+    assertEquals(0.5, Scoring.update(1.0, false), 1e-9)
     assertEquals(0.0, Scoring.update(0.0, false), 1e-9)
   }
 
