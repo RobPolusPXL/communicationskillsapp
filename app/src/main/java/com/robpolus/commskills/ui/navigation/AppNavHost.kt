@@ -19,6 +19,7 @@ import com.robpolus.commskills.ui.screens.GrammarOverviewScreen
 import com.robpolus.commskills.ui.screens.GrammarScreen
 import com.robpolus.commskills.domain.Levels
 import com.robpolus.commskills.ui.PracticeViewModel
+import com.robpolus.commskills.ui.screens.ChoiceScreen
 import com.robpolus.commskills.ui.screens.ExamHearts
 import com.robpolus.commskills.ui.screens.MatchScreen
 import com.robpolus.commskills.ui.screens.ResultScreen
@@ -49,6 +50,7 @@ object Routes {
   const val SETTINGS = "settings"
   const val MATCH = "practice/match"
   const val TYPE = "practice/type"
+  const val CHOICE = "practice/choice"
   const val RESULT = "practice/result"
   const val OVERVIEW = "overview/{level}/{listId}"
   const val GRAMMAR_OVERVIEW = "grammar/overview/{type}"
@@ -69,10 +71,16 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
   val typeUi by practice.type.collectAsState()
   val result by practice.result.collectAsState()
   val examUi by practice.exam.collectAsState()
+  val choiceUi by practice.choice.collectAsState()
 
   fun startExam(level: String) {
     practice.startExam(level)
-    nav.navigate(if (level == Levels.VOCAB_MATCH) Routes.MATCH else Routes.TYPE)
+    nav.navigate(Routes.TYPE)
+  }
+
+  fun startPartExam(level: String, partId: String) {
+    practice.startPartExam(level, partId)
+    nav.navigate(Routes.CHOICE)
   }
 
   // Zodra een sessie klaar is, naar het resultaat.
@@ -146,7 +154,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
           }
         },
         onOverview = { level, listId -> nav.navigate(Routes.overview(level, listId)) },
-        onExam = { level -> startExam(level) },
+        onExam = { level, partId -> startPartExam(level, partId) },
       )
     }
     composable(Routes.OVERVIEW) { entry ->
@@ -170,6 +178,15 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         ui = typeUi,
         onSubmit = practice::submitAnswer,
         onNext = practice::nextQuestion,
+        onQuit = { practice.abandon(); nav.popBackStack() },
+        topExtra = { ExamHearts(examUi) },
+      )
+    }
+    composable(Routes.CHOICE) {
+      ChoiceScreen(
+        ui = choiceUi,
+        onPick = practice::pickOption,
+        onNext = practice::nextChoice,
         onQuit = { practice.abandon(); nav.popBackStack() },
         topExtra = { ExamHearts(examUi) },
       )

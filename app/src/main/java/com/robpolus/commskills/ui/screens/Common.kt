@@ -97,7 +97,7 @@ fun ExamHearts(exam: com.robpolus.commskills.ui.ExamUi?) {
     verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
     modifier = Modifier.padding(start = 12.dp),
   ) {
-    repeat(3) { i ->
+    repeat(exam.maxLives) { i ->
       Icon(
         androidx.compose.material.icons.Icons.Filled.Favorite,
         contentDescription = null,

@@ -39,7 +39,8 @@ import com.robpolus.commskills.domain.AppData
 import com.robpolus.commskills.domain.DirectionChoice
 import com.robpolus.commskills.domain.Learning
 import com.robpolus.commskills.domain.Levels
-import com.robpolus.commskills.domain.ListColor
+import com.robpolus.commskills.domain.PartColor
+import com.robpolus.commskills.domain.Parts
 import com.robpolus.commskills.domain.SessionBuilder
 import com.robpolus.commskills.ui.theme.Blue
 import com.robpolus.commskills.ui.theme.BlueContainer
@@ -60,7 +61,7 @@ fun VocabularyScreen(
   onBack: () -> Unit,
   onPlay: (level: String, groupIds: List<String>?, direction: DirectionChoice) -> Unit,
   onOverview: (level: String, listId: String) -> Unit,
-  onExam: ((level: String) -> Unit)? = null,
+  onExam: ((level: String, partId: String) -> Unit)? = null,
 ) {
   var level by rememberSaveable { mutableStateOf(Levels.VOCAB_MATCH) }
   var confirmed by rememberSaveable { mutableStateOf(setOf<String>()) }
@@ -69,6 +70,7 @@ fun VocabularyScreen(
   var direction by rememberSaveable { mutableStateOf(DirectionChoice.MIXED) }
 
   val view = Learning.vocabularyView(data, level)
+  val parts = Parts.all(data)
   val unlocked = Learning.levelUnlocked(data, level) || level in confirmed
 
   ScreenScaffold("Vocabulary", onBack) { padding ->
@@ -113,32 +115,34 @@ fun VocabularyScreen(
           }
         }
         item { Text("Kies één of meer lijsten", style = MaterialTheme.typography.titleSmall, color = Color(0xFF44526A)) }
-        items(data.lists, key = { it.id }) { list ->
-          val checked = list.id in selected
-          val color = view.groupColor(list.id)
-          val perfect = color == ListColor.GOLD
-          val played = color != ListColor.GREY
+        items(parts, key = { it.id }) { part ->
+          val checked = part.id in selected
+          val pc = Parts.color(data, level, part)
+          val pal = pc.palette()
+          val pct = Parts.percent(view, part)
+          val medal = Parts.medal(data, level, part)
           ChunkyCard(
-            edge = if (checked) Blue else Line,
-            fill = if (checked) BlueContainer else Color.White,
-            onClick = { selected = if (checked) selected - list.id else selected + list.id },
+            edge = if (checked) Blue else pal.edge,
+            fill = pal.fill,
+            onClick = { selected = if (checked) selected - part.id else selected + part.id },
           ) {
             Row(Modifier.padding(horizontal = 14.dp, vertical = 26.dp), verticalAlignment = Alignment.CenterVertically) {
-              val avg = view.groupAverage(list.id)
-              ProgressRing(avg.toFloat(), color.color(), "${(avg * 100).toInt()}%")
+              ProgressRing(pct.toFloat(), pal.ring, "${(pct * 100).toInt()}%")
               Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
-                Text(list.title, style = MaterialTheme.typography.titleSmall)
+                Text(part.title, style = MaterialTheme.typography.titleSmall)
                 Text(
-                  "${list.words.size} woorden" + when {
-                    perfect -> " · foutloos"
-                    !played -> " · nog niet gespeeld"
+                  "${part.words.size} woorden · ${Parts.known(view, part)} gekend" + when (pc) {
+                    PartColor.BRONZE -> " · brons"
+                    PartColor.SILVER -> " · zilver"
+                    PartColor.GOLD -> " · goud"
+                    PartColor.GREEN -> " · klaar voor het examen"
                     else -> ""
                   },
                   style = MaterialTheme.typography.bodySmall,
                   color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
               }
-              IconButton(onClick = { onOverview(level, list.id) }, modifier = Modifier.size(36.dp)) {
+              IconButton(onClick = { onOverview(level, part.listId) }, modifier = Modifier.size(36.dp)) {
                 Icon(Icons.Filled.Info, contentDescription = "Woordenoverzicht", tint = Color(0xFF9AA3B2))
               }
               SelectTick(checked, Blue)
@@ -169,22 +173,33 @@ fun VocabularyScreen(
       }
 
       BottomActions {
-        val words = data.lists.filter { it.id in selected }.sumOf { it.words.size }
+        val chosen = parts.filter { it.id in selected }
+        val words = chosen.sumOf { it.words.size }
         val shown = minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }
         ChunkyButton(
           text = when {
-            selected.isEmpty() -> "Kies een lijst om te starten"
-            selected.size == 1 -> "Oefenen ($shown woorden)"
-            else -> "${selected.size} lijsten combineren ($shown woorden)"
+            chosen.isEmpty() -> "Kies een lijst om te starten"
+            chosen.size == 1 -> "Oefenen ($shown woorden)"
+            else -> "${chosen.size} delen combineren ($shown woorden)"
           },
-          onClick = { onPlay(level, data.lists.map { it.id }.filter { it in selected }, direction) },
-          enabled = selected.isNotEmpty() && unlocked,
+          onClick = { onPlay(level, chosen.map { it.id }, direction) },
+          enabled = chosen.isNotEmpty() && unlocked,
         )
-        if (onExam != null) ChunkyOutlineButton(
-          text = if (view.examAvailable()) "Examen doen" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)",
-          onClick = { onExam(level) },
-          enabled = view.examAvailable() && unlocked,
-        )
+        if (onExam != null) {
+          val single = chosen.singleOrNull()
+          val open = single != null && Parts.examOpen(data, level, single)
+          val next = single?.let { minOf(3, Parts.medal(data, level, it) + 1) } ?: 1
+          val medalName = when (next) { 1 -> "brons"; 2 -> "zilver"; else -> "goud" }
+          ChunkyOutlineButton(
+            text = when {
+              single == null -> "Examen: kies één deel"
+              open -> "Examen doen ($medalName)"
+              else -> "Examen vanaf 70% gekend (nu ${(Parts.percent(view, single) * 100).toInt()}%)"
+            },
+            onClick = { if (single != null) onExam(level, single.id) },
+            enabled = open && unlocked,
+          )
+        }
       }
     }
   }
@@ -268,4 +283,16 @@ private fun DirectionChip(text: String, selected: Boolean, modifier: Modifier, o
       fontWeight = FontWeight.ExtraBold,
     )
   }
+}
+
+private class PartPalette(val edge: Color, val fill: Color, val ring: Color)
+
+private fun PartColor.palette() = when (this) {
+  PartColor.GREY -> PartPalette(Line, Color.White, Color(0xFF9AA3B2))
+  PartColor.RED -> PartPalette(com.robpolus.commskills.ui.theme.Coral, Color(0xFFFFE3E0), com.robpolus.commskills.ui.theme.Coral)
+  PartColor.ORANGE -> PartPalette(com.robpolus.commskills.ui.theme.Orange2, Color(0xFFFFEBD0), com.robpolus.commskills.ui.theme.Orange2)
+  PartColor.GREEN -> PartPalette(com.robpolus.commskills.ui.theme.Correct, Color(0xFFD9F3E3), com.robpolus.commskills.ui.theme.Correct)
+  PartColor.BRONZE -> PartPalette(Color(0xFF9C5B25), Color(0xFFE8B98A), Color(0xFF9C5B25))
+  PartColor.SILVER -> PartPalette(Color(0xFF7D8AA0), Color(0xFFD5DCE8), Color(0xFF7D8AA0))
+  PartColor.GOLD -> PartPalette(Color(0xFFC99700), Color(0xFFFFE27A), Color(0xFFC99700))
 }

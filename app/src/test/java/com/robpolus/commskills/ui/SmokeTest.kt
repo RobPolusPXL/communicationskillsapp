@@ -34,13 +34,13 @@ class SmokeTest {
   }
 
   private fun toHome() {
-    rule.waitUntil(15_000) { app.repository.data.value.lists.size == 7 }
+    rule.waitUntil(15_000) { app.repository.data.value.lists.size == 8 }
     waitForText("Vocabulary")
   }
 
   @Test
   fun bundledListsAreImportedOnFirstStart() {
-    rule.waitUntil(15_000) { app.repository.data.value.lists.size == 7 }
+    rule.waitUntil(15_000) { app.repository.data.value.lists.size == 8 }
     val lists = app.repository.data.value.lists
     assertEquals(
       setOf("Academic writing", "Applying for a job", "Business writing", "Ethical dilemmas", "Moral foreign language effect", "Stanford class", "Trolley problem"),

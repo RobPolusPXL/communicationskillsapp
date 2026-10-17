@@ -30,6 +30,8 @@ object Trophies {
       list += TrophyStatus("level_$level", "Niveau: $title", "70% gehaald in $title", level in data.levelReached)
       list += TrophyStatus("exam_$level", "Examen: $title", "Examen geslaagd voor $title", level in data.examPassed)
     }
+    val medals = data.medals.size
+    list += TrophyStatus("medal", "Medaille", "Een deel van een lijst met een medaille afgerond", medals > 0, medals)
     val perfect = data.sessions.values.sumOf { it.perfectCount }
     list += TrophyStatus("perfect", "100%", "Een lijst of type foutloos gespeeld", perfect > 0, perfect)
     return list

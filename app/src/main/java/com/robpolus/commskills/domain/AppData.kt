@@ -18,6 +18,8 @@ data class WordProgress(
   val correct: Int = 0,
   val wrong: Int = 0,
   val played: Boolean = false,
+  /** Aantal juiste antwoorden na elkaar; een fout zet dit terug op 0. */
+  val streak: Int = 0,
 )
 
 /** Wat er met een groep (lijst of if-type) in een niveau gespeeld is. */
@@ -45,6 +47,8 @@ data class AppData(
   /** Sleutel: "niveau|groep". */
   val sessions: Map<String, SessionStat> = emptyMap(),
   val examPassed: Set<String> = emptySet(),
+  /** Sleutel: "niveau|deel". Waarde: 1 = brons, 2 = zilver, 3 = goud. */
+  val medals: Map<String, Int> = emptyMap(),
   /** Niveaus waar de 70% ooit gehaald is. */
   val levelReached: Set<String> = emptySet(),
   val streak: StreakState = StreakState(),
@@ -58,5 +62,6 @@ data class AppData(
   companion object {
     fun progressKey(level: String, group: String, item: String) = "$level|$group|$item"
     fun sessionKey(level: String, group: String) = "$level|$group"
+    fun medalKey(level: String, partId: String) = "$level|$partId"
   }
 }

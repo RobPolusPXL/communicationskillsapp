@@ -43,7 +43,7 @@ class FlowTest {
   private fun idle() = ShadowLooper.idleMainLooper(3, TimeUnit.SECONDS)
 
   private fun toHome() {
-    rule.waitUntil(15_000) { data.lists.size == 7 }
+    rule.waitUntil(15_000) { data.lists.size == 8 }
     waitForText("Vocabulary")
   }
 
@@ -141,51 +141,80 @@ class FlowTest {
     assertEquals(2, vm.result.value!!.mistakes.size)
   }
 
+  /** Beantwoordt het meerkeuze-examen; `wrong` = aantal bewust foute antwoorden. */
+  private fun answerChoices(wrong: Int = 0) {
+    var mistakes = wrong
+    var guard = 0
+    while (vm.choice.value != null && guard++ < 200) {
+      val ui = vm.choice.value!!
+      val words = data.lists.flatMap { it.words }
+      val correctText = if (ui.label.startsWith("Engels")) words.first { it.en == ui.prompt }.nl.first()
+      else words.first { it.nl.joinToString(", ") == ui.prompt }.en
+      val correctIdx = ui.options.indexOf(correctText)
+      val pick = if (mistakes > 0) { mistakes--; (correctIdx + 1) % ui.options.size } else correctIdx
+      rule.runOnIdle { vm.pickOption(pick); vm.nextChoice() }
+      idle()
+      rule.waitForIdle()
+      if (vm.result.value != null) break
+    }
+  }
+
   @Test
-  fun matchExamPassUnlocksTypingLevel() {
+  fun testListIsSingleSimplePart() {
+    toHome()
+    val part = com.robpolus.commskills.domain.Parts.all(data).first { it.listId == "testlijst" }
+    assertEquals(12, part.words.size)
+  }
+
+  @Test
+  fun partExamPassUnlocksTypingLevelAndGivesBronze() {
     toHome()
     makeExamEligible(Levels.VOCAB_MATCH)
     assertFalse(Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
-    rule.runOnIdle { vm.startExam(Levels.VOCAB_MATCH) }
-    rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives) }
-    solveMatch()
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    rule.runOnIdle { assertEquals(2, vm.exam.value!!.lives); assertEquals(5, vm.choice.value!!.options.size) }
+    answerChoices()
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
     assertTrue(dump(), Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
-    assertTrue(data.examPassed.contains(Levels.VOCAB_MATCH))
+    assertEquals(1, data.medals[com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_MATCH, "testlijst")])
   }
 
   @Test
-  fun matchExamFailsAfterThreeMistakes() {
+  fun partExamAllowsOneMistakeForBronzeButFailsOnTwo() {
     toHome()
     makeExamEligible(Levels.VOCAB_MATCH)
-    rule.runOnIdle { vm.startExam(Levels.VOCAB_MATCH) }
-    solveMatch(wrong = 3)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    answerChoices(wrong = 1)
+    rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
+    rule.runOnIdle { vm.clearResult(); vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
+    answerChoices(wrong = 2)
     rule.runOnIdle { assertEquals("Examen niet gehaald", vm.result.value!!.title) }
-    assertFalse(Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
+    assertTrue(data.medals.keys.none { it.startsWith(Levels.VOCAB_TYPE) })
   }
 
   @Test
-  fun typingSessionAndExam() {
+  fun goldExamFailsOnFirstMistakeAndPassesWhenPerfect() {
     toHome()
-    makeExamEligible(Levels.VOCAB_TYPE)
+    makeExamEligible(Levels.VOCAB_MATCH)
+    val key = com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_MATCH, "testlijst")
+    app.repository.update { it.copy(medals = it.medals + (key to 2)) }
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    rule.runOnIdle { assertEquals(1, vm.exam.value!!.lives) }
+    answerChoices(wrong = 1)
+    rule.runOnIdle { assertEquals("Examen niet gehaald", vm.result.value!!.title) }
+    assertEquals(2, data.medals[key])
+    rule.runOnIdle { vm.clearResult(); vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    answerChoices()
+    rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
+    assertEquals(3, data.medals[key])
+  }
+
+  @Test
+  fun typingSessionPerfect() {
+    toHome()
     rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("trolley_problem"), com.robpolus.commskills.domain.DirectionChoice.MIXED) }
     typeUntilDone()
     rule.runOnIdle { assertEquals("Foutloos!", vm.result.value!!.title) }
-    rule.runOnIdle { vm.clearResult(); vm.startExam(Levels.VOCAB_TYPE) }
-    rule.runOnIdle { assertEquals(12, vm.exam.value!!.total) }
-    typeUntilDone()
-    rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
-    assertTrue(data.examPassed.contains(Levels.VOCAB_TYPE))
-  }
-
-  @Test
-  fun typingExamFailsWithWrongAnswers() {
-    toHome()
-    makeExamEligible(Levels.VOCAB_TYPE)
-    rule.runOnIdle { vm.startExam(Levels.VOCAB_TYPE) }
-    typeUntilDone(correct = false)
-    rule.runOnIdle { assertEquals("Examen niet gehaald", vm.result.value!!.title) }
-    assertFalse(data.examPassed.contains(Levels.VOCAB_TYPE))
   }
 
   @Test

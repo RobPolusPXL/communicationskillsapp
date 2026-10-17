@@ -19,6 +19,9 @@ class LevelView(
   fun wordColor(group: String, item: String): WordColor =
     Scoring.wordColor(score(group, item), played(group, item))
 
+  /** Een woord is gekend na twee juiste antwoorden na elkaar. */
+  fun known(group: String, item: String): Boolean = (progress(group, item)?.streak ?: 0) >= Scoring.KNOWN_STREAK
+
   fun groupAverage(group: String): Double =
     groups[group].orEmpty().let { ids -> if (ids.isEmpty()) 0.0 else ids.map { score(group, it) }.average() }
 
@@ -34,10 +37,16 @@ class LevelView(
   }
 
   /** Gemiddelde woordscore over het hele niveau; ongespeelde woorden tellen als 0. */
-  fun percentage(): Double =
-    Scoring.levelPercentage(groups.flatMap { (group, ids) -> ids.map { score(group, it) } })
+  fun percentage(): Double {
+    val all = groups.flatMap { (group, ids) -> ids.map { group to it } }
+    if (all.isEmpty()) return 0.0
+    return if (Levels.isVocabulary(level)) all.count { (g, i) -> known(g, i) }.toDouble() / all.size
+    else Scoring.levelPercentage(all.map { (g, i) -> score(g, i) })
+  }
 
-  fun examAvailable(): Boolean = Scoring.examAvailable(percentage())
+  /** Woordniveaus: minstens één deel is groen. Grammar: het niveaupercentage haalt 70%. */
+  fun examAvailable(): Boolean =
+    if (Levels.isVocabulary(level)) Parts.all(data).any { Parts.ready(this, it) } else Scoring.examAvailable(percentage())
 
   /** "Gemixt" gaat open nadat alle groepen minstens één keer gespeeld zijn. */
   fun mixedUnlocked(): Boolean = Unlocking.mixedUnlocked(groups.keys.map { groupPlayed(it) })
@@ -68,6 +77,7 @@ object Learning {
       correct = old.correct + if (correct) 1 else 0,
       wrong = old.wrong + if (correct) 0 else 1,
       played = true,
+      streak = if (correct) old.streak + 1 else 0,
     )
     val next = data.copy(progress = data.progress + (key to updated))
     return markLevelReached(next, level)
@@ -88,6 +98,13 @@ object Learning {
       ))
     }
     return data.copy(sessions = sessions)
+  }
+
+  /** Een geslaagd deel-examen: de volgende medaille (max. goud). Het eerste examen ontgrendelt het volgende niveau. */
+  fun awardMedal(data: AppData, level: String, partId: String): AppData {
+    val key = AppData.medalKey(level, partId)
+    val next = minOf(3, (data.medals[key] ?: 0) + 1)
+    return markExamPassed(data.copy(medals = data.medals + (key to next)), level)
   }
 
   fun markExamPassed(data: AppData, level: String): AppData =

@@ -29,7 +29,8 @@ object SessionBuilder {
   ): List<Entry> {
     val view = Learning.vocabularyView(data, level)
     val ids = groupIds ?: data.lists.map { it.id }
-    val entries = data.lists.filter { it.id in ids }.flatMap { list -> list.words.map { Entry(list.id, it) } }
+    val entries = Parts.all(data).filter { it.id in ids || it.listId in ids }
+      .flatMap { part -> part.words.map { Entry(part.listId, it) } }
     if (entries.size <= size) return entries.shuffled(random)
     val weakCount = size / 2
     val weakest = entries.shuffled(random).sortedBy { view.score(it.group, it.word.id) }.take(weakCount)

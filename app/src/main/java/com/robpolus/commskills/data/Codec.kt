@@ -22,13 +22,14 @@ object Codec {
     put("lists", JSONArray().apply { d.lists.forEach { put(encodeList(it)) } })
     put("progress", JSONObject().apply {
       d.progress.forEach { (k, p) ->
-        put(k, JSONArray().put(p.score).put(p.correct).put(p.wrong).put(p.played))
+        put(k, JSONArray().put(p.score).put(p.correct).put(p.wrong).put(p.played).put(p.streak))
       }
     })
     put("sessions", JSONObject().apply {
       d.sessions.forEach { (k, s) -> put(k, JSONArray().put(s.completed).put(s.lastPerfect).put(s.perfectCount)) }
     })
     put("examPassed", JSONArray(d.examPassed.toList()))
+    put("medals", JSONObject().apply { d.medals.forEach { (k, v) -> put(k, v) } })
     put("levelReached", JSONArray(d.levelReached.toList()))
     put("streak", JSONObject().put("current", d.streak.current).put("longest", d.streak.longest)
       .put("lastDate", d.streak.lastDate ?: JSONObject.NULL))
@@ -45,12 +46,13 @@ object Codec {
     return AppData(
       lists = o.optJSONArray("lists").objects().map(::decodeList),
       progress = o.optJSONObject("progress").entries { a ->
-        WordProgress(a.getDouble(0), a.getInt(1), a.getInt(2), a.getBoolean(3))
+        WordProgress(a.getDouble(0), a.getInt(1), a.getInt(2), a.getBoolean(3), a.optInt(4, 0))
       },
       sessions = o.optJSONObject("sessions").entries { a ->
         SessionStat(a.getInt(0), a.getBoolean(1), a.getInt(2))
       },
       examPassed = o.optJSONArray("examPassed").strings().toSet(),
+      medals = o.optJSONObject("medals")?.let { m -> m.keys().asSequence().associateWith { m.getInt(it) } } ?: emptyMap(),
       levelReached = o.optJSONArray("levelReached").strings().toSet(),
       streak = o.optJSONObject("streak")?.let {
         StreakState(it.optInt("current"), it.optInt("longest"), if (it.isNull("lastDate")) null else it.getString("lastDate"))

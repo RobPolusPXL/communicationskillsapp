@@ -8,6 +8,11 @@ import com.robpolus.commskills.domain.ActiveTimer
 import com.robpolus.commskills.domain.AnswerChecker
 import com.robpolus.commskills.domain.AnswerResult
 import com.robpolus.commskills.domain.AppData
+import com.robpolus.commskills.domain.ChoiceBuilder
+import com.robpolus.commskills.domain.ChoiceExamSession
+import com.robpolus.commskills.domain.ChoiceQuestion
+import com.robpolus.commskills.domain.Part
+import com.robpolus.commskills.domain.Parts
 import com.robpolus.commskills.domain.DirectionChoice
 import com.robpolus.commskills.domain.Entry
 import com.robpolus.commskills.domain.ExamEngine
@@ -86,7 +91,21 @@ data class ResultUi(
 )
 
 /** Toestand van een lopend examen (voor de levens bovenaan). */
-data class ExamUi(val lives: Int, val answered: Int, val total: Int)
+data class ExamUi(val lives: Int, val answered: Int, val total: Int, val maxLives: Int = 3)
+
+/** Eén meerkeuzevraag van een deel-examen. */
+data class ChoiceUi(
+  val serial: Int,
+  val number: Int,
+  val total: Int,
+  val prompt: String,
+  val label: String,
+  val options: List<String>,
+  /** Gekozen optie en juiste optie; pas ingevuld nadat er gekozen is. */
+  val picked: Int?,
+  val correctIndex: Int?,
+  val targetMedal: Int,
+)
 
 class PracticeViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -111,6 +130,9 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   private val _exam = MutableStateFlow<ExamUi?>(null)
   val exam: StateFlow<ExamUi?> = _exam
 
+  private val _choice = MutableStateFlow<ChoiceUi?>(null)
+  val choice: StateFlow<ChoiceUi?> = _choice
+
   private val _result = MutableStateFlow<ResultUi?>(null)
   val result: StateFlow<ResultUi?> = _result
 
@@ -125,7 +147,11 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   private var typing: TypingSession<Question>? = null
   private var serial = 0
 
-  private val examEngine: ExamEngine? get() = typing?.exam ?: matchExam
+  private var choiceSession: ChoiceExamSession? = null
+  private var choicePart: Part? = null
+  private var choiceMedal = 0
+
+  private val examEngine: ExamEngine? get() = choiceSession?.engine ?: typing?.exam ?: matchExam
 
   // --- starten -----------------------------------------------------------------------------------
 
@@ -150,28 +176,103 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     publishType(null)
   }
 
+  /** Grammar-examen. */
   fun startExam(level: String) {
     begin(level)
-    when (level) {
-      Levels.VOCAB_MATCH -> {
-        val engine = ExamEngine.vocabulary()
-        matchExam = engine
-        matchEntries = SessionBuilder.examEntries(data.value, level, ExamEngine.VOCABULARY_QUESTIONS)
-        matchSession = MatchSession(matchEntries, repeatMistakes = false)
-        publishMatch()
-      }
-      Levels.VOCAB_TYPE -> {
-        val entries = SessionBuilder.examEntries(data.value, level, ExamEngine.VOCABULARY_QUESTIONS)
-        typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED, pool = allWords()), ExamEngine.vocabulary())
-        publishType(null)
-      }
-      else -> {
-        val questions = Grammar.examExercises(data.value, grammar).map { GrammarQuestion(it) }
-        typing = TypingSession(questions, ExamEngine.grammar())
-        publishType(null)
-      }
-    }
+    val questions = Grammar.examExercises(data.value, grammar).map { GrammarQuestion(it) }
+    typing = TypingSession(questions, ExamEngine.grammar())
+    publishType(null)
     publishExam()
+  }
+
+  /** Meerkeuze-examen over één deel van een woordenlijst. */
+  fun startPartExam(level: String, partId: String) {
+    val part = Parts.all(data.value).firstOrNull { it.id == partId } ?: return
+    begin(level)
+    choicePart = part
+    choiceMedal = Parts.medal(data.value, level, part)
+    val pool = data.value.lists.flatMap { l -> l.words.map { Entry(l.id, it) } }
+    val engine = ExamEngine(part.words.size, ChoiceBuilder.lives(choiceMedal))
+    choiceSession = ChoiceExamSession(ChoiceBuilder.build(part, pool), engine)
+    publishChoice()
+    publishExam()
+  }
+
+  fun pickOption(option: Int) {
+    val session = choiceSession ?: return
+    val q = session.question ?: return
+    touch()
+    val ok = session.pick(option) ?: return
+    repository.update { d ->
+      Stats.registerExercise(Learning.recordAnswer(d, level, q.group, q.id, ok), today())
+    }
+    if (!ok) noteChoiceMistake(q)
+    publishExam()
+    publishChoice()
+  }
+
+  fun nextChoice() {
+    val session = choiceSession ?: return
+    if (session.picked == null) return
+    if (session.finished) {
+      finishChoiceExam()
+    } else {
+      session.next()
+      serial++
+      publishChoice()
+    }
+  }
+
+  private fun noteChoiceMistake(q: ChoiceQuestion) {
+    mistakes.getOrPut(q.group + "/" + q.id) {
+      MistakeLine(q.group + "/" + q.id, q.entry.word.en + (q.entry.word.type?.let { " ($it)" } ?: ""), q.entry.word.nl.joinToString(", "))
+    }
+  }
+
+  private fun publishChoice() {
+    val session = choiceSession ?: return
+    val q = session.question ?: return
+    val picked = session.picked
+    _choice.value = ChoiceUi(
+      serial = serial,
+      number = session.index + 1,
+      total = session.total,
+      prompt = q.prompt,
+      label = q.label,
+      options = q.options,
+      picked = picked,
+      correctIndex = if (picked != null) q.correctIndex else null,
+      targetMedal = minOf(3, choiceMedal + 1),
+    )
+  }
+
+  private fun finishChoiceExam() {
+    val session = choiceSession ?: return
+    val part = choicePart ?: return
+    val passed = session.engine.status == ExamStatus.PASSED
+    val replay = choiceMedal >= 3
+    if (passed && !replay) repository.update { Learning.awardMedal(it, level, part.id) }
+    val after = data.value
+    val medalName = when (minOf(3, choiceMedal + 1)) { 1 -> "brons"; 2 -> "zilver"; else -> "goud" }
+    _result.value = ResultUi(
+      level = level,
+      title = if (passed) "Examen geslaagd!" else "Examen niet gehaald",
+      total = session.total,
+      mistakes = mistakes.values.toList(),
+      perfect = false,
+      newTrophies = Trophies.newlyEarned(before, after),
+      levelPercentage = null,
+      examAvailable = false,
+      message = when {
+        passed && replay -> "Je hebt dit deel al met goud afgerond."
+        passed && level == Levels.VOCAB_MATCH && choiceMedal == 0 -> "Medaille $medalName behaald. Het niveau Typen is ontgrendeld."
+        passed -> "Medaille $medalName behaald voor ${part.title}."
+        session.engine.lives == 1 -> "Goud: één fout is meteen game over. Probeer opnieuw."
+        else -> "Je maakte meer dan één fout. Oefen nog even en probeer opnieuw."
+      },
+      isExam = true,
+    )
+    clearSession()
   }
 
   private fun begin(level: String) {
@@ -186,6 +287,10 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     _match.value = null
     _type.value = null
     _exam.value = null
+    _choice.value = null
+    choiceSession = null
+    choicePart = null
+    choiceMedal = 0
     matchSession = null
     matchExam = null
     matchEntries = emptyList()
@@ -204,7 +309,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
 
   private fun publishExam() {
     val e = examEngine ?: return
-    _exam.value = ExamUi(e.livesLeft, e.answered, e.totalQuestions)
+    _exam.value = ExamUi(e.livesLeft, e.answered, e.totalQuestions, e.lives)
   }
 
   /** Registreert activiteit (actieve oefentijd voor het dagdoel). */
@@ -386,7 +491,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       perfect = perfect,
       newTrophies = Trophies.newlyEarned(before, finalData),
       levelPercentage = view.percentage(),
-      examAvailable = view.examAvailable(),
+      examAvailable = view.examAvailable() && level == Levels.GRAMMAR,
     )
     clearSession()
   }

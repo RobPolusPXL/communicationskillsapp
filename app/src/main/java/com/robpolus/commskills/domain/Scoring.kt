@@ -8,6 +8,12 @@ object Scoring {
   /** Gewicht van het nieuwste antwoord in het voortschrijdend gemiddelde. */
   const val ALPHA = 0.5
 
+  /** Een woord is gekend na zoveel juiste antwoorden na elkaar. */
+  const val KNOWN_STREAK = 2
+
+  /** Vanaf dit percentage gekende woorden is een deel groen (klaar voor het examen). */
+  const val READY = 0.7
+
   /** Vanaf dit niveaupercentage mag het examen gedaan worden. */
   const val EXAM_THRESHOLD = 0.7
 

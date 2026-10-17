@@ -35,8 +35,9 @@ class LearningTest {
     var d = sampleData() // 5 woorden
     repeat(20) { for ((g, ids) in Learning.vocabularyGroups(d)) ids.forEach { d = Learning.recordAnswer(d, level, g, it, true) } }
     assertEquals(1.0, Learning.vocabularyView(d, level).percentage(), 0.01)
-    val half = Learning.recordAnswer(sampleData(), level, "a", "one", true)
-    assertEquals(0.5 / 5, Learning.vocabularyView(half, level).percentage(), 1e-9)
+    var one = sampleData()
+    repeat(2) { one = Learning.recordAnswer(one, level, "a", "one", true) }
+    assertEquals(1.0 / 5, Learning.vocabularyView(one, level).percentage(), 1e-9)
   }
 
   @Test

@@ -9,6 +9,7 @@ import com.robpolus.commskills.importer.ListMerge
 object BundledLists {
 
   private val titles = mapOf(
+    "0_testlijst.docx" to "Testlijst",
     "academic_writing.docx" to "Academic writing",
     "applyingforajob.docx" to "Applying for a job",
     "business_writing.docx" to "Business writing",
