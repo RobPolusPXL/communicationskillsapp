@@ -27,7 +27,11 @@ data class VocabQuestion(
   val synonyms: List<Word> = emptyList(),
   /** Andere woorden met dezelfde Engelse tekst (decrease n/v): hun Nederlandse vertalingen zijn ook goed. */
   val sameEnglish: List<Word> = emptyList(),
+  /** Antwoorden die de gebruiker eerder toch juist vond, in de richting van deze vraag. */
+  val extra: List<String> = emptyList(),
 ) : Question {
+  val extraKey get() = AppData.extraKey(if (toDutch) "nl" else "en", entry.group, word.id)
+
   private val word get() = entry.word
   private val toDutch get() = direction == Direction.EN_NL
 
@@ -43,6 +47,11 @@ data class VocabQuestion(
   override fun check(checker: AnswerChecker, given: String): AnswerResult {
     val own = checker.checkWord(given, word, direction)
     if (own.isCorrect) return own
+    if (extra.isNotEmpty()) {
+      val r = if (toDutch) checker.check(given, extra.flatMap { Variants.expandOptional(it) }, dutch = true)
+      else checker.check(given, extra.flatMap { Variants.expandOptional(it) }, lenientPrefixes = true)
+      if (r is AnswerResult.Correct) return r
+    }
     if (direction == Direction.EN_NL) {
       for (other in sameEnglish) {
         val r = checker.checkWord(given, other, Direction.EN_NL)
@@ -64,6 +73,7 @@ data class VocabQuestion(
       choice: DirectionChoice,
       random: Random = Random.Default,
       pool: List<Word> = entries.map { it.word },
+      extras: Map<String, List<String>> = emptyMap(),
     ): List<VocabQuestion> {
       val byDutch = HashMap<String, MutableList<Word>>()
       for (w in pool) for (nl in w.nl) byDutch.getOrPut(nl.lowercase()) { mutableListOf() }.add(w)
@@ -77,7 +87,8 @@ data class VocabQuestion(
           .filter { it.id != e.word.id || it.en != e.word.en }
           .distinctBy { it.en }
         val same = pool.filter { it.en.equals(e.word.en, ignoreCase = true) && it.id != e.word.id }.distinctBy { it.id }
-        VocabQuestion(e, dir, synonyms, same)
+        val extraKey = AppData.extraKey(if (dir == Direction.EN_NL) "nl" else "en", e.group, e.word.id)
+        VocabQuestion(e, dir, synonyms, same, extras[extraKey].orEmpty())
       }
     }
   }
@@ -121,6 +132,19 @@ class TypingSession<Q : Question>(
   private val attempted = mutableSetOf<Q>()
   private val wrongFirstTry = LinkedHashSet<Q>()
   private val groups = questions.map { it.group }.distinct()
+  private var lastWrongQuestion: Q? = null
+  var lastQuestionAnswered: Q? = null
+    private set
+  private var lastWrongFirst = false
+
+  /** Oefenen: het laatste foute antwoord toch juist rekenen (niet in een examen). */
+  fun forgiveLast(): Boolean {
+    if (exam != null || !queue.forgiveLast()) return false
+    val q = lastWrongQuestion
+    if (q != null && lastWrongFirst) wrongFirstTry -= q
+    lastWrongQuestion = null
+    return true
+  }
 
   val total: Int = questions.size
 
@@ -139,10 +163,12 @@ class TypingSession<Q : Question>(
 
   fun answer(checker: AnswerChecker, given: String): TypedOutcome<Q>? {
     val q = current() ?: return null
+    lastQuestionAnswered = q
     val result = q.check(checker, given)
     val correct = result.isCorrect
     val firstTry = attempted.add(q)
     if (firstTry && !correct) wrongFirstTry += q
+    if (!correct) { lastWrongQuestion = q; lastWrongFirst = firstTry }
     if (exam != null) {
       exam.record(correct)
       examIndex++

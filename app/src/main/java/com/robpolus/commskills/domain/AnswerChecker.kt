@@ -16,6 +16,9 @@ enum class Note {
 
   /** Een ander Engels woord met dezelfde Nederlandse vertaling: ook goed. */
   SYNONYM,
+
+  /** Een deel van een langere vertaling: toch juist. */
+  PARTIAL,
 }
 
 sealed class AnswerResult {
@@ -47,6 +50,7 @@ class AnswerChecker {
           word.nl.flatMap { Variants.expandOptional(it) },
           lenientPrefixes = false,
           display = word.nl.joinToString(", "),
+          dutch = true,
         )
       Direction.NL_EN ->
         check(given, Variants.expandOptional(word.en), lenientPrefixes = true, display = word.en)
@@ -62,16 +66,17 @@ class AnswerChecker {
     accepted: List<String>,
     lenientPrefixes: Boolean = false,
     display: String = accepted.joinToString(", "),
+    dutch: Boolean = false,
   ): AnswerResult {
     val best = accepted
-      .mapNotNull { matchOne(given, it, lenientPrefixes) }
+      .mapNotNull { matchOne(given, it, lenientPrefixes, dutch) }
       .minByOrNull { it.size }
     return if (best != null) AnswerResult.Correct(best) else AnswerResult.Wrong(display)
   }
 
   // ---------------------------------------------------------------------------------------------
 
-  private fun matchOne(givenRaw: String, referenceRaw: String, lenient: Boolean): Set<Note>? {
+  private fun matchOne(givenRaw: String, referenceRaw: String, lenient: Boolean, dutch: Boolean = false): Set<Note>? {
     var ref = clean(referenceRaw)
     var given = clean(givenRaw)
     if (ref.isEmpty() || given.isEmpty()) return null
@@ -85,9 +90,15 @@ class AnswerChecker {
       if (refHasTo && !givenHasTo) notes += Note.MISSING_TO
     }
 
+    if (dutch) {
+      ref = stripDutchFillers(ref)
+      given = stripDutchFillers(given)
+    }
     val refTokens = ref.split(' ')
     val givenTokens = given.split(' ')
-    if (refTokens.size != givenTokens.size) return null
+    if (refTokens.size != givenTokens.size) {
+      return if (dutch && isPartOf(givenTokens, refTokens)) setOf(Note.PARTIAL) else null
+    }
 
     // 1. Exacte vergelijking (met accent- en hoofdlettertolerantie).
     var accentMissing = false
@@ -110,6 +121,23 @@ class AnswerChecker {
       return notes
     }
     return null
+  }
+
+  /** Lidwoorden en lege woordjes ("een", "de", "het", "zich", "iets", "iemand", "ergens") tellen niet mee. */
+  private val dutchFillers = setOf("een", "de", "het", "zich", "iets", "iemand", "ergens")
+
+  private fun stripDutchFillers(s: String): String {
+    val kept = s.split(' ').filter { it.lowercase() !in dutchFillers }
+    return if (kept.isEmpty()) s else kept.joinToString(" ")
+  }
+
+  /** Aaneengesloten deel van de vertaling dat minstens de helft van de woorden dekt. */
+  private fun isPartOf(given: List<String>, ref: List<String>): Boolean {
+    if (given.size >= ref.size || given.size * 2 < ref.size) return false
+    for (start in 0..ref.size - given.size) {
+      if (given.indices.all { compareToken(given[it], ref[start + it]) != TokenMatch.NONE }) return true
+    }
+    return false
   }
 
   private enum class TokenMatch { EXACT, ACCENT, NONE }

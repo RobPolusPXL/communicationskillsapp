@@ -168,4 +168,55 @@ class TypingTest {
     }
     assertFalse(qs[0].check(checker, "huis").isCorrect)
   }
+
+  private fun dutchWord(en: String, vararg nl: String) = Word(en, en, null, "", nl.toList())
+
+  @Test
+  fun dutchArticlesAndFillerWordsAreIgnored() {
+    val w = dutchWord("raise an issue", "een kwestie aansnijden")
+    assertTrue(checker.checkWord("kwestie aansnijden", w, Direction.EN_NL).isCorrect)
+    assertTrue(checker.checkWord("de kwestie aansnijden", w, Direction.EN_NL).isCorrect)
+    val engage = dutchWord("engage", "iemand betrekken")
+    assertTrue(checker.checkWord("betrekken", engage, Direction.EN_NL).isCorrect)
+  }
+
+  @Test
+  fun partOfALongerTranslationIsCorrectWithNote() {
+    val w = dutchWord("leap upwards", "een sprong omhoog maken")
+    val r = checker.checkWord("sprong omhoog", w, Direction.EN_NL)
+    assertTrue(r is AnswerResult.Correct && Note.PARTIAL in r.notes)
+    assertFalse(checker.checkWord("omhoog", w, Direction.EN_NL).isCorrect)
+    assertFalse(checker.checkWord("sprong omlaag", w, Direction.EN_NL).isCorrect)
+  }
+
+  @Test
+  fun extraAnswerIsRememberedAndOnlyAppliesToThatWord() {
+    val w = dutchWord("decline", "afname")
+    val noExtra = VocabQuestion(Entry("l", w), Direction.EN_NL)
+    assertFalse(noExtra.check(checker, "terugval").isCorrect)
+    val key = noExtra.extraKey
+    assertEquals("nl|l|decline", key)
+    val withExtra = VocabQuestion.from(listOf(Entry("l", w)), DirectionChoice.EN_NL, extras = mapOf(key to listOf("terugval"))).single()
+    assertTrue(withExtra.check(checker, "terugval").isCorrect)
+    assertFalse(withExtra.check(checker, "iets anders").isCorrect)
+  }
+
+  @Test
+  fun forgivingLastWrongAnswerRemovesRepeatAndMistake() {
+    val s = TypingSession(listOf(vq("one", "een"), vq("two", "twee")), random = Random(1))
+    s.answer(checker, "fout")
+    assertFalse(s.isPerfect)
+    assertTrue(s.forgiveLast())
+    assertTrue(s.mistakes.isEmpty())
+    s.answer(checker, if (s.current()!!.id == "one") "een" else "twee")
+    assertTrue(s.finished)
+    assertTrue(s.isPerfect)
+  }
+
+  @Test
+  fun examCannotBeForgiven() {
+    val s = TypingSession(listOf(vq("one", "een")), ExamEngine(1, 3))
+    s.answer(checker, "fout")
+    assertFalse(s.forgiveLast())
+  }
 }

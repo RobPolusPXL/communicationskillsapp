@@ -129,6 +129,19 @@ object Learning {
     },
   )
 
+  /** Onthoudt een antwoord dat de gebruiker toch juist vond; het telt voortaan meteen als juist. */
+  fun addExtraAnswer(data: AppData, key: String, text: String): AppData {
+    val clean = text.trim()
+    val old = data.extraAnswers[key].orEmpty()
+    if (clean.isEmpty() || old.any { it.equals(clean, ignoreCase = true) }) return data
+    return data.copy(extraAnswers = data.extraAnswers + (key to old + clean))
+  }
+
+  fun removeExtraAnswer(data: AppData, key: String, text: String): AppData {
+    val left = data.extraAnswers[key].orEmpty().filterNot { it == text }
+    return data.copy(extraAnswers = if (left.isEmpty()) data.extraAnswers - key else data.extraAnswers + (key to left))
+  }
+
   fun markExamPassed(data: AppData, level: String): AppData =
     data.copy(examPassed = data.examPassed + level)
 

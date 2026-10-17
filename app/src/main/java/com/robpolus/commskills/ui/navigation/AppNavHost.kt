@@ -164,6 +164,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         level = entry.arguments?.getString("level").orEmpty(),
         listId = entry.arguments?.getString("listId").orEmpty(),
         onBack = { nav.popBackStack() },
+        onRemoveExtra = { key, text -> vm.update { com.robpolus.commskills.domain.Learning.removeExtraAnswer(it, key, text) } },
       )
     }
     composable(Routes.MATCH) {
@@ -179,6 +180,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         ui = typeUi,
         onSubmit = practice::submitAnswer,
         onNext = practice::nextQuestion,
+        onAccept = practice::acceptAnyway,
         onQuit = { practice.abandon(); nav.popBackStack() },
         topExtra = { ExamHearts(examUi) },
       )

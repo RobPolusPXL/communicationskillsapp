@@ -47,6 +47,8 @@ data class AppData(
   /** Sleutel: "niveau|groep". */
   val sessions: Map<String, SessionStat> = emptyMap(),
   val examPassed: Set<String> = emptySet(),
+  /** Door de gebruiker goedgekeurde extra antwoorden. Sleutel: "nl|lijst|woord" (Nederlands) of "en|lijst|woord". */
+  val extraAnswers: Map<String, List<String>> = emptyMap(),
   /** Sleutel: "niveau|deel". Waarde: 1 = brons, 2 = zilver, 3 = goud. */
   val medals: Map<String, Int> = emptyMap(),
   /** Niveaus waar de 70% ooit gehaald is. */
@@ -62,6 +64,7 @@ data class AppData(
   companion object {
     fun progressKey(level: String, group: String, item: String) = "$level|$group|$item"
     fun sessionKey(level: String, group: String) = "$level|$group"
+    fun extraKey(dir: String, group: String, id: String) = "$dir|$group|$id"
     fun medalKey(level: String, partId: String) = "$level|$partId"
   }
 }

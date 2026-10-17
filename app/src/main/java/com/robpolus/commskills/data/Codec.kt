@@ -29,6 +29,7 @@ object Codec {
       d.sessions.forEach { (k, s) -> put(k, JSONArray().put(s.completed).put(s.lastPerfect).put(s.perfectCount)) }
     })
     put("examPassed", JSONArray(d.examPassed.toList()))
+    put("extraAnswers", JSONObject().apply { d.extraAnswers.forEach { (k, v) -> put(k, JSONArray(v)) } })
     put("medals", JSONObject().apply { d.medals.forEach { (k, v) -> put(k, v) } })
     put("levelReached", JSONArray(d.levelReached.toList()))
     put("streak", JSONObject().put("current", d.streak.current).put("longest", d.streak.longest)
@@ -52,6 +53,7 @@ object Codec {
         SessionStat(a.getInt(0), a.getBoolean(1), a.getInt(2))
       },
       examPassed = o.optJSONArray("examPassed").strings().toSet(),
+      extraAnswers = o.optJSONObject("extraAnswers")?.let { m -> m.keys().asSequence().associateWith { m.getJSONArray(it).strings() } } ?: emptyMap(),
       medals = o.optJSONObject("medals")?.let { m -> m.keys().asSequence().associateWith { m.getInt(it) } } ?: emptyMap(),
       levelReached = o.optJSONArray("levelReached").strings().toSet(),
       streak = o.optJSONObject("streak")?.let {

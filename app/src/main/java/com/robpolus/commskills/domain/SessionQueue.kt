@@ -29,6 +29,19 @@ class SessionQueue<T>(items: List<T>, private val random: Random = Random.Defaul
 
   fun current(): T? = queue.firstOrNull()
 
+  private var lastWrong: T? = null
+  private var lastWrongWasFirst = false
+
+  /** Het laatste foute antwoord toch juist rekenen: de herhaling vervalt en het item is afgewerkt. */
+  fun forgiveLast(): Boolean {
+    val item = lastWrong ?: return false
+    if (!queue.remove(item)) return false
+    completed++
+    if (lastWrongWasFirst) wrongFirstTry.remove(item)
+    lastWrong = null
+    return true
+  }
+
   /** Registreert het antwoord op het huidige item. */
   fun answer(correct: Boolean) {
     val item = queue.removeFirstOrNull() ?: return
@@ -37,6 +50,8 @@ class SessionQueue<T>(items: List<T>, private val random: Random = Random.Defaul
       completed++
     } else {
       if (firstTry) wrongFirstTry.add(item)
+      lastWrong = item
+      lastWrongWasFirst = firstTry
       val position = random.nextInt(3, 6).coerceAtMost(queue.size)
       queue.add(position, item)
     }

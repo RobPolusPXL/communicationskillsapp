@@ -32,6 +32,7 @@ import com.robpolus.commskills.domain.Trophies
 import com.robpolus.commskills.domain.TrophyStatus
 import com.robpolus.commskills.domain.TypingSession
 import com.robpolus.commskills.domain.VocabQuestion
+import com.robpolus.commskills.domain.WordProgress
 import java.time.LocalDate
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,6 +62,8 @@ data class TypeFeedback(
   val given: String,
   val correctAnswer: String,
   val explanation: String,
+  /** Foute vocabulary-vraag in een oefensessie: de gebruiker mag "Toch juist" kiezen. */
+  val canAccept: Boolean = false,
 )
 
 data class TypeUi(
@@ -164,7 +167,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
 
   fun startType(level: String, groupIds: List<String>?, choice: DirectionChoice) {
     begin(level)
-    val questions = VocabQuestion.from(entriesFor(level, groupIds), choice, pool = allWords())
+    val questions = VocabQuestion.from(entriesFor(level, groupIds), choice, pool = allWords(), extras = data.value.extraAnswers)
     typing = TypingSession(questions)
     publishType(null)
   }
@@ -196,7 +199,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     if (level == Levels.VOCAB_TYPE) {
       // Typen: hetzelfde examen, maar de antwoorden worden getypt.
       val entries = part.words.map { Entry(part.listId, it) }.shuffled()
-      typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED, pool = allWords()), engine)
+      typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED, pool = allWords(), extras = data.value.extraAnswers), engine)
       publishType(null)
       publishExam()
       return
@@ -416,7 +419,9 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val outcome = session.answer(checker, answer) ?: return
     val q = outcome.question
     val correct = outcome.result.isCorrect
+    lastPrior = null
     if (outcome.firstTry) {
+      if (q is VocabQuestion) lastPrior = AppData.progressKey(level, q.group, q.id) to data.value.progress[AppData.progressKey(level, q.group, q.id)]
       repository.update { d ->
         val scored = if (q is GrammarQuestion) {
           Grammar.recordAnswer(d, grammar, q.exercise, correct)
@@ -435,8 +440,33 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
         given = answer,
         correctAnswer = q.correctText,
         explanation = q.explanation,
+        canAccept = !correct && q is VocabQuestion && session.exam == null,
       ),
+      q,
     )
+  }
+
+  private var lastPrior: Pair<String, WordProgress?>? = null
+
+  /** "Toch juist": het antwoord telt als juist en wordt bij dit woord onthouden. */
+  fun acceptAnyway() {
+    val session = typing ?: return
+    val ui = _type.value ?: return
+    val feedback = ui.feedback ?: return
+    val q = session.lastQuestionAnswered as? VocabQuestion ?: return
+    if (!feedback.canAccept || !session.forgiveLast()) return
+    val prior = lastPrior
+    repository.update { d ->
+      var next = d
+      if (prior != null) {
+        next = next.copy(progress = if (prior.second == null) next.progress - prior.first else next.progress + (prior.first to prior.second!!))
+        next = Learning.recordAnswer(next, level, q.group, q.id, true)
+      }
+      Learning.addExtraAnswer(next, q.extraKey, feedback.given)
+    }
+    mistakes.remove(q.group + "/" + q.id)
+    lastPrior = null
+    _type.value = ui.copy(feedback = feedback.copy(correct = true, canAccept = false, notes = emptySet()))
   }
 
   private fun noteMistake(q: Question) {
@@ -462,10 +492,10 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     }
   }
 
-  private fun publishType(feedback: TypeFeedback?) {
+  private fun publishType(feedback: TypeFeedback?, answered: Question? = null) {
     val session = typing ?: return
     // Na de laatste vraag blijft de feedback staan tot "Volgende".
-    val q = session.current() ?: run {
+    val q = answered ?: session.current() ?: run {
       _type.value = _type.value?.copy(feedback = feedback ?: _type.value?.feedback, completed = session.completed)
       return
     }

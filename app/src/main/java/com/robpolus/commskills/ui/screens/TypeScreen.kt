@@ -54,6 +54,7 @@ fun noteText(note: Note): String = when (note) {
   Note.MISSING_ACCENT -> "Let op: er ontbreekt een accent."
   Note.MISSING_TO -> "Voor 100% correct moet het ‘to …’ zijn."
   Note.SYNONYM -> "Ook goed: een ander woord met dezelfde vertaling."
+  Note.PARTIAL -> "Let op: dit is een deel van de volledige vertaling."
 }
 
 @Composable
@@ -62,6 +63,7 @@ fun TypeScreen(
   onSubmit: (String) -> Unit,
   onNext: () -> Unit,
   onQuit: () -> Unit,
+  onAccept: () -> Unit = {},
   topExtra: @Composable () -> Unit = {},
 ) {
   var confirmQuit by remember { mutableStateOf(false) }
@@ -121,6 +123,7 @@ fun TypeScreen(
       ChunkyButton("Controleren", onClick = { onSubmit(text) }, enabled = text.isNotBlank())
     } else {
       FeedbackCard(feedback)
+      if (feedback.canAccept) ChunkyOutlineButton("Toch juist", onClick = onAccept)
       ChunkyButton(
         "Volgende",
         onClick = onNext,

@@ -219,4 +219,14 @@ class PartsTest {
     assertTrue(r.progress.keys.any { it.split("|")[1] == "b" })
     assertEquals(setOf("${Levels.VOCAB_MATCH}|b"), r.medals.keys)
   }
+
+  @Test
+  fun extraAnswersAreAddedOnceAndCanBeRemoved() {
+    var d = AppData(lists = listOf(list("a", 2)))
+    d = Learning.addExtraAnswer(d, "nl|a|a1", "terugval")
+    d = Learning.addExtraAnswer(d, "nl|a|a1", "Terugval")
+    assertEquals(listOf("terugval"), d.extraAnswers["nl|a|a1"])
+    d = Learning.removeExtraAnswer(d, "nl|a|a1", "terugval")
+    assertTrue(d.extraAnswers.isEmpty())
+  }
 }

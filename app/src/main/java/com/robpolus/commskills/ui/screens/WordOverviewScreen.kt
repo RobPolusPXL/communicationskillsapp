@@ -24,7 +24,7 @@ import com.robpolus.commskills.domain.Learning
 
 /** Alle woorden van een lijst, per woord rood/oranje/groen volgens de voortgang in dit niveau. */
 @Composable
-fun WordOverviewScreen(data: AppData, level: String, listId: String, onBack: () -> Unit) {
+fun WordOverviewScreen(data: AppData, level: String, listId: String, onBack: () -> Unit, onRemoveExtra: (String, String) -> Unit = { _, _ -> }) {
   val list = data.lists.firstOrNull { it.id == listId }
   val view = Learning.vocabularyView(data, level)
   ScreenScaffold(list?.title ?: "Lijst", onBack) { padding ->
@@ -43,6 +43,15 @@ fun WordOverviewScreen(data: AppData, level: String, listId: String, onBack: () 
               style = MaterialTheme.typography.bodyMedium,
               color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+            for (dir in listOf("nl", "en")) {
+              val key = AppData.extraKey(dir, list.id, word.id)
+              for (extra in data.extraAnswers[key].orEmpty()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                  Text("Ook goed: $extra", style = MaterialTheme.typography.bodySmall, color = com.robpolus.commskills.ui.theme.Correct)
+                  androidx.compose.material3.TextButton(onClick = { onRemoveExtra(key, extra) }) { Text("Verwijder") }
+                }
+              }
+            }
           }
         }
         HorizontalDivider()

@@ -227,6 +227,18 @@ class FlowTest {
   }
 
   @Test
+  fun acceptAnywayRemembersAnswerAndCountsAsCorrect() {
+    toHome()
+    rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("testlijst"), com.robpolus.commskills.domain.DirectionChoice.EN_NL) }
+    rule.runOnIdle { vm.submitAnswer("zzz") }
+    rule.runOnIdle { assertTrue(vm.type.value!!.feedback!!.canAccept) }
+    rule.runOnIdle { vm.acceptAnyway() }
+    rule.runOnIdle { assertTrue(vm.type.value!!.feedback!!.correct) }
+    assertTrue(dump(), data.extraAnswers.values.any { "zzz" in it })
+    assertTrue(data.progress.values.any { it.streak == 1 })
+  }
+
+  @Test
   fun typingSessionPerfect() {
     toHome()
     rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("trolley_problem"), com.robpolus.commskills.domain.DirectionChoice.MIXED) }
