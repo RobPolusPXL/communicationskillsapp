@@ -49,10 +49,10 @@ fun SettingsScreen(
   }
   var resetListId by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
   var confirmReset by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
-  ScreenScaffold("Instellingen", onBack, accent = com.robpolus.commskills.ui.theme.Teal) { padding ->
+  ScreenScaffold("Instellingen", onBack) { padding ->
     LazyColumn(
       modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
-      verticalArrangement = Arrangement.spacedBy(6.dp),
+      verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
       item { extra() }
       item {
@@ -68,12 +68,13 @@ fun SettingsScreen(
         Spacer(Modifier.height(8.dp))
       }
       items(data.lists, key = { it.id }) { list ->
-        Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
-          Text(list.title, modifier = Modifier.weight(1f))
-          Text("${list.words.size} woorden", color = MaterialTheme.colorScheme.onSurfaceVariant)
-          TextButton(onClick = { resetListId = list.id }) { Text("Reset") }
+        ChunkyCard {
+          Row(Modifier.fillMaxWidth().padding(start = 14.dp, end = 4.dp, top = 4.dp, bottom = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+            Text(list.title, modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleSmall)
+            Text("${list.words.size} woorden", color = MaterialTheme.colorScheme.onSurfaceVariant)
+            TextButton(onClick = { resetListId = list.id }) { Text("Reset") }
+          }
         }
-        HorizontalDivider()
       }
     }
   }

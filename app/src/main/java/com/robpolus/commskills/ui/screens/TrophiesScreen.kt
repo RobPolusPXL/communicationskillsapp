@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.robpolus.commskills.domain.AppData
 import com.robpolus.commskills.domain.Trophies
@@ -30,7 +31,7 @@ import com.robpolus.commskills.ui.theme.Line
 @Composable
 fun TrophiesScreen(data: AppData, onBack: () -> Unit) {
   val trophies = Trophies.all(data)
-  ScreenScaffold("Trofeeën", onBack, accent = com.robpolus.commskills.ui.theme.Sun) { padding ->
+  ScreenScaffold("Trofeeën", onBack) { padding ->
     LazyColumn(
       modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
       verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -43,10 +44,9 @@ fun TrophiesScreen(data: AppData, onBack: () -> Unit) {
         )
       }
       items(trophies, key = { it.id }) { t ->
-        Card(
-          modifier = Modifier.fillMaxWidth(),
-          colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-          border = BorderStroke(2.dp, if (t.earned) Gold else Line),
+        ChunkyCard(
+          edge = if (t.earned) Gold else Line,
+          fill = if (t.earned) Color(0xFFFFF6D6) else Color.White,
         ) {
           Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Icon(

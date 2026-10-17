@@ -15,7 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -143,7 +143,7 @@ fun VocabularyScreen(
                 )
               }
               IconButton(onClick = { onOverview(level, part.listId) }, modifier = Modifier.size(36.dp)) {
-                Icon(Icons.Filled.Info, contentDescription = "Woordenoverzicht", tint = Color(0xFF9AA3B2))
+                Icon(Icons.Outlined.Info, contentDescription = "Woordenoverzicht", tint = Color(0xFFB4BBC8))
               }
               SelectTick(checked, Blue)
             }

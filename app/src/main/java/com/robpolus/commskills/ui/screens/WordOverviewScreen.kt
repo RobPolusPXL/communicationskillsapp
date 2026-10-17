@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,9 +30,11 @@ fun WordOverviewScreen(data: AppData, level: String, listId: String, onBack: () 
   val view = Learning.vocabularyView(data, level)
   ScreenScaffold(list?.title ?: "Lijst", onBack) { padding ->
     if (list == null) return@ScreenScaffold
-    LazyColumn(Modifier.padding(padding).padding(horizontal = 16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+    LazyColumn(Modifier.padding(padding).padding(horizontal = 14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+      item { Spacer(Modifier.height(4.dp)) }
       items(list.words, key = { it.id }) { word ->
-        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        ChunkyCard {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
           Box(Modifier.size(14.dp).clip(CircleShape).background(view.wordColor(list.id, word.id).color()))
           Column(Modifier.padding(start = 12.dp)) {
             Text(
@@ -54,8 +57,9 @@ fun WordOverviewScreen(data: AppData, level: String, listId: String, onBack: () 
             }
           }
         }
-        HorizontalDivider()
+        }
       }
+      item { Spacer(Modifier.height(8.dp)) }
     }
   }
 }

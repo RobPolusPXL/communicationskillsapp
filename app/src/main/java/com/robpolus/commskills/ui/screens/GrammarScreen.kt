@@ -16,7 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -71,7 +71,7 @@ fun GrammarScreen(
   var selected by rememberSaveable { mutableStateOf(setOf<String>()) }
   val view = Grammar.view(data, exercises)
 
-  ScreenScaffold("Grammar", onBack, accent = Orange2Dark) { padding ->
+  ScreenScaffold("Grammar", onBack) { padding ->
     Column(Modifier.padding(padding)) {
       LazyColumn(
         modifier = Modifier.weight(1f).padding(horizontal = 14.dp),
@@ -116,7 +116,7 @@ fun GrammarScreen(
                 }
               }
               IconButton(onClick = { onOverview(type) }, modifier = Modifier.size(36.dp)) {
-                Icon(Icons.Filled.Info, contentDescription = "Overzicht", tint = Color(0xFF9AA3B2))
+                Icon(Icons.Outlined.Info, contentDescription = "Overzicht", tint = Color(0xFFB4BBC8))
               }
               SelectTick(checked, Orange2)
             }
@@ -180,8 +180,8 @@ fun GrammarScreen(
 fun GrammarOverviewScreen(data: AppData, exercises: List<GrammarExercise>, type: Int, onBack: () -> Unit) {
   val view = Grammar.view(data, exercises)
   val group = Grammar.groupId(type)
-  ScreenScaffold(Grammar.title(type), onBack, accent = com.robpolus.commskills.ui.theme.Orange2Dark) { padding ->
-    LazyColumn(Modifier.padding(padding).padding(horizontal = 16.dp)) {
+  ScreenScaffold(Grammar.title(type), onBack) { padding ->
+    LazyColumn(Modifier.padding(padding).padding(horizontal = 14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
       item {
         Text(
           Grammar.subtitle(type),
@@ -191,12 +191,14 @@ fun GrammarOverviewScreen(data: AppData, exercises: List<GrammarExercise>, type:
         )
       }
       items(exercises.filter { it.type == type }, key = { it.id }) { e ->
-        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-          Box(Modifier.size(14.dp).clip(CircleShape).background(view.wordColor(group, e.id).color()))
-          Text(e.filled(), modifier = Modifier.padding(start = 12.dp), style = MaterialTheme.typography.bodyMedium)
+        ChunkyCard {
+          Row(Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+            Box(Modifier.size(14.dp).clip(CircleShape).background(view.wordColor(group, e.id).color()))
+            Text(e.filled(), modifier = Modifier.padding(start = 12.dp), style = MaterialTheme.typography.bodyMedium)
+          }
         }
-        HorizontalDivider()
       }
+      item { Spacer(Modifier.height(8.dp)) }
     }
   }
 }
