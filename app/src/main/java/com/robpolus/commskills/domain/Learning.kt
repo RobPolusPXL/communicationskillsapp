@@ -119,6 +119,16 @@ object Learning {
     levelReached = emptySet(),
   )
 
+  /** Zet de voortgang van één lijst terug op 0 (woorden, sessies en medailles van haar delen). */
+  fun resetList(data: AppData, listId: String): AppData = data.copy(
+    progress = data.progress.filterKeys { it.split("|").getOrNull(1) != listId },
+    sessions = data.sessions.filterKeys { it.split("|").getOrNull(1) != listId },
+    medals = data.medals.filterKeys { key ->
+      val part = key.substringAfter("|")
+      part != listId && !part.startsWith("$listId#")
+    },
+  )
+
   fun markExamPassed(data: AppData, level: String): AppData =
     data.copy(examPassed = data.examPassed + level)
 

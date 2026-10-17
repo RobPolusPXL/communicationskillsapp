@@ -291,7 +291,7 @@ private class PartPalette(val edge: Color, val fill: Color, val ring: Color, val
 
 private fun PartColor.palette() = when (this) {
   PartColor.GREY -> PartPalette(Line, Color.White, Color(0xFF9AA3B2))
-  PartColor.PROGRESS -> PartPalette(Color(0xFF1B1F27), Color(0xFF333945), Color(0xFFFFFFFF), dark = true)
+  PartColor.PROGRESS -> PartPalette(Line, Color.White, Color(0xFF1B1F27))
   PartColor.RED -> PartPalette(Color(0xFFFF6B61), Color(0xFFFFD3CF), Color(0xFFFF4B3E))
   PartColor.GREEN -> PartPalette(Color(0xFF34D06A), Color(0xFFBDF5CF), Color(0xFF22B455))
   PartColor.BRONZE -> PartPalette(Color(0xFFF08A3C), Color(0xFFFFC38F), Color(0xFFE3721F))

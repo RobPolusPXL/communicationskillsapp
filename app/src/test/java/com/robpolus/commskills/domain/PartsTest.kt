@@ -208,4 +208,16 @@ class PartsTest {
     assertEquals(3, r.streak.current)
     assertEquals(PartColor.GREY, Parts.color(r, Levels.VOCAB_MATCH, Parts.all(r).single()))
   }
+
+  @Test
+  fun resetListOnlyClearsThatList() {
+    var d = AppData(lists = listOf(list("a", 50), list("b", 10)))
+    for (id in listOf("a1", "b1")) d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, id.take(1), id, true)
+    d = Learning.awardMedal(d, Levels.VOCAB_MATCH, "a#1")
+    d = Learning.awardMedal(d, Levels.VOCAB_MATCH, "b")
+    val r = Learning.resetList(d, "a")
+    assertTrue(r.progress.keys.none { it.split("|")[1] == "a" })
+    assertTrue(r.progress.keys.any { it.split("|")[1] == "b" })
+    assertEquals(setOf("${Levels.VOCAB_MATCH}|b"), r.medals.keys)
+  }
 }

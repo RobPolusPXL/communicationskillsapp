@@ -41,11 +41,13 @@ fun SettingsScreen(
   onCancelImport: () -> Unit,
   onBack: () -> Unit,
   onResetProgress: () -> Unit = {},
+  onResetList: (String) -> Unit = {},
   extra: @Composable () -> Unit = {},
 ) {
   val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
     if (uri != null) onPickFile(uri)
   }
+  var resetListId by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf<String?>(null) }
   var confirmReset by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
   ScreenScaffold("Instellingen", onBack, accent = com.robpolus.commskills.ui.theme.Teal) { padding ->
     LazyColumn(
@@ -56,7 +58,7 @@ fun SettingsScreen(
       item {
         Text("Voortgang", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
         Spacer(Modifier.height(4.dp))
-        ChunkyOutlineButton("Voortgang op 0 zetten", onClick = { confirmReset = true })
+        ChunkyOutlineButton("Alle voortgang op 0 zetten", onClick = { confirmReset = true })
         Spacer(Modifier.height(8.dp))
       }
       item {
@@ -66,13 +68,25 @@ fun SettingsScreen(
         Spacer(Modifier.height(8.dp))
       }
       items(data.lists, key = { it.id }) { list ->
-        Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-          Text(list.title)
+        Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+          Text(list.title, modifier = Modifier.weight(1f))
           Text("${list.words.size} woorden", color = MaterialTheme.colorScheme.onSurfaceVariant)
+          TextButton(onClick = { resetListId = list.id }) { Text("Reset") }
         }
         HorizontalDivider()
       }
     }
+  }
+
+  val listToReset = data.lists.firstOrNull { it.id == resetListId }
+  if (listToReset != null) {
+    AlertDialog(
+      onDismissRequest = { resetListId = null },
+      title = { Text("${listToReset.title} op 0 zetten?") },
+      text = { Text("De voortgang en medailles van deze lijst beginnen opnieuw. Andere lijsten blijven staan.") },
+      confirmButton = { TextButton(onClick = { resetListId = null; onResetList(listToReset.id) }) { Text("Ja, reset") } },
+      dismissButton = { TextButton(onClick = { resetListId = null }) { Text("Annuleren") } },
+    )
   }
 
   if (confirmReset) {
