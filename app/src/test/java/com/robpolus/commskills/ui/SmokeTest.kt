@@ -43,10 +43,10 @@ class SmokeTest {
     rule.waitUntil(15_000) { app.repository.data.value.lists.size == 8 }
     val lists = app.repository.data.value.lists
     assertEquals(
-      setOf("Academic writing", "Applying for a job", "Business writing", "Ethical dilemmas", "Moral foreign language effect", "Stanford class", "Trolley problem"),
+      setOf("Testlijst", "Academic writing", "Applying for a job", "Business writing", "Ethical dilemmas", "Moral foreign language effect", "Stanford class", "Trolley problem"),
       lists.map { it.title }.toSet(),
     )
-    assertEquals(559, lists.sumOf { it.words.size })
+    assertEquals(571, lists.sumOf { it.words.size })
     assertEquals(100, app.grammar.size)
   }
 
