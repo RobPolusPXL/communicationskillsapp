@@ -397,7 +397,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       round = session.roundNumber + 1,
       rounds = session.totalRounds,
       repeat = session.roundNumber >= SessionBuilder.rounds(matchEntries, SessionBuilder.MATCH_ROUND_SIZE).size,
-      en = round.enTiles.map { Tile(it.id, it.en, round.isMatched(Side.EN, it.id)) },
+      en = round.enTiles.map { Tile(it.id, round.enLabel(it), round.isMatched(Side.EN, it.id)) },
       nl = round.nlTiles.map { Tile(it.id, round.nlText(it), round.isMatched(Side.NL, it.id)) },
       selectedEn = selectedEn,
       selectedNl = round.selectedNl,

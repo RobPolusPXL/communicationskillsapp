@@ -29,6 +29,16 @@ class MatchRound(val words: List<Word>, random: Random = Random.Default) {
 
   fun nlText(word: Word): String = word.nl.first()
 
+  /** Staat dezelfde Engelse tekst twee keer in de ronde (decrease n / v), dan komt het woordtype erbij. */
+  fun enLabel(word: Word): String =
+    if (word.type != null && words.count { it.en.equals(word.en, ignoreCase = true) } > 1) "${word.en} (${word.type})" else word.en
+
+  /** Juist als de Nederlandse tekst een vertaling is van dit Engelse woord, of van een woord met dezelfde Engelse tekst. */
+  private fun accepts(en: Word, nlWord: Word): Boolean {
+    val text = nlText(nlWord)
+    return words.any { it.en.equals(en.en, ignoreCase = true) && text in it.nl }
+  }
+
   private val matchedEn = mutableSetOf<String>()
   private val matchedNl = mutableSetOf<String>()
   private val mistaken = mutableSetOf<String>()
@@ -54,7 +64,7 @@ class MatchRound(val words: List<Word>, random: Random = Random.Default) {
     selectedNl = null
     val enWord = words.first { it.id == en }
     val nlWord = words.first { it.id == nl }
-    return if (nlText(nlWord) in enWord.nl) {
+    return if (accepts(enWord, nlWord)) {
       matchedEn += en
       matchedNl += nl
       MatchEvent.Matched(en, nl)

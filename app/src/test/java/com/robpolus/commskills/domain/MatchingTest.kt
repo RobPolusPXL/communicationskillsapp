@@ -48,6 +48,29 @@ class MatchingTest {
   }
 
   @Test
+  fun sameEnglishTextWithDifferentTypeAcceptsEitherDutchTile() {
+    val noun = Word("decrease_n", "decrease", "n", "", listOf("afname", "daling"))
+    val verb = Word("decrease_v", "decrease", "v", "", listOf("afnemen", "dalen"))
+    val r = MatchRound(listOf(noun, verb), Random(1))
+    // het naamwoord-tegeltje aan het werkwoord koppelen is ook juist
+    r.select(Side.EN, "decrease_n")
+    assertTrue(r.select(Side.NL, "decrease_v") is MatchEvent.Matched)
+    r.select(Side.EN, "decrease_v")
+    assertTrue(r.select(Side.NL, "decrease_n") is MatchEvent.Matched)
+    assertTrue(r.isComplete)
+    assertTrue(r.mistakenIds.isEmpty())
+    assertEquals("decrease (n)", r.enLabel(noun))
+    assertEquals("decrease (v)", r.enLabel(verb))
+  }
+
+  @Test
+  fun typeIsOnlyShownWhenEnglishTextIsDuplicated() {
+    val a = Word("a_n", "chair", "n", "", listOf("stoel"))
+    val r = MatchRound(listOf(a, w("table", "tafel")), Random(1))
+    assertEquals("chair", r.enLabel(a))
+  }
+
+  @Test
   fun identicalDutchTextAcceptsEitherTile() {
     val twin = listOf(w("improve", "verbeteren"), w("enhance", "verbeteren"))
     val r = MatchRound(twin, Random(1))
