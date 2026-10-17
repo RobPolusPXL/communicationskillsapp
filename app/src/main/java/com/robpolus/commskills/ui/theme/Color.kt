@@ -2,9 +2,9 @@ package com.robpolus.commskills.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Blue = Color(0xFF2A2D34)
-val BlueDark = Color(0xFF111318)
-val BlueContainer = Color(0xFFE8E9EC)
+val Blue = Color(0xFFE8467C)
+val BlueDark = Color(0xFFBC2A5C)
+val BlueContainer = Color(0xFFFFDFEA)
 val Ink = Color(0xFF1B1F27)
 val InkSoft = Color(0xFF5B6472)
 val Line = Color(0xFFE3E7EE)

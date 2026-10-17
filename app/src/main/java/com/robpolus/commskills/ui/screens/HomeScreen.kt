@@ -194,7 +194,7 @@ private fun BottomNav(onTrophies: () -> Unit, onSettings: () -> Unit) {
 
 @Composable
 private fun NavItem(label: String, icon: androidx.compose.ui.graphics.vector.ImageVector, selected: Boolean, onClick: (() -> Unit)?) {
-  val tint = if (selected) InkColor else Color(0xFF8A93A3)
+  val tint = if (selected) Blue else Color(0xFF8A93A3)
   Column(
     Modifier.clip(RoundedCornerShape(12.dp))
       .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
