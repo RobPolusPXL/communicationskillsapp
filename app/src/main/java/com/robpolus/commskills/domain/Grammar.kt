@@ -51,15 +51,29 @@ object Grammar {
     return Sessions.weightedOrder(chosen, { view.weight(groupId(it.type), it.id) }, random)
   }
 
+  /** Examen per if-type: een willekeurige selectie van hoogstens [count] zinnen van dat type. */
   fun examExercises(
-    data: AppData,
     exercises: List<GrammarExercise>,
-    count: Int = ExamEngine.GRAMMAR_QUESTIONS,
+    type: Int,
+    count: Int = SessionBuilder.TYPE_SESSION_SIZE,
     random: Random = Random.Default,
-  ): List<GrammarExercise> {
+  ): List<GrammarExercise> = exercises.filter { it.type == type }.shuffled(random).take(count)
+
+  /** Zinnen van dit type die gekend zijn (twee keer na elkaar juist) / alle zinnen van het type. */
+  fun knownPercent(data: AppData, exercises: List<GrammarExercise>, type: Int): Double {
     val view = view(data, exercises)
-    return Sessions.examQuestions(exercises, count, { view.weight(groupId(it.type), it.id) }, random)
+    val ofType = exercises.filter { it.type == type }
+    return if (ofType.isEmpty()) 0.0 else ofType.count { view.known(groupId(type), it.id) }.toDouble() / ofType.size
   }
+
+  fun ready(data: AppData, exercises: List<GrammarExercise>, type: Int): Boolean =
+    knownPercent(data, exercises, type) >= Scoring.READY - 1e-9
+
+  fun medal(data: AppData, type: Int): Int = data.medals[AppData.medalKey(Levels.GRAMMAR, groupId(type))] ?: 0
+
+  /** Mag het examen van dit type: 70% gekend, of al een medaille. */
+  fun examOpen(data: AppData, exercises: List<GrammarExercise>, type: Int): Boolean =
+    medal(data, type) > 0 || ready(data, exercises, type)
 
   /** Voor niveaus met een eigen groepsindeling: verwerkt een antwoord en onthoudt of de 70% bereikt is. */
   fun recordAnswer(data: AppData, exercises: List<GrammarExercise>, exercise: GrammarExercise, correct: Boolean): AppData {

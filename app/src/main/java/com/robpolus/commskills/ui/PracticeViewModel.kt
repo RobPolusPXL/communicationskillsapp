@@ -180,11 +180,13 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     publishType(null)
   }
 
-  /** Grammar-examen. */
-  fun startExam(level: String) {
-    begin(level)
-    val questions = Grammar.examExercises(data.value, grammar).map { GrammarQuestion(it) }
-    typing = TypingSession(questions, ExamEngine.grammar())
+  /** Grammar-examen over één if-type: getypt, met medaille en levens zoals bij Vocabulary. */
+  fun startGrammarExam(type: Int) {
+    begin(Levels.GRAMMAR)
+    choicePart = Part(Grammar.groupId(type), Grammar.groupId(type), Grammar.title(type), 1, 1, emptyList())
+    choiceMedal = Grammar.medal(data.value, type)
+    val questions = Grammar.examExercises(grammar, type).map { GrammarQuestion(it) }
+    typing = TypingSession(questions, ExamEngine(questions.size, ChoiceBuilder.lives(choiceMedal)))
     publishType(null)
     publishExam()
   }
@@ -531,7 +533,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       perfect = perfect,
       newTrophies = Trophies.newlyEarned(before, finalData),
       levelPercentage = view.percentage(),
-      examAvailable = view.examAvailable() && level == Levels.GRAMMAR,
+      examAvailable = false,
     )
     clearSession()
   }

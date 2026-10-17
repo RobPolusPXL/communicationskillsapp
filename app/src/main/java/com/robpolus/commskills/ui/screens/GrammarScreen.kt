@@ -66,7 +66,7 @@ fun GrammarScreen(
   onBack: () -> Unit,
   onPlay: (groupIds: List<String>?) -> Unit,
   onOverview: (type: Int) -> Unit,
-  onExam: ((String) -> Unit)? = null,
+  onExam: ((type: Int) -> Unit)? = null,
 ) {
   var selected by rememberSaveable { mutableStateOf(setOf<String>()) }
   val view = Grammar.view(data, exercises)
@@ -104,7 +104,14 @@ fun GrammarScreen(
                 Box(Modifier.fillMaxWidth().height(6.dp).clip(RoundedCornerShape(3.dp)).background(Color(0xFFE8EBF2))) {
                   Box(
                     Modifier.fillMaxWidth(avg.coerceIn(0f, 1f)).height(6.dp).clip(RoundedCornerShape(3.dp))
-                      .background(view.groupColor(group).color()),
+                      .background(
+                        when (Grammar.medal(data, type)) {
+                          1 -> Color(0xFFE39B6B)
+                          2 -> Color(0xFFC9CCD3)
+                          3 -> Color(0xFFFFCB05)
+                          else -> view.groupColor(group).color()
+                        },
+                      ),
                   )
                 }
               }
@@ -140,22 +147,30 @@ fun GrammarScreen(
       BottomActions {
         val count = exercises.count { Grammar.groupId(it.type) in selected }
         val shown = minOf(count, SessionBuilder.SESSION_SIZE).let { if (it < count) "$it van $count" else "$count" }
-        ChunkyButton(
-          text = when {
-            selected.isEmpty() -> "Kies een type om te starten"
-            selected.size == 1 -> "Oefenen ($shown zinnen)"
-            else -> "${selected.size} types combineren ($shown zinnen)"
-          },
-          onClick = { onPlay(Grammar.types.map { Grammar.groupId(it) }.filter { it in selected }) },
-          enabled = selected.isNotEmpty(),
-          color = Orange2,
-          edge = Orange2Dark,
-        )
-        if (onExam != null) ChunkyOutlineButton(
-          text = if (view.examAvailable()) "Examen doen (21 vragen)" else "Examen vanaf 70% (nu ${(view.percentage() * 100).toInt()}%)",
-          onClick = { onExam(com.robpolus.commskills.domain.Levels.GRAMMAR) },
-          enabled = view.examAvailable(),
-        )
+        val singleType = Grammar.types.singleOrNull { Grammar.groupId(it) in selected && selected.size == 1 }
+        val open = singleType != null && Grammar.examOpen(data, exercises, singleType)
+        val playText = when {
+          selected.isEmpty() -> "Kies een type om te starten"
+          selected.size == 1 -> "Oefenen ($shown zinnen)"
+          else -> "${selected.size} types combineren ($shown zinnen)"
+        }
+        val playClick = { onPlay(Grammar.types.map { Grammar.groupId(it) }.filter { it in selected }) }
+        // Klaar voor het examen: het examen wordt de felle knop, oefenen de lichte.
+        if (open) ChunkyOutlineButton(text = playText, onClick = playClick)
+        else ChunkyButton(text = playText, onClick = playClick, enabled = selected.isNotEmpty(), color = Orange2, edge = Orange2Dark)
+        if (onExam != null) {
+          val next = singleType?.let { minOf(3, Grammar.medal(data, it) + 1) } ?: 1
+          val medalName = when (next) { 1 -> "brons"; 2 -> "zilver"; else -> "goud" }
+          val examText = when {
+            singleType == null -> "Examen: kies één type"
+            open -> "Examen doen ($medalName)"
+            else -> "Examen vanaf 70% gekend (nu ${(Grammar.knownPercent(data, exercises, singleType) * 100).toInt()}%)"
+          }
+          if (open && singleType != null) {
+            val (fill, edgeC, textC) = medalButton(next)
+            ChunkyButton(text = examText, onClick = { onExam(singleType) }, color = fill, edge = edgeC, textColor = textC)
+          } else ChunkyOutlineButton(text = examText, onClick = {}, enabled = false)
+        }
       }
     }
   }

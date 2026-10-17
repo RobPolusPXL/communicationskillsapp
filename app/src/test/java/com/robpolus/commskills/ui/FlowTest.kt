@@ -266,10 +266,12 @@ class FlowTest {
       next
     }
     assertTrue(com.robpolus.commskills.domain.Grammar.view(data, app.grammar).examAvailable())
-    rule.runOnIdle { vm.startExam(Levels.GRAMMAR) }
-    rule.runOnIdle { assertEquals(21, vm.exam.value!!.total) }
+    assertTrue(com.robpolus.commskills.domain.Grammar.examOpen(data, app.grammar, 0))
+    rule.runOnIdle { vm.startGrammarExam(0) }
+    rule.runOnIdle { assertEquals(15, vm.exam.value!!.total) }
     typeUntilDone()
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
+    assertEquals(1, com.robpolus.commskills.domain.Grammar.medal(data, 0))
     assertTrue(data.examPassed.contains(Levels.GRAMMAR))
     assertTrue(Levels.GRAMMAR in data.levelReached)
   }

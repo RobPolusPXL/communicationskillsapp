@@ -152,9 +152,9 @@ class TypingTest {
     assertEquals(50, s.size)
     assertTrue(s.all { it.type == 1 || it.type == 3 })
     assertEquals(100, Grammar.sessionExercises(AppData(), exercises, null, Random(1)).size)
-    val exam = Grammar.examExercises(AppData(), exercises, random = Random(2))
-    assertEquals(21, exam.size)
-    assertEquals(21, exam.map { it.id }.toSet().size)
+    val exam = Grammar.examExercises(exercises, 0, random = Random(2))
+    assertEquals(15, exam.size)
+    assertEquals(15, exam.map { it.id }.toSet().size)
     assertNotNull(exam.firstOrNull())
   }
 

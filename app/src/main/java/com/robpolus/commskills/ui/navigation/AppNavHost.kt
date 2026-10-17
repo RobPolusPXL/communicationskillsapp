@@ -73,8 +73,8 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
   val examUi by practice.exam.collectAsState()
   val choiceUi by practice.choice.collectAsState()
 
-  fun startExam(level: String) {
-    practice.startExam(level)
+  fun startGrammarExam(type: Int) {
+    practice.startGrammarExam(type)
     nav.navigate(Routes.TYPE)
   }
 
@@ -198,11 +198,6 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
       ResultScreen(
         result = result,
         onDone = { practice.clearResult(); nav.popBackStack() },
-        onExam = { level ->
-          practice.clearResult()
-          nav.popBackStack()
-          startExam(level)
-        },
       )
     }
     composable(Routes.GRAMMAR) {
@@ -215,7 +210,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
           nav.navigate(Routes.TYPE)
         },
         onOverview = { type -> nav.navigate("grammar/overview/$type") },
-        onExam = { level -> startExam(level) },
+        onExam = { type -> startGrammarExam(type) },
       )
     }
     composable(Routes.GRAMMAR_OVERVIEW) { entry ->

@@ -301,7 +301,7 @@ private fun PartColor.palette() = when (this) {
 }
 
 /** Knopkleur van het volgende examen: brons, zilver of goud. */
-private fun medalButton(next: Int): Triple<Color, Color, Color> = when (next) {
+internal fun medalButton(next: Int): Triple<Color, Color, Color> = when (next) {
   1 -> Triple(Color(0xFFE39B6B), Color(0xFFC27E4F), Color(0xFF2A1608))
   2 -> Triple(Color(0xFFC9CCD3), Color(0xFFA5A9B3), Color(0xFF1E2028))
   else -> Triple(Color(0xFFFFCB05), Color(0xFFE8B000), Color(0xFF2A2100))
