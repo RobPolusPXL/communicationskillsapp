@@ -276,7 +276,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
         passed && level == Levels.VOCAB_MATCH && choiceMedal == 0 -> "Medaille $medalName behaald. Het niveau Typen is ontgrendeld."
         passed -> "Medaille $medalName behaald voor ${part.title}."
         session.engine.lives == 1 -> "Goud: één fout is meteen game over. Probeer opnieuw."
-        else -> "Je maakte meer dan één fout. Oefen nog even en probeer opnieuw."
+        else -> "Te veel fouten voor $medalName. Oefen nog even en probeer opnieuw."
       },
       isExam = true,
     )
@@ -536,7 +536,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
         passed && part != null -> "Medaille $medalName behaald voor ${part.title}."
         passed -> "Gefeliciteerd, dit niveau is afgerond."
         part != null && engine.lives == 1 -> "Goud: één fout is meteen game over. Probeer opnieuw."
-        part != null -> "Je maakte meer dan één fout. Oefen nog even en probeer opnieuw."
+        part != null -> "Te veel fouten voor $medalName. Oefen nog even en probeer opnieuw."
         else -> "Geen leven meer over. Oefen nog even en probeer opnieuw."
       },
       isExam = true,

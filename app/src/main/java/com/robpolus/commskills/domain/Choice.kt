@@ -19,8 +19,8 @@ data class ChoiceQuestion(
 object ChoiceBuilder {
   const val OPTIONS = 5
 
-  /** Levens bij een examen: brons en zilver mogen één fout hebben, goud geen. */
-  fun lives(currentMedal: Int) = if (currentMedal >= 2) 1 else 2
+  /** Levens bij een examen: brons mag 2 fouten, zilver 1, goud 0 (levens = fouten + 1). */
+  fun lives(currentMedal: Int) = when (currentMedal) { 0 -> 3; 1 -> 2; else -> 1 }
 
   /**
    * Alle woorden van [part] als vraag, door elkaar. De helft EN→NL, de helft NL→EN.

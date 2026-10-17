@@ -137,7 +137,7 @@ class PartsTest {
 
   @Test
   fun goldGivesOneLifeOthersTwo() {
-    assertEquals(2, ChoiceBuilder.lives(0))
+    assertEquals(3, ChoiceBuilder.lives(0))
     assertEquals(2, ChoiceBuilder.lives(1))
     assertEquals(1, ChoiceBuilder.lives(2))
     assertEquals(1, ChoiceBuilder.lives(3))
@@ -151,24 +151,23 @@ class PartsTest {
   }
 
   @Test
-  fun bronzeExamAllowsOneMistake() {
-    val s = session(2)
-    var first = true
+  fun bronzeExamAllowsTwoMistakes() {
+    val s = session(3)
+    var wrongLeft = 2
     while (!s.finished) {
       val q = s.question!!
-      val pick = if (first) (q.correctIndex + 1) % q.options.size else q.correctIndex
-      first = false
+      val pick = if (wrongLeft > 0) { wrongLeft--; (q.correctIndex + 1) % q.options.size } else q.correctIndex
       s.pick(pick)
       if (!s.finished) s.next()
     }
     assertEquals(ExamStatus.PASSED, s.engine.status)
-    assertEquals(1, s.mistakes.size)
+    assertEquals(2, s.mistakes.size)
   }
 
   @Test
-  fun bronzeExamFailsOnSecondMistake() {
-    val s = session(2)
-    repeat(2) {
+  fun bronzeExamFailsOnThirdMistake() {
+    val s = session(3)
+    repeat(3) {
       val q = s.question!!
       s.pick((q.correctIndex + 1) % q.options.size)
       if (!s.finished) s.next()

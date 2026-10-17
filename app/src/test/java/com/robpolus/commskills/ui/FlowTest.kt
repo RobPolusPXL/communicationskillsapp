@@ -172,7 +172,7 @@ class FlowTest {
     makeExamEligible(Levels.VOCAB_MATCH)
     assertFalse(Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
     rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
-    rule.runOnIdle { assertEquals(2, vm.exam.value!!.lives); assertEquals(5, vm.choice.value!!.options.size) }
+    rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives); assertEquals(5, vm.choice.value!!.options.size) }
     answerChoices()
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
     assertTrue(dump(), Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
@@ -180,11 +180,11 @@ class FlowTest {
   }
 
   @Test
-  fun partExamAllowsOneMistakeForBronzeButFailsOnTwo() {
+  fun partExamAllowsTwoMistakesForBronze() {
     toHome()
     makeExamEligible(Levels.VOCAB_MATCH)
     rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
-    answerChoices(wrong = 1)
+    answerChoices(wrong = 2)
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
   }
 
