@@ -22,17 +22,30 @@ class ExamEngine(val totalQuestions: Int, val lives: Int = LIVES) {
       else -> ExamStatus.IN_PROGRESS
     }
 
+  private var lastWasMistake = false
+
   fun record(correct: Boolean): ExamStatus {
     if (status != ExamStatus.IN_PROGRESS) return status
     answered++
     if (correct) correctCount++ else livesLeft--
+    lastWasMistake = !correct
     return status
+  }
+
+  /** "Toch juist": het laatste foute antwoord telt alsnog als juist; het leven komt terug. */
+  fun forgiveLast(): Boolean {
+    if (!lastWasMistake) return false
+    lastWasMistake = false
+    livesLeft++
+    correctCount++
+    return true
   }
 
   /** Een leven kwijt zonder dat een vraag afgewerkt is (fout koppelen bij matchen). */
   fun loseLife(): ExamStatus {
     if (status != ExamStatus.IN_PROGRESS) return status
     livesLeft--
+    lastWasMistake = false
     return status
   }
 

@@ -137,9 +137,9 @@ class TypingSession<Q : Question>(
     private set
   private var lastWrongFirst = false
 
-  /** Oefenen: het laatste foute antwoord toch juist rekenen (niet in een examen). */
+  /** Het laatste foute antwoord toch juist rekenen; in een examen komt het leven terug. */
   fun forgiveLast(): Boolean {
-    if (exam != null || !queue.forgiveLast()) return false
+    if (if (exam != null) !exam.forgiveLast() else !queue.forgiveLast()) return false
     val q = lastWrongQuestion
     if (q != null && lastWrongFirst) wrongFirstTry -= q
     lastWrongQuestion = null

@@ -116,7 +116,7 @@ Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De
 
 **Herhaling binnen een sessie:** een fout woord komt 3 à 5 posities verder opnieuw, tot het één keer juist is. Met "Toch juist" haal je die herhaling weg.
 
-**Antwoorden die "toch juist" zijn:** de knop "Toch juist" (enkel bij oefenen, niet in examens) bewaart je antwoord blijvend bij het woord (`extraAnswers`, per richting). Het telt daarna meteen juist en je kan het in het woordenoverzicht (info-icoon) verwijderen. Een reset per lijst laat deze antwoorden staan.
+**Antwoorden die "toch juist" zijn:** de knop "Toch juist" (ook in examens) bewaart je antwoord blijvend bij het woord (`extraAnswers`, per richting). Het telt daarna meteen juist en je kan het in het woordenoverzicht (info-icoon) verwijderen. Een reset per lijst laat deze antwoorden staan.
 
 ## 6. Sessies en oefenvormen
 - **Sessie** = alle woorden van de gekozen lijst(en), in volgorde bepaald door § 5.
@@ -132,7 +132,7 @@ Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De
 - **Toegestane fouten volgens de medaille die je probeert te halen:** brons 2, zilver 1, goud 0 (levens 3 / 2 / 1; de laatste fout is meteen game over).
 - Geslaagd = alle vragen beantwoord zonder alle levens te verliezen → volgende medaille. Mislukt → opnieuw proberen, zonder wachttijd. Bij goud is er niets meer te winnen.
 - De examenknop krijgt de kleur van de volgende medaille en wordt de felle knop zodra het examen open is; oefenen wordt dan de lichte knop.
-- "Toch juist" bestaat niet in examens.
+- "Toch juist" werkt ook in examens: het antwoord telt als juist en het verloren leven komt terug.
 
 ## 8. Streak, dagdoel en trofeeën 🔶
 - **Dag** = kalenderdag in de tijdzone van het toestel.

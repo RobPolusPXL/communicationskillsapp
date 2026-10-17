@@ -444,7 +444,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
         given = answer,
         correctAnswer = q.correctText,
         explanation = q.explanation,
-        canAccept = !correct && q is VocabQuestion && session.exam == null,
+        canAccept = !correct && q is VocabQuestion,
       ),
       q,
     )
@@ -452,7 +452,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
 
   private var lastPrior: Pair<String, WordProgress?>? = null
 
-  /** "Toch juist": het antwoord telt als juist en wordt bij dit woord onthouden. */
+  /** "Toch juist": het antwoord telt als juist (ook in een examen) en wordt bij dit woord onthouden. */
   fun acceptAnyway() {
     val session = typing ?: return
     val ui = _type.value ?: return
@@ -470,6 +470,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     }
     mistakes.remove(q.group + "/" + q.id)
     lastPrior = null
+    publishExam()
     _type.value = ui.copy(feedback = feedback.copy(correct = true, canAccept = false, notes = emptySet()))
   }
 

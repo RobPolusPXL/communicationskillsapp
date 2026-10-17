@@ -51,7 +51,7 @@ object ReminderScheduler {
       PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
     )
     val notification = NotificationCompat.Builder(context, CHANNEL)
-      .setSmallIcon(R.drawable.ic_launcher)
+      .setSmallIcon(R.drawable.ic_stat)
       .setContentTitle("Tijd om te oefenen")
       .setContentText("Houd je streak in leven met een korte oefening.")
       .setContentIntent(open)

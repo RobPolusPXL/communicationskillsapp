@@ -239,6 +239,17 @@ class FlowTest {
   }
 
   @Test
+  fun acceptAnywayInExamGivesLifeBack() {
+    toHome()
+    makeExamEligible(Levels.VOCAB_TYPE)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
+    rule.runOnIdle { vm.submitAnswer("zzz") }
+    rule.runOnIdle { assertEquals(2, vm.exam.value!!.lives); assertTrue(vm.type.value!!.feedback!!.canAccept) }
+    rule.runOnIdle { vm.acceptAnyway() }
+    rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives); assertTrue(vm.type.value!!.feedback!!.correct) }
+  }
+
+  @Test
   fun typingSessionPerfect() {
     toHome()
     rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("trolley_problem"), com.robpolus.commskills.domain.DirectionChoice.MIXED) }

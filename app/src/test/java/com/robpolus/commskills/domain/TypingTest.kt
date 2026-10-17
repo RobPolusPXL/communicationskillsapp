@@ -214,9 +214,23 @@ class TypingTest {
   }
 
   @Test
-  fun examCannotBeForgiven() {
-    val s = TypingSession(listOf(vq("one", "een")), ExamEngine(1, 3))
+  fun examMistakeCanBeForgivenAndGivesLifeBack() {
+    val exam = ExamEngine(2, 1)
+    val s = TypingSession(listOf(vq("one", "een"), vq("two", "twee")), exam)
     s.answer(checker, "fout")
+    assertEquals(ExamStatus.FAILED, exam.status)
+    assertTrue(s.forgiveLast())
+    assertEquals(1, exam.livesLeft)
+    assertEquals(ExamStatus.IN_PROGRESS, exam.status)
+    assertFalse(s.forgiveLast())
+    s.answer(checker, "twee")
+    assertEquals(ExamStatus.PASSED, exam.status)
+  }
+
+  @Test
+  fun examCorrectAnswerCannotBeForgiven() {
+    val s = TypingSession(listOf(vq("one", "een")), ExamEngine(1, 3))
+    s.answer(checker, "een")
     assertFalse(s.forgiveLast())
   }
 }
