@@ -126,7 +126,7 @@ Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De
 - **Combineren:** zelf gekozen lijsten worden één sessie; elk woord telt voor zijn eigen lijst. 🔶 Een gespeelde combinatie telt als gespeeld voor de betrokken lijsten.
 
 ## 7. Examen
-- Een examen hoort bij **één deel** (of één Grammar-type) en opent bij **70% gekend**, of zodra er al een medaille is.
+- Een examen hoort bij **één deel** (of één Grammar-type) en opent bij **70% gekend**, of zodra er al een medaille is. Bij Grammar volstaat **één keer juist** per zin (de moeilijkheid zit in het mixen), dus 70% van de zinnen met een juist laatste antwoord.
 - **Matchen-niveau:** meerkeuze, één woord per vraag, 5 opties, Engels→Nederlands en Nederlands→Engels door elkaar, over alle woorden van het deel.
 - **Typen-niveau en Grammar:** getypt, willekeurige selectie van **hoogstens 15 vragen** uit het deel (Typen: richtingen gemixt).
 - **Toegestane fouten volgens de medaille die je probeert te halen:** brons 2, zilver 1, goud 0 (levens 3 / 2 / 1; de laatste fout is meteen game over).

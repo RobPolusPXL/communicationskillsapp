@@ -59,11 +59,11 @@ object Grammar {
     random: Random = Random.Default,
   ): List<GrammarExercise> = exercises.filter { it.type == type }.shuffled(random).take(count)
 
-  /** Zinnen van dit type die gekend zijn (twee keer na elkaar juist) / alle zinnen van het type. */
+  /** Zinnen van dit type waarvan het laatste antwoord juist was / alle zinnen van het type (één keer juist volstaat). */
   fun knownPercent(data: AppData, exercises: List<GrammarExercise>, type: Int): Double {
     val view = view(data, exercises)
     val ofType = exercises.filter { it.type == type }
-    return if (ofType.isEmpty()) 0.0 else ofType.count { view.known(groupId(type), it.id) }.toDouble() / ofType.size
+    return if (ofType.isEmpty()) 0.0 else ofType.count { view.correctNow(groupId(type), it.id) }.toDouble() / ofType.size
   }
 
   fun ready(data: AppData, exercises: List<GrammarExercise>, type: Int): Boolean =

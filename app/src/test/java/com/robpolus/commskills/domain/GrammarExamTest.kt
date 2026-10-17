@@ -18,14 +18,14 @@ class GrammarExamTest {
   }
 
   @Test
-  fun examOpensAt70PercentKnownOfThatType() {
+  fun examOpensAt70PercentCorrectOfThatType() {
     var d = AppData()
     assertFalse(Grammar.examOpen(d, exercises, 1))
-    // 17 van 25 zinnen twee keer juist = 68%: nog dicht.
-    exercises.filter { it.type == 1 }.take(17).forEach { e -> repeat(2) { d = Grammar.recordAnswer(d, exercises, e, true) } }
+    // 17 van 25 zinnen juist = 68%: nog dicht.
+    exercises.filter { it.type == 1 }.take(17).forEach { e -> d = Grammar.recordAnswer(d, exercises, e, true) }
     assertFalse(Grammar.examOpen(d, exercises, 1))
     // 18 van 25 = 72%: open, maar enkel voor dit type.
-    exercises.filter { it.type == 1 }[17].let { e -> repeat(2) { d = Grammar.recordAnswer(d, exercises, e, true) } }
+    exercises.filter { it.type == 1 }[17].let { e -> d = Grammar.recordAnswer(d, exercises, e, true) }
     assertTrue(Grammar.examOpen(d, exercises, 1))
     assertFalse(Grammar.examOpen(d, exercises, 0))
   }
@@ -47,3 +47,4 @@ class GrammarExamTest {
     assertEquals(1, ChoiceBuilder.lives(2))
   }
 }
+

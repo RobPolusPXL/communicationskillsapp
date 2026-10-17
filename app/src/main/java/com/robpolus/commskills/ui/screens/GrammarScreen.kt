@@ -164,7 +164,7 @@ fun GrammarScreen(
           val examText = when {
             singleType == null -> "Examen: kies één type"
             open -> "Examen doen ($medalName)"
-            else -> "Examen vanaf 70% gekend (nu ${(Grammar.knownPercent(data, exercises, singleType) * 100).toInt()}%)"
+            else -> "Examen vanaf 70% juist (nu ${(Grammar.knownPercent(data, exercises, singleType) * 100).toInt()}%)"
           }
           if (open && singleType != null) {
             val (fill, edgeC, textC) = medalButton(next)
