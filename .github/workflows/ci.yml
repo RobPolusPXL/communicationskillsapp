@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: ["feature/**", "fix/**"]
+  pull_request:
+    branches: [develop, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 9.3.1
+      - name: Unit tests
+        shell: bash
+        run: |
+          set -o pipefail
+          gradle --no-daemon test 2>&1 | tee build.log
+      - name: Debug APK
+        shell: bash
+        run: |
+          set -o pipefail
+          gradle --no-daemon assembleDebug 2>&1 | tee -a build.log
+      - name: Samenvatting van fouten
+        if: failure()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import glob, re
+          for f in sorted(glob.glob('app/build/test-results/**/*.xml', recursive=True)):
+              text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', open(f, encoding='utf-8', errors='replace').read())
+              for m in re.finditer(r'<testcase name="([^"]*)" classname="([^"]*)"[^>]*>\s*<(?:failure|error) message="([^"]*)"[^>]*>(.*?)</(?:failure|error)>', text, re.S):
+                  name, cls, msg, trace = m.groups()
+                  trace = ' | '.join(trace.split('\n')[:6])[:380]
+                  print(f"::error title={cls.split('.')[-1]}.{name}::{msg[:200]} || {trace}".replace('\n', ' '))
+          PY
+          grep -E "^e: |error:|FAILED|What went wrong|Caused by" build.log | head -4 | while IFS= read -r line; do
+            echo "::error::${line:0:400}"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: app/build/reports/tests
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk

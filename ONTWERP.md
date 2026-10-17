@@ -3,7 +3,7 @@
 Bouwt voort op [ANALYSE.md](ANALYSE.md). Alles wat in de analyse beslist is, wordt hier niet herhaald. Dit document vult de punten in die Rob aan de ontwikkelaar overliet (§ 14 van de analyse). Zulke **voorstellen** zijn gemarkeerd met 🔶 en wachten op zijn akkoord.
 
 ## 1. Architectuur
-- Android, Kotlin, Jetpack Compose, Gradle (zelfde basis als de maaltijdplanner; minSdk 24, targetSdk 36).
+- Android, Kotlin, Jetpack Compose, Gradle (zelfde basis als de maaltijdplanner; minSdk 26, targetSdk 36).
 - **MVVM** met drie lagen: `ui` (Compose-schermen + ViewModels), `domain` (regels: antwoordcontrole, score, ontgrendeling, examen), `data` (Firebase, import, assets).
 - **Google-login** via Firebase Auth. **Firestore** met offline-persistentie: online bewaard, maar werkt ook zonder internet en synchroniseert achteraf. Er is geen aparte lokale database nodig.
 - Domeinlogica is zuiver Kotlin zonder Android-afhankelijkheden, zodat ze met gewone unit tests getest kan worden.
@@ -31,20 +31,20 @@ Login ─► Home ─┬─► Vocabulary-route ─► Lijst kiezen/combineren �
 
 | Scherm | Inhoud |
 |---|---|
-| **Home** | Twee routes (Vocabulary, Grammar), streak, dagdoel-voortgang (x/10 min) |
+| **Home** | Leerpad met Vocabulary- en Grammar-knoop, weekkaart met dagbolletjes en dagdoelbalk ("Vandaag x van 10:00 min"), streak, onderbalk Start / Trofeeën / Instellingen |
 | **Route** | Niveaupad (Matchen → Typen; Grammar: één niveau). Vergrendelde niveaus met slotje. Lijsttegels in rood/groen/goud. Meerdere lijsten aanvinken om te combineren. Tegel "Gemixt" vergrendeld tot alle lijsten gespeeld zijn. Knop "Examen" actief vanaf 70%. |
 | **Woordenoverzicht** | Per lijst alle woorden, per woord rood of groen |
 | **Matchen** | 6 Engelse + 6 Nederlandse woorden, tikken om te verbinden, kleurt meteen groen/rood. Knop (i) toont de Engelse uitleg. |
 | **Typen** | Prompt, invoerveld, controleren, feedback (juist / typo / "to"-melding / accentmelding / fout + juiste oplossing + uitleg) |
 | **Grammar** | Zin met opening, ontbrekend stuk typen, feedback zoals bij Typen + korte uitleg van de regel |
-| **Examen** | Voortgang (n/12 of n/21), 3 levens, zelfde oefenvorm als het niveau |
+| **Examen** | Voortgang (n/totaal), levens volgens de medaille (§ 7), meerkeuze bij Matchen, getypt bij Typen en Grammar |
 | **Resultaat** | Score, foute woorden met juiste oplossing, nieuwe trofeeën |
 | **Trofeeën** | Alle trofeeën, behaalde in kleur, met tellers waar van toepassing |
 | **Instellingen** | Herinneringsuur, lijst importeren, uitloggen |
 
 Waarschuwingsdialoog bij het aanklikken van een vergrendeld niveau: "Ben je zeker? Je bent mogelijk nog niet klaar voor dit niveau." met Ja/Nee.
 
-Stijl: witte achtergrond, rustige kleuren, grote duidelijke knoppen, eigen identiteit (geen kopie van Duolingo).
+Stijl: witte achtergrond, hoofdkleur **Framboos** (#E8467C), statuskleuren groen #3DDC84 · rood #FF4B4B · brons #E39B6B · zilver #C9CCD3 · goud #FFCB05, dikke afgeronde kaarten en knoppen, lettertype Nunito, eigen identiteit (geen kopie van Duolingo).
 
 ## 3. Datamodel (Firestore)
 
@@ -101,21 +101,22 @@ Vergelijking in deze volgorde:
 
 Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De notes zijn de meldingen (typo, accent, "to").
 
-## 5. Voortgang en herhaling 🔶
+## 5. Voortgang, delen en medailles
 
-**Woordscore (0..1):** voortschrijdend gemiddelde per woord, nieuw woord start op 0.
-`score = 0,7 · score + 0,3 · uitslag` (uitslag = 1 bij juist, 0 bij fout).
-Een correct-met-melding telt als juist.
+**Delen:** een woordenlijst wordt in delen van **hoogstens 40 woorden** gesplitst, gelijkmatig en in de volgorde van de lijst (111 woorden → 37 · 37 · 37). Een lijst tot 40 woorden is één deel (id = lijst-id); anders `lijst#n`. De vier if-types van Grammar zijn ook elk een deel (`type0` … `type3`).
 
-**Kleur van een woord:** rood onder 0,5 · oranje 0,5–0,8 · groen vanaf 0,8. Nog nooit gespeeld = grijs.
+**Per woord** bewaren we `[score, juist, fout, gespeeld, streak]`:
+- *Percentage van een deel* = aandeel woorden waarvan het **laatste** antwoord juist was (juist is juist, fout is fout).
+- *Gekend* = **twee keer na elkaar juist**; een fout zet de streak terug op 0.
+- *Gewicht* voor herhaling: `1 + 3·(1 − score)` met `score = 0,5·score + 0,5·uitslag` (zwakke woorden vroeger en vaker).
 
-**Kleur van een lijst:** rood onder 0,5 · groen vanaf 0,7 · **goud** bij 100% (alle woorden score 1).
+**Kleur van een deel:** wit met zwarte rand en ring = bezig · grijs = nog niet gespeeld · rood = alle woorden gespeeld maar minder dan 70% gekend · **groen = minstens 70% gekend** (examen open) · brons / zilver / goud = behaalde medaille (de hele kaart krijgt die kleur).
 
-**Niveaupercentage (de 70%):** gemiddelde woordscore over **alle woorden van alle lijsten van het niveau**; woorden die nog nooit gespeeld zijn tellen als 0. Daardoor moet je dus alles gespeeld hebben om 70% te halen, wat past bij de regel dat de mix pas na alle lijsten opengaat.
+**Medailles:** per deel en per niveau (Matchen, Typen, Grammar-type) bewaren we 0–3 (brons, zilver, goud). Elk geslaagd examen geeft de volgende medaille. Het eerste geslaagde Matchen-examen ontgrendelt Typen.
 
-**Vaker foute woorden:**
-- *Binnen een sessie:* een fout beantwoord woord komt 3 à 5 posities verder in dezelfde sessie opnieuw, tot het één keer juist is.
-- *Over sessies heen:* bij het samenstellen van een sessie of de gemixte oefening wordt de volgorde gewogen met `gewicht = 1 + 3·(1 − score)`: zwakke woorden komen vroeger en vaker aan bod, woorden met score nabij 1 komen laat of één keer voor.
+**Herhaling binnen een sessie:** een fout woord komt 3 à 5 posities verder opnieuw, tot het één keer juist is. Met "Toch juist" haal je die herhaling weg.
+
+**Antwoorden die "toch juist" zijn:** de knop "Toch juist" (ook in examens) bewaart je antwoord blijvend bij het woord (`extraAnswers`, per richting). Het telt daarna meteen juist en je kan het in het woordenoverzicht (info-icoon) verwijderen. Een reset per lijst laat deze antwoorden staan.
 
 ## 6. Sessies en oefenvormen
 - **Sessie** = alle woorden van de gekozen lijst(en), in volgorde bepaald door § 5.
@@ -125,12 +126,13 @@ Een correct-met-melding telt als juist.
 - **Combineren:** zelf gekozen lijsten worden één sessie; elk woord telt voor zijn eigen lijst. 🔶 Een gespeelde combinatie telt als gespeeld voor de betrokken lijsten.
 
 ## 7. Examen
-- Beschikbaar vanaf **70%** in het niveau. Vocabulary: **12 vragen, 3 levens**. Grammar: **21 vragen, 3 levens**.
-- Vragen worden getrokken uit het niveau met de gewogen verdeling van § 5 (zwakkere woorden vaker), zonder dubbels, in dezelfde oefenvorm als het niveau.
-- Matchen-examen: 12 vragen = twee rondes van 6 paren; elke foute koppeling kost een leven.
-- Fout antwoord = leven kwijt + juiste oplossing tonen. 🔶 Geslaagd zodra alle vragen beantwoord zijn zonder alle 3 levens te verliezen.
-- Geslaagd → volgend niveau ontgrendeld + trofee. Mislukt → opnieuw proberen, 🔶 zonder wachttijd.
-- Examenuitkomsten tellen mee voor de woordscores.
+- Een examen hoort bij **één deel** (of één Grammar-type) en opent bij **70% gekend**, of zodra er al een medaille is. Bij Grammar volstaat **één keer juist** per zin (de moeilijkheid zit in het mixen), dus 70% van de zinnen met een juist laatste antwoord.
+- **Matchen-niveau:** meerkeuze, één woord per vraag, 5 opties, Engels→Nederlands en Nederlands→Engels door elkaar, over alle woorden van het deel.
+- **Typen-niveau en Grammar:** getypt, willekeurige selectie van **hoogstens 15 vragen** uit het deel (Typen: richtingen gemixt).
+- **Toegestane fouten volgens de medaille die je probeert te halen:** brons 2, zilver 1, goud 0 (levens 3 / 2 / 1; de laatste fout is meteen game over).
+- Geslaagd = alle vragen beantwoord zonder alle levens te verliezen → volgende medaille. Mislukt → opnieuw proberen, zonder wachttijd. Bij goud is er niets meer te winnen.
+- De examenknop krijgt de kleur van de volgende medaille en wordt de felle knop zodra het examen open is; oefenen wordt dan de lichte knop.
+- "Toch juist" werkt ook in examens: het antwoord telt als juist en het verloren leven komt terug.
 
 ## 8. Streak, dagdoel en trofeeën 🔶
 - **Dag** = kalenderdag in de tijdzone van het toestel.
@@ -157,7 +159,7 @@ Trofeeën:
 - Een `.docx` is een zip met XML. `DocxListImporter` leest de tabellen met kolommen *Word and Type* · *Explanation/Definition* · *Dutch Translation*, zonder zware bibliotheken.
 - Opvangen van de bekende bijzonderheden: dubbele kolommen door samengevoegde cellen, meerdere tabellen in één bestand, kop-rijen herkennen, Nederlandse varianten splitsen op komma's, `to …`/`a …` en het type `(v)` uit het Engelse veld halen.
 - Na het inlezen een **voorbeeldscherm** met aantal woorden en eventuele problemen vóór bevestigen. Dubbele woorden binnen een lijst worden gemeld.
-- De 7 bestaande lijsten worden via dezelfde importer toegevoegd; de Word-bestanden zelf komen **niet** in de repo.
+- De 7 bestaande lijsten worden via dezelfde importer toegevoegd. Rob heeft bevestigd dat de Word-lijsten gerust in de repo mogen (niet geheim of gevoelig).
 
 ## 11. Grammar-oefeningen bijmaken 🔶
 Aantal: **25 oefenzinnen per if-type** (100 in totaal), zelf geschreven, in dezelfde stijl als de cursus: invullen van een werkwoordsvorm met het werkwoord tussen haakjes. Alle zinnen worden door Rob nagelezen vóór ze in de app komen; elke zin krijgt een correcte antwoordenlijst (varianten zoals `'d`/`would`) en een korte uitleg.
@@ -168,7 +170,7 @@ Aantal: **25 oefenzinnen per if-type** (100 in totaal), zelf geschreven, in deze
 - **Git flow:** `main` = werkend, `develop` = integratie, `feature/*` per onderdeel. Pipeline via GitHub Actions bouwt en test bij elke pull request naar `develop` en `main`; een rode build blokkeert de merge.
 
 ## 13. Privacy en repo
-- De repo is **publiek**. Cursusmateriaal (Word-lijsten, PDF) en geheimen (sleutels, `google-services.json` zoals bij de maaltijdplanner buiten git houden) komen er niet in.
+- De repo is **publiek**. De Word-lijsten mogen er volgens Rob in; geheimen (sleutels, keystores) komen er niet in. Of `google-services.json` in git komt, wordt bij de Firebase-stap bepaald.
 - Firestore-regels: een gebruiker leest en schrijft enkel zijn eigen `users/{uid}/…`.
 
 ## 14. Bouwvolgorde (voorstel) 🔶
@@ -194,3 +196,20 @@ Alle 🔶-punten hierboven, samengevat:
 6. Zelf gecombineerde lijsten tellen als gespeeld (§ 6)
 7. Herinnering overslaan als er al geoefend is (§ 9)
 8. 25 oefenzinnen per if-type en nalezen door Rob (§ 11)
+
+## 16. Afwijkingen tijdens de bouw
+- Voortgang wordt per niveau bijgehouden (sleutel `niveau|lijst|woord`), niet globaal per woord; dubbele woorden in verschillende lijsten tellen per lijst.
+- Trofeeën worden afgeleid uit de data, niet apart opgeslagen.
+- Cloud: één Firestore-document `users/{uid}/data/state`; nieuwste `updatedAt` wint (een vers toestel neemt de cloud over).
+- Firebase is optioneel: zonder `app/google-services.json` draait de app lokaal zonder login.
+- minSdk 26.
+- NL→EN: een ander Engels woord met dezelfde Nederlandse vertaling telt ook goed (met melding).
+- Tweekolomstabellen met zinnen (business_writing) worden niet geïmporteerd.
+- Een Nederlands lidwoord vooraan is nog niet optioneel.
+- Voortgang en medailles hangen aan delen van hoogstens 40 woorden (§ 5); het niveaupercentage van Vocabulary is het aandeel woorden met een juist laatste antwoord.
+- Examen per deel met medailles en 2 / 1 / 0 fouten (§ 7) vervangt het examen van 12 (Vocabulary) en 21 (Grammar) vragen met 3 levens.
+- Typen en Grammar tellen hoogstens 15 vragen per ronde.
+- Antwoordcontrole Engels→Nederlands is ruimer: lidwoorden en "zich/iets/iemand/ergens" mogen weg, een aaneengesloten deel van een vertaling (minstens de helft) telt als juist met melding; alle vertalingen van woorden met dezelfde Engelse tekst zijn juist; "Toch juist" onthoudt eigen antwoorden.
+- Matchen: een Nederlandse tegel is juist bij elk woord in de ronde met dezelfde Engelse tekst waarvan de vertalingen die tegel bevatten.
+- Inloggen met Google (Firebase Auth) en Firestore-sync zijn ingesteld met project `commskillapp-1c57c`; `google-services.json` staat buiten git, een andere keystore heeft een eigen SHA-1 nodig.
+- De Testlijst (12 woorden) zit bij de bundled lijsten om het examen snel te kunnen proberen.
