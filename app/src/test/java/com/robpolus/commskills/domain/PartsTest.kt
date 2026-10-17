@@ -196,4 +196,16 @@ class PartsTest {
     }
     assertEquals(ExamStatus.PASSED, s.engine.status)
   }
+
+  @Test
+  fun resetClearsProgressMedalsAndExamsButKeepsListsAndStreak() {
+    var d = AppData(lists = listOf(list("a", 10)), streak = StreakState(3, 5, "2026-10-17"))
+    d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, "a", "a1", true)
+    d = Learning.awardMedal(d, Levels.VOCAB_MATCH, "a")
+    val r = Learning.resetProgress(d)
+    assertTrue(r.progress.isEmpty() && r.medals.isEmpty() && r.examPassed.isEmpty() && r.sessions.isEmpty())
+    assertEquals(1, r.lists.size)
+    assertEquals(3, r.streak.current)
+    assertEquals(PartColor.GREY, Parts.color(r, Levels.VOCAB_MATCH, Parts.all(r).single()))
+  }
 }

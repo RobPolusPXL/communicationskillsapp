@@ -166,7 +166,7 @@ fun ChunkyCard(
 
 /** Ronde voortgangsring met het percentage in het midden. */
 @Composable
-fun ProgressRing(progress: Float, color: Color, label: String, modifier: Modifier = Modifier, size: androidx.compose.ui.unit.Dp = 44.dp) {
+fun ProgressRing(progress: Float, color: Color, label: String, modifier: Modifier = Modifier, size: androidx.compose.ui.unit.Dp = 44.dp, labelColor: Color = Color(0xFF44526A)) {
   Box(
     modifier
       .size(size)
@@ -185,7 +185,7 @@ fun ProgressRing(progress: Float, color: Color, label: String, modifier: Modifie
       },
     contentAlignment = Alignment.Center,
   ) {
-    Text(label, fontSize = 10.sp, fontWeight = FontWeight.Black, color = Color(0xFF44526A))
+    Text(label, fontSize = 10.sp, fontWeight = FontWeight.Black, color = labelColor)
   }
 }
 

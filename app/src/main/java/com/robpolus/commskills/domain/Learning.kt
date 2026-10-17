@@ -110,6 +110,15 @@ object Learning {
     return markExamPassed(data.copy(medals = data.medals + (key to next)), level)
   }
 
+  /** Zet alle leervoortgang terug op 0 (woorden, delen, medailles, examens). Streak en dagdoel blijven. */
+  fun resetProgress(data: AppData): AppData = data.copy(
+    progress = emptyMap(),
+    sessions = emptyMap(),
+    medals = emptyMap(),
+    examPassed = emptySet(),
+    levelReached = emptySet(),
+  )
+
   fun markExamPassed(data: AppData, level: String): AppData =
     data.copy(examPassed = data.examPassed + level)
 

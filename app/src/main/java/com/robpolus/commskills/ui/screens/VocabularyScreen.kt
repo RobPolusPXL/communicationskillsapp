@@ -127,9 +127,9 @@ fun VocabularyScreen(
             onClick = { selected = if (checked) selected - part.id else selected + part.id },
           ) {
             Row(Modifier.padding(horizontal = 14.dp, vertical = 26.dp), verticalAlignment = Alignment.CenterVertically) {
-              ProgressRing(pct.toFloat(), pal.ring, "${(pct * 100).toInt()}%")
+              ProgressRing(pct.toFloat(), pal.ring, "${(pct * 100).toInt()}%", labelColor = if (pal.dark) Color.White else Color(0xFF44526A))
               Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
-                Text(part.title, style = MaterialTheme.typography.titleSmall)
+                Text(part.title, style = MaterialTheme.typography.titleSmall, color = if (pal.dark) Color.White else Color.Unspecified)
                 Text(
                   "${part.words.size} woorden · ${Parts.known(view, part)} gekend" + when (pc) {
                     PartColor.BRONZE -> " · brons"
@@ -139,7 +139,7 @@ fun VocabularyScreen(
                     else -> ""
                   },
                   style = MaterialTheme.typography.bodySmall,
-                  color = MaterialTheme.colorScheme.onSurfaceVariant,
+                  color = if (pal.dark) Color(0xFFD3D8E2) else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
               }
               IconButton(onClick = { onOverview(level, part.listId) }, modifier = Modifier.size(36.dp)) {
@@ -287,11 +287,11 @@ private fun DirectionChip(text: String, selected: Boolean, modifier: Modifier, o
   }
 }
 
-private class PartPalette(val edge: Color, val fill: Color, val ring: Color)
+private class PartPalette(val edge: Color, val fill: Color, val ring: Color, val dark: Boolean = false)
 
 private fun PartColor.palette() = when (this) {
   PartColor.GREY -> PartPalette(Line, Color.White, Color(0xFF9AA3B2))
-  PartColor.PROGRESS -> PartPalette(Color(0xFF5AA9F5), Color(0xFFD8ECFF), Color(0xFF3B8FE0))
+  PartColor.PROGRESS -> PartPalette(Color(0xFF1B1F27), Color(0xFF333945), Color(0xFFFFFFFF), dark = true)
   PartColor.RED -> PartPalette(Color(0xFFFF6B61), Color(0xFFFFD3CF), Color(0xFFFF4B3E))
   PartColor.GREEN -> PartPalette(Color(0xFF34D06A), Color(0xFFBDF5CF), Color(0xFF22B455))
   PartColor.BRONZE -> PartPalette(Color(0xFFF08A3C), Color(0xFFFFC38F), Color(0xFFE3721F))

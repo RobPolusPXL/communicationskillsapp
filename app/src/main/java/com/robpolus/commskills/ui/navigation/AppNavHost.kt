@@ -233,6 +233,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onConfirmImport = vm::confirmImport,
         onCancelImport = vm::cancelImport,
         onBack = { nav.popBackStack() },
+        onResetProgress = { vm.update { com.robpolus.commskills.domain.Learning.resetProgress(it) } },
         extra = {
           AccountSettings(
             configured = app.cloud.configured,

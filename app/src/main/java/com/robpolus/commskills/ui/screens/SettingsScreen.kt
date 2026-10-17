@@ -39,17 +39,25 @@ fun SettingsScreen(
   onConfirmImport: () -> Unit,
   onCancelImport: () -> Unit,
   onBack: () -> Unit,
+  onResetProgress: () -> Unit = {},
   extra: @Composable () -> Unit = {},
 ) {
   val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
     if (uri != null) onPickFile(uri)
   }
+  var confirmReset by androidx.compose.runtime.remember { androidx.compose.runtime.mutableStateOf(false) }
   ScreenScaffold("Instellingen", onBack, accent = com.robpolus.commskills.ui.theme.Teal) { padding ->
     LazyColumn(
       modifier = Modifier.padding(padding).padding(horizontal = 16.dp),
       verticalArrangement = Arrangement.spacedBy(6.dp),
     ) {
       item { extra() }
+      item {
+        Text("Voortgang", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+        Spacer(Modifier.height(4.dp))
+        ChunkyOutlineButton("Voortgang op 0 zetten", onClick = { confirmReset = true })
+        Spacer(Modifier.height(8.dp))
+      }
       item {
         Text("Woordenlijsten", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
         Spacer(Modifier.height(4.dp))
@@ -64,6 +72,16 @@ fun SettingsScreen(
         HorizontalDivider()
       }
     }
+  }
+
+  if (confirmReset) {
+    AlertDialog(
+      onDismissRequest = { confirmReset = false },
+      title = { Text("Voortgang op 0 zetten?") },
+      text = { Text("Alle woorden, delen, medailles en examens beginnen opnieuw. Je lijsten, streak en dagdoel blijven.") },
+      confirmButton = { TextButton(onClick = { confirmReset = false; onResetProgress() }) { Text("Ja, reset") } },
+      dismissButton = { TextButton(onClick = { confirmReset = false }) { Text("Annuleren") } },
+    )
   }
 
   when (importState) {
