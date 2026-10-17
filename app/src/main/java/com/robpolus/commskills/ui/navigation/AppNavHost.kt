@@ -80,7 +80,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
 
   fun startPartExam(level: String, partId: String) {
     practice.startPartExam(level, partId)
-    nav.navigate(Routes.CHOICE)
+    nav.navigate(if (level == Levels.VOCAB_TYPE) Routes.TYPE else Routes.CHOICE)
   }
 
   // Zodra een sessie klaar is, naar het resultaat.

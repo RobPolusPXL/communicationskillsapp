@@ -22,6 +22,9 @@ class LevelView(
   /** Een woord is gekend na twee juiste antwoorden na elkaar. */
   fun known(group: String, item: String): Boolean = (progress(group, item)?.streak ?: 0) >= Scoring.KNOWN_STREAK
 
+  /** Het laatste antwoord op dit woord was juist. */
+  fun correctNow(group: String, item: String): Boolean = (progress(group, item)?.streak ?: 0) >= 1
+
   fun groupAverage(group: String): Double =
     groups[group].orEmpty().let { ids -> if (ids.isEmpty()) 0.0 else ids.map { score(group, it) }.average() }
 
@@ -40,7 +43,7 @@ class LevelView(
   fun percentage(): Double {
     val all = groups.flatMap { (group, ids) -> ids.map { group to it } }
     if (all.isEmpty()) return 0.0
-    return if (Levels.isVocabulary(level)) all.count { (g, i) -> known(g, i) }.toDouble() / all.size
+    return if (Levels.isVocabulary(level)) all.count { (g, i) -> correctNow(g, i) }.toDouble() / all.size
     else Scoring.levelPercentage(all.map { (g, i) -> score(g, i) })
   }
 

@@ -49,7 +49,7 @@ class PartsTest {
     val part = Parts.all(d).single()
     fun know(i: Int) { repeat(2) { d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, "a", "a$i", true) } }
     for (i in 1..6) know(i)
-    assertEquals(PartColor.ORANGE, Parts.color(d, Levels.VOCAB_MATCH, part))
+    assertEquals(PartColor.PROGRESS, Parts.color(d, Levels.VOCAB_MATCH, part))
     assertFalse(Parts.examOpen(d, Levels.VOCAB_MATCH, part))
     know(7)
     assertEquals(PartColor.GREEN, Parts.color(d, Levels.VOCAB_MATCH, part))
@@ -63,7 +63,22 @@ class PartsTest {
     val part = Parts.all(d).single()
     assertEquals(PartColor.GREY, Parts.color(d, Levels.VOCAB_MATCH, part))
     d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, "a", "a1", true)
+    assertEquals(PartColor.PROGRESS, Parts.color(d, Levels.VOCAB_MATCH, part))
+    for (i in 1..10) d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, "a", "a$i", i % 2 == 0)
     assertEquals(PartColor.RED, Parts.color(d, Levels.VOCAB_MATCH, part))
+  }
+
+  @Test
+  fun percentageFollowsLastAnswerButGreenNeedsTwoInARow() {
+    var d = AppData(lists = listOf(list("a", 10)))
+    val part = Parts.all(d).single()
+    for (i in 1..10) d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, "a", "a$i", true)
+    val view = Learning.vocabularyView(d, Levels.VOCAB_MATCH)
+    assertEquals(1.0, Parts.percent(view, part), 1e-9)
+    assertEquals(0.0, Parts.knownPercent(view, part), 1e-9)
+    assertFalse(Parts.ready(view, part))
+    d = Learning.recordAnswer(d, Levels.VOCAB_MATCH, "a", "a1", false)
+    assertEquals(0.9, Parts.percent(Learning.vocabularyView(d, Levels.VOCAB_MATCH), part), 1e-9)
   }
 
   @Test

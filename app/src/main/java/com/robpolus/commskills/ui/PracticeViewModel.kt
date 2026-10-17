@@ -193,6 +193,14 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     choiceMedal = Parts.medal(data.value, level, part)
     val pool = data.value.lists.flatMap { l -> l.words.map { Entry(l.id, it) } }
     val engine = ExamEngine(part.words.size, ChoiceBuilder.lives(choiceMedal))
+    if (level == Levels.VOCAB_TYPE) {
+      // Typen: hetzelfde examen, maar de antwoorden worden getypt.
+      val entries = part.words.map { Entry(part.listId, it) }.shuffled()
+      typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED, pool = allWords()), engine)
+      publishType(null)
+      publishExam()
+      return
+    }
     choiceSession = ChoiceExamSession(ChoiceBuilder.build(part, pool), engine)
     publishChoice()
     publishExam()
@@ -508,7 +516,11 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
         }
       }
     }
-    if (passed) repository.update { Learning.markExamPassed(it, level) }
+    val part = choicePart
+    val medalName = when (minOf(3, choiceMedal + 1)) { 1 -> "brons"; 2 -> "zilver"; else -> "goud" }
+    if (passed && part != null) {
+      if (choiceMedal < 3) repository.update { Learning.awardMedal(it, level, part.id) }
+    } else if (passed) repository.update { Learning.markExamPassed(it, level) }
     val after = data.value
     _result.value = ResultUi(
       level = level,
@@ -520,8 +532,11 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       levelPercentage = null,
       examAvailable = false,
       message = when {
-        passed && level == Levels.VOCAB_MATCH -> "Het niveau Typen is ontgrendeld."
+        passed && part != null && choiceMedal >= 3 -> "Je hebt dit deel al met goud afgerond."
+        passed && part != null -> "Medaille $medalName behaald voor ${part.title}."
         passed -> "Gefeliciteerd, dit niveau is afgerond."
+        part != null && engine.lives == 1 -> "Goud: één fout is meteen game over. Probeer opnieuw."
+        part != null -> "Je maakte meer dan één fout. Oefen nog even en probeer opnieuw."
         else -> "Geen leven meer over. Oefen nog even en probeer opnieuw."
       },
       isExam = true,

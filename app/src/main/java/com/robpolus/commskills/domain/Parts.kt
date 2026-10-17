@@ -10,7 +10,7 @@ data class Part(
   val words: List<Word>,
 )
 
-enum class PartColor { GREY, RED, ORANGE, GREEN, BRONZE, SILVER, GOLD }
+enum class PartColor { GREY, PROGRESS, RED, GREEN, BRONZE, SILVER, GOLD }
 
 object Parts {
   const val MAX = 40
@@ -35,11 +35,15 @@ object Parts {
 
   fun known(view: LevelView, part: Part): Int = part.words.count { view.known(part.listId, it.id) }
 
-  /** Gekende woorden / alle woorden van het deel. */
+  /** Woorden waarvan het laatste antwoord juist was / alle woorden: juist is juist, fout is fout. */
   fun percent(view: LevelView, part: Part): Double =
+    if (part.words.isEmpty()) 0.0 else part.words.count { view.correctNow(part.listId, it.id) }.toDouble() / part.words.size
+
+  /** Gekende woorden (twee keer na elkaar juist) / alle woorden: bepaalt wanneer het deel groen wordt. */
+  fun knownPercent(view: LevelView, part: Part): Double =
     if (part.words.isEmpty()) 0.0 else known(view, part).toDouble() / part.words.size
 
-  fun ready(view: LevelView, part: Part): Boolean = percent(view, part) >= Scoring.READY - 1e-9
+  fun ready(view: LevelView, part: Part): Boolean = knownPercent(view, part) >= Scoring.READY - 1e-9
 
   fun medal(data: AppData, level: String, part: Part): Int = data.medals[AppData.medalKey(level, part.id)] ?: 0
 
@@ -54,13 +58,13 @@ object Parts {
       3 -> return PartColor.GOLD
     }
     val view = Learning.vocabularyView(data, level)
-    val p = percent(view, part)
-    val played = part.words.any { view.played(part.listId, it.id) }
+    val anyPlayed = part.words.any { view.played(part.listId, it.id) }
+    val allPlayed = part.words.all { view.played(part.listId, it.id) }
     return when {
-      p >= Scoring.READY - 1e-9 -> PartColor.GREEN
-      !played -> PartColor.GREY
-      p < 0.35 -> PartColor.RED
-      else -> PartColor.ORANGE
+      ready(view, part) -> PartColor.GREEN
+      !anyPlayed -> PartColor.GREY
+      allPlayed -> PartColor.RED
+      else -> PartColor.PROGRESS
     }
   }
 }

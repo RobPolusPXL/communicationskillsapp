@@ -186,8 +186,25 @@ class FlowTest {
     rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
     answerChoices(wrong = 1)
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
-    rule.runOnIdle { vm.clearResult(); vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
-    answerChoices(wrong = 2)
+  }
+
+  @Test
+  fun typingPartExamIsTypedAndGivesMedal() {
+    toHome()
+    makeExamEligible(Levels.VOCAB_TYPE)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
+    rule.runOnIdle { assertEquals(12, vm.exam.value!!.total); assertTrue(vm.type.value != null); assertTrue(vm.choice.value == null) }
+    typeUntilDone()
+    rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
+    assertEquals(1, data.medals[com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_TYPE, "testlijst")])
+  }
+
+  @Test
+  fun typingPartExamFailsOnTwoMistakes() {
+    toHome()
+    makeExamEligible(Levels.VOCAB_TYPE)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
+    typeUntilDone(correct = false)
     rule.runOnIdle { assertEquals("Examen niet gehaald", vm.result.value!!.title) }
     assertTrue(data.medals.keys.none { it.startsWith(Levels.VOCAB_TYPE) })
   }

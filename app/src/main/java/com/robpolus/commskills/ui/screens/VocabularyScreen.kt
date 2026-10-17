@@ -176,29 +176,31 @@ fun VocabularyScreen(
         val chosen = parts.filter { it.id in selected }
         val words = chosen.sumOf { it.words.size }
         val shown = minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }
-        ChunkyButton(
-          text = when {
-            chosen.isEmpty() -> "Kies een lijst om te starten"
-            chosen.size == 1 -> "Oefenen ($shown woorden)"
-            else -> "${chosen.size} delen combineren ($shown woorden)"
-          },
-          onClick = { onPlay(level, chosen.map { it.id }, direction) },
-          enabled = chosen.isNotEmpty() && unlocked,
-        )
+        val single = chosen.singleOrNull()
+        val open = single != null && Parts.examOpen(data, level, single)
+        val playText = when {
+          chosen.isEmpty() -> "Kies een lijst om te starten"
+          chosen.size == 1 -> "Oefenen ($shown woorden)"
+          else -> "${chosen.size} delen combineren ($shown woorden)"
+        }
+        val playClick = { onPlay(level, chosen.map { it.id }, direction) }
+        // Klaar voor het examen: het examen wordt de felle knop, oefenen de lichte.
+        if (open) ChunkyOutlineButton(text = playText, onClick = playClick, enabled = unlocked)
+        else ChunkyButton(text = playText, onClick = playClick, enabled = chosen.isNotEmpty() && unlocked)
         if (onExam != null) {
-          val single = chosen.singleOrNull()
-          val open = single != null && Parts.examOpen(data, level, single)
           val next = single?.let { minOf(3, Parts.medal(data, level, it) + 1) } ?: 1
           val medalName = when (next) { 1 -> "brons"; 2 -> "zilver"; else -> "goud" }
-          ChunkyOutlineButton(
-            text = when {
-              single == null -> "Examen: kies één deel"
-              open -> "Examen doen ($medalName)"
-              else -> "Examen vanaf 70% gekend (nu ${(Parts.percent(view, single) * 100).toInt()}%)"
-            },
-            onClick = { if (single != null) onExam(level, single.id) },
-            enabled = open && unlocked,
+          val examText = when {
+            single == null -> "Examen: kies één deel"
+            open -> "Examen doen ($medalName)"
+            else -> "Examen vanaf 70% gekend (nu ${(Parts.knownPercent(view, single) * 100).toInt()}%)"
+          }
+          val examClick = { if (single != null) onExam(level, single.id) }
+          if (open) ChunkyButton(
+            text = examText, onClick = examClick, enabled = unlocked,
+            color = com.robpolus.commskills.ui.theme.Correct, edge = com.robpolus.commskills.ui.theme.GreenEdge,
           )
+          else ChunkyOutlineButton(text = examText, onClick = examClick, enabled = false)
         }
       }
     }
@@ -289,10 +291,10 @@ private class PartPalette(val edge: Color, val fill: Color, val ring: Color)
 
 private fun PartColor.palette() = when (this) {
   PartColor.GREY -> PartPalette(Line, Color.White, Color(0xFF9AA3B2))
-  PartColor.RED -> PartPalette(com.robpolus.commskills.ui.theme.Coral, Color(0xFFFFE3E0), com.robpolus.commskills.ui.theme.Coral)
-  PartColor.ORANGE -> PartPalette(com.robpolus.commskills.ui.theme.Orange2, Color(0xFFFFEBD0), com.robpolus.commskills.ui.theme.Orange2)
-  PartColor.GREEN -> PartPalette(com.robpolus.commskills.ui.theme.Correct, Color(0xFFD9F3E3), com.robpolus.commskills.ui.theme.Correct)
-  PartColor.BRONZE -> PartPalette(Color(0xFF9C5B25), Color(0xFFE8B98A), Color(0xFF9C5B25))
-  PartColor.SILVER -> PartPalette(Color(0xFF7D8AA0), Color(0xFFD5DCE8), Color(0xFF7D8AA0))
-  PartColor.GOLD -> PartPalette(Color(0xFFC99700), Color(0xFFFFE27A), Color(0xFFC99700))
+  PartColor.PROGRESS -> PartPalette(Color(0xFF5AA9F5), Color(0xFFD8ECFF), Color(0xFF3B8FE0))
+  PartColor.RED -> PartPalette(Color(0xFFFF6B61), Color(0xFFFFD3CF), Color(0xFFFF4B3E))
+  PartColor.GREEN -> PartPalette(Color(0xFF34D06A), Color(0xFFBDF5CF), Color(0xFF22B455))
+  PartColor.BRONZE -> PartPalette(Color(0xFFF08A3C), Color(0xFFFFC38F), Color(0xFFE3721F))
+  PartColor.SILVER -> PartPalette(Color(0xFF8CB8E8), Color(0xFFDDEBFB), Color(0xFF6FA3DC))
+  PartColor.GOLD -> PartPalette(Color(0xFFFFB800), Color(0xFFFFE066), Color(0xFFF5A300))
 }
