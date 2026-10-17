@@ -138,6 +138,7 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onGrammar = { nav.navigate(Routes.GRAMMAR) },
         onTrophies = { nav.navigate(Routes.TROPHIES) },
         onSettings = { nav.navigate(Routes.SETTINGS) },
+        grammarPercentage = com.robpolus.commskills.domain.Grammar.view(data, grammar).percentage(),
       )
     }
     composable(Routes.VOCABULARY) {

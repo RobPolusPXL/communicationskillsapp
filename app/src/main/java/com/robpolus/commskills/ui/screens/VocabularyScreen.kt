@@ -196,10 +196,10 @@ fun VocabularyScreen(
             else -> "Examen vanaf 70% gekend (nu ${(Parts.knownPercent(view, single) * 100).toInt()}%)"
           }
           val examClick = { if (single != null) onExam(level, single.id) }
-          if (open) ChunkyButton(
-            text = examText, onClick = examClick, enabled = unlocked,
-            color = com.robpolus.commskills.ui.theme.Correct, edge = com.robpolus.commskills.ui.theme.GreenEdge,
-          )
+          if (open) {
+            val (fill, edgeC, textC) = medalButton(next)
+            ChunkyButton(text = examText, onClick = examClick, enabled = unlocked, color = fill, edge = edgeC, textColor = textC)
+          }
           else ChunkyOutlineButton(text = examText, onClick = examClick, enabled = false)
         }
       }
@@ -292,9 +292,16 @@ private class PartPalette(val edge: Color, val fill: Color, val ring: Color, val
 private fun PartColor.palette() = when (this) {
   PartColor.GREY -> PartPalette(Line, Color.White, Color(0xFF9AA3B2))
   PartColor.PROGRESS -> PartPalette(Color(0xFF1B1F27), Color.White, Color(0xFF1B1F27))
-  PartColor.RED -> PartPalette(Color(0xFFFF6B61), Color(0xFFFFD3CF), Color(0xFFFF4B3E))
-  PartColor.GREEN -> PartPalette(Color(0xFF34D06A), Color(0xFFBDF5CF), Color(0xFF22B455))
-  PartColor.BRONZE -> PartPalette(Color(0xFFF08A3C), Color(0xFFFFC38F), Color(0xFFE3721F))
-  PartColor.SILVER -> PartPalette(Color(0xFF8CB8E8), Color(0xFFDDEBFB), Color(0xFF6FA3DC))
-  PartColor.GOLD -> PartPalette(Color(0xFFFFB800), Color(0xFFFFE066), Color(0xFFF5A300))
+  PartColor.RED -> PartPalette(Color(0xFFFF4B4B), Color(0xFFFFD8D8), Color(0xFFD92E2E))
+  PartColor.GREEN -> PartPalette(Color(0xFF3DDC84), Color(0xFFCFF8E0), Color(0xFF22B466))
+  PartColor.BRONZE -> PartPalette(Color(0xFFE39B6B), Color(0xFFF9D9C0), Color(0xFFC27E4F))
+  PartColor.SILVER -> PartPalette(Color(0xFFC9CCD3), Color(0xFFF1F2F5), Color(0xFFA5A9B3))
+  PartColor.GOLD -> PartPalette(Color(0xFFFFCB05), Color(0xFFFFDE4D), Color(0xFFE8B000))
+}
+
+/** Knopkleur van het volgende examen: brons, zilver of goud. */
+private fun medalButton(next: Int): Triple<Color, Color, Color> = when (next) {
+  1 -> Triple(Color(0xFFE39B6B), Color(0xFFC27E4F), Color(0xFF2A1608))
+  2 -> Triple(Color(0xFFC9CCD3), Color(0xFFA5A9B3), Color(0xFF1E2028))
+  else -> Triple(Color(0xFFFFCB05), Color(0xFFE8B000), Color(0xFF2A2100))
 }
