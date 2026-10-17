@@ -157,4 +157,15 @@ class TypingTest {
     assertEquals(21, exam.map { it.id }.toSet().size)
     assertNotNull(exam.firstOrNull())
   }
+
+  @Test
+  fun everyTranslationOfTheSameEnglishWordIsCorrect() {
+    val noun = Word("decrease_n", "decrease", "n", "", listOf("afname", "daling"))
+    val verb = Word("decrease_v", "decrease", "v", "", listOf("afnemen", "dalen"))
+    val qs = VocabQuestion.from(listOf(Entry("l", noun), Entry("l", verb)), DirectionChoice.EN_NL, pool = listOf(noun, verb))
+    for (q in qs) for (answer in listOf("afname", "daling", "afnemen", "dalen")) {
+      assertTrue(q.check(checker, answer).isCorrect)
+    }
+    assertFalse(qs[0].check(checker, "huis").isCorrect)
+  }
 }

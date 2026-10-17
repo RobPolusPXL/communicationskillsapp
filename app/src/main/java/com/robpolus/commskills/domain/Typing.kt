@@ -25,6 +25,8 @@ data class VocabQuestion(
   val direction: Direction,
   /** Andere woorden met een gelijke Nederlandse vertaling; bij NL→EN zijn hun Engelse woorden ook goed. */
   val synonyms: List<Word> = emptyList(),
+  /** Andere woorden met dezelfde Engelse tekst (decrease n/v): hun Nederlandse vertalingen zijn ook goed. */
+  val sameEnglish: List<Word> = emptyList(),
 ) : Question {
   private val word get() = entry.word
   private val toDutch get() = direction == Direction.EN_NL
@@ -40,7 +42,14 @@ data class VocabQuestion(
 
   override fun check(checker: AnswerChecker, given: String): AnswerResult {
     val own = checker.checkWord(given, word, direction)
-    if (own.isCorrect || direction != Direction.NL_EN) return own
+    if (own.isCorrect) return own
+    if (direction == Direction.EN_NL) {
+      for (other in sameEnglish) {
+        val r = checker.checkWord(given, other, Direction.EN_NL)
+        if (r is AnswerResult.Correct) return r
+      }
+      return own
+    }
     for (other in synonyms) {
       val r = checker.checkWord(given, other, Direction.NL_EN)
       if (r is AnswerResult.Correct) return AnswerResult.Correct(r.notes + Note.SYNONYM)
@@ -67,7 +76,8 @@ data class VocabQuestion(
         val synonyms = e.word.nl.flatMap { byDutch[it.lowercase()].orEmpty() }
           .filter { it.id != e.word.id || it.en != e.word.en }
           .distinctBy { it.en }
-        VocabQuestion(e, dir, synonyms)
+        val same = pool.filter { it.en.equals(e.word.en, ignoreCase = true) && it.id != e.word.id }.distinctBy { it.id }
+        VocabQuestion(e, dir, synonyms, same)
       }
     }
   }
