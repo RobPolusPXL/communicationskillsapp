@@ -16,6 +16,9 @@ object SessionBuilder {
   /** Aantal woorden per vocabulary-sessie: de helft zwakste, de helft willekeurig. */
   const val VOCAB_SESSION_SIZE = 40
 
+  /** Aantal vragen per ronde bij typen (oefenen en examen): typen kost meer tijd dan matchen. */
+  const val TYPE_SESSION_SIZE = 15
+
   /**
    * Vocabulary-sessie: heeft de keuze meer dan [size] woorden, dan is de helft de zwakste
    * (laagste score, ongespeeld telt als 0) en de helft willekeurig uit de rest. Daarna gemengd.

@@ -167,7 +167,8 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
 
   fun startType(level: String, groupIds: List<String>?, choice: DirectionChoice) {
     begin(level)
-    val questions = VocabQuestion.from(entriesFor(level, groupIds), choice, pool = allWords(), extras = data.value.extraAnswers)
+    val entries = SessionBuilder.vocabularySession(data.value, level, groupIds, size = SessionBuilder.TYPE_SESSION_SIZE)
+    val questions = VocabQuestion.from(entries, choice, pool = allWords(), extras = data.value.extraAnswers)
     typing = TypingSession(questions)
     publishType(null)
   }
@@ -195,10 +196,11 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     choicePart = part
     choiceMedal = Parts.medal(data.value, level, part)
     val pool = data.value.lists.flatMap { l -> l.words.map { Entry(l.id, it) } }
-    val engine = ExamEngine(part.words.size, ChoiceBuilder.lives(choiceMedal))
+    val total = if (level == Levels.VOCAB_TYPE) minOf(part.words.size, SessionBuilder.TYPE_SESSION_SIZE) else part.words.size
+    val engine = ExamEngine(total, ChoiceBuilder.lives(choiceMedal))
     if (level == Levels.VOCAB_TYPE) {
-      // Typen: hetzelfde examen, maar de antwoorden worden getypt.
-      val entries = part.words.map { Entry(part.listId, it) }.shuffled()
+      // Typen: getypt examen over een willekeurige selectie van het deel.
+      val entries = part.words.map { Entry(part.listId, it) }.shuffled().take(total)
       typing = TypingSession(VocabQuestion.from(entries, DirectionChoice.MIXED, pool = allWords(), extras = data.value.extraAnswers), engine)
       publishType(null)
       publishExam()

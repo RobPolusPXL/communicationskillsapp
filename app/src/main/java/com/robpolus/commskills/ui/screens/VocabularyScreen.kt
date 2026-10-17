@@ -175,7 +175,8 @@ fun VocabularyScreen(
       BottomActions {
         val chosen = parts.filter { it.id in selected }
         val words = chosen.sumOf { it.words.size }
-        val shown = minOf(words, SessionBuilder.VOCAB_SESSION_SIZE).let { if (it < words) "$it van $words" else "$words" }
+        val cap = if (level == Levels.VOCAB_TYPE) SessionBuilder.TYPE_SESSION_SIZE else SessionBuilder.VOCAB_SESSION_SIZE
+        val shown = minOf(words, cap).let { if (it < words) "$it van $words" else "$words" }
         val single = chosen.singleOrNull()
         val open = single != null && Parts.examOpen(data, level, single)
         val playText = when {
