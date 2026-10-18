@@ -28,6 +28,7 @@ import com.robpolus.commskills.domain.Question
 import com.robpolus.commskills.domain.SessionBuilder
 import com.robpolus.commskills.domain.Side
 import com.robpolus.commskills.domain.Stats
+import com.robpolus.commskills.domain.Tips
 import com.robpolus.commskills.domain.Trophies
 import com.robpolus.commskills.domain.TrophyStatus
 import com.robpolus.commskills.domain.TypingSession
