@@ -1,12 +1,13 @@
 package com.robpolus.commskills.domain
 
-/** Niveau-sleutels. Voortgang hoort bij een niveau: matchen en typen tellen apart. */
+/** Niveau-sleutels. Voortgang hoort bij een niveau: matchen, kiezen en typen tellen apart. */
 object Levels {
   const val VOCAB_MATCH = "vocab.match"
+  const val VOCAB_CHOICE = "vocab.choice"
   const val VOCAB_TYPE = "vocab.type"
   const val GRAMMAR = "grammar.conditionals"
 
-  val vocabulary = listOf(VOCAB_MATCH, VOCAB_TYPE)
+  val vocabulary = listOf(VOCAB_MATCH, VOCAB_CHOICE, VOCAB_TYPE)
 
   fun isVocabulary(level: String) = level in vocabulary
 }

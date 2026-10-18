@@ -38,7 +38,7 @@ import com.robpolus.commskills.ui.theme.GreenEdge
 import com.robpolus.commskills.ui.theme.Line
 import com.robpolus.commskills.ui.theme.Wrong
 
-/** Meerkeuze-examen: één woord, vijf opties. */
+/** Meerkeuze (oefenen of examen): één woord, vijf opties. */
 @Composable
 fun ChoiceScreen(
   ui: ChoiceUi?,
@@ -94,7 +94,7 @@ fun ChoiceScreen(
     AlertDialog(
       onDismissRequest = { confirmQuit = false },
       title = { Text("Stoppen?") },
-      text = { Text("Het examen wordt afgebroken.") },
+      text = { Text(if (ui.exam) "Het examen wordt afgebroken." else "De sessie wordt afgebroken.") },
       confirmButton = { TextButton(onClick = { confirmQuit = false; onQuit() }) { Text("Stoppen") } },
       dismissButton = { TextButton(onClick = { confirmQuit = false }) { Text("Verder spelen") } },
     )

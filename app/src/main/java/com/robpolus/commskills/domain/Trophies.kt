@@ -15,6 +15,7 @@ object Trophies {
 
   val levelTitles = mapOf(
     Levels.VOCAB_MATCH to "Woorden matchen",
+    Levels.VOCAB_CHOICE to "Woorden kiezen",
     Levels.VOCAB_TYPE to "Woorden typen",
     Levels.GRAMMAR to "If-zinnen",
   )

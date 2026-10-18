@@ -26,8 +26,12 @@ object ChoiceBuilder {
    * Alle woorden van [part] als vraag, door elkaar. De helft EN→NL, de helft NL→EN.
    * Foute opties komen eerst uit dezelfde lijst, daarna uit de rest; synoniemen worden nooit als fout getoond.
    */
-  fun build(part: Part, pool: List<Entry>, random: Random = Random.Default): List<ChoiceQuestion> {
-    val entries = part.words.map { Entry(part.listId, it) }.shuffled(random)
+  fun build(part: Part, pool: List<Entry>, random: Random = Random.Default): List<ChoiceQuestion> =
+    build(part.words.map { Entry(part.listId, it) }, pool, random)
+
+  /** Eén vraag per woord in [entries], in willekeurige volgorde (zie [build] voor de opties). */
+  fun build(entries0: List<Entry>, pool: List<Entry>, random: Random = Random.Default): List<ChoiceQuestion> {
+    val entries = entries0.shuffled(random)
     val dirs = entries.indices.map { if (it % 2 == 0) Direction.EN_NL else Direction.NL_EN }.shuffled(random)
     val shuffledPool = pool.shuffled(random)
     return entries.mapIndexed { i, e ->
@@ -51,8 +55,17 @@ object ChoiceBuilder {
   }
 }
 
-/** Een meerkeuze-examen over één deel. Eén woord tegelijk; elke vraag één keer. */
-class ChoiceExamSession(val questions: List<ChoiceQuestion>, val engine: ExamEngine) {
+/**
+ * Een meerkeuzesessie, één woord tegelijk. Als examen krijgt elke vraag één kans en bepaalt [engine]
+ * het einde; bij oefenen ([practice]) kost een fout niets en komt een fout woord één keer terug.
+ */
+class ChoiceExamSession(
+  questions: List<ChoiceQuestion>,
+  val engine: ExamEngine,
+  val practice: Boolean = false,
+) {
+  private val queue = questions.toMutableList()
+  private val requeued = mutableSetOf<ChoiceQuestion>()
   var index = 0
     private set
   var picked: Int? = null
@@ -61,9 +74,12 @@ class ChoiceExamSession(val questions: List<ChoiceQuestion>, val engine: ExamEng
   private val wrongOnes = LinkedHashSet<ChoiceQuestion>()
   val mistakes: List<ChoiceQuestion> get() = wrongOnes.toList()
 
-  val total get() = questions.size
-  val question: ChoiceQuestion? get() = questions.getOrNull(index)
-  val finished: Boolean get() = engine.status != ExamStatus.IN_PROGRESS
+  /** Alle vragen tot nu toe, inclusief herhalingen. */
+  val all: List<ChoiceQuestion> get() = queue.toList()
+  val total get() = queue.size
+  val question: ChoiceQuestion? get() = queue.getOrNull(index)
+  val finished: Boolean
+    get() = if (practice) picked != null && index >= queue.size - 1 else engine.status != ExamStatus.IN_PROGRESS
 
   /** @return of het antwoord juist was; `null` als er al gekozen was. */
   fun pick(option: Int): Boolean? {
@@ -72,7 +88,11 @@ class ChoiceExamSession(val questions: List<ChoiceQuestion>, val engine: ExamEng
     picked = option
     val ok = option == q.correctIndex
     if (!ok) wrongOnes += q
-    engine.record(ok)
+    if (practice) {
+      if (!ok && requeued.add(q)) queue += q
+    } else {
+      engine.record(ok)
+    }
     return ok
   }
 

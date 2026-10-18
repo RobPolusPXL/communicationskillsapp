@@ -66,8 +66,9 @@ fun HomeScreen(
   grammarPercentage: Double = 0.0,
 ) {
   val match = Learning.vocabularyView(data, Levels.VOCAB_MATCH).percentage()
+  val choice = Learning.vocabularyView(data, Levels.VOCAB_CHOICE).percentage()
   val type = Learning.vocabularyView(data, Levels.VOCAB_TYPE).percentage()
-  val vocabAverage = (match + type) / 2
+  val vocabAverage = (match + choice + type) / 3
   Column(Modifier.fillMaxSize().systemBarsPadding()) {
     Column(
       Modifier.weight(1f).padding(horizontal = 20.dp).padding(top = 12.dp),
@@ -86,7 +87,7 @@ fun HomeScreen(
 
       Column(Modifier.weight(1f).fillMaxWidth(), verticalArrangement = Arrangement.SpaceAround) {
         PathNode(
-          "Vocabulary", "Matchen ${(match * 100).toInt()}% · Typen ${(type * 100).toInt()}%", "Aa",
+          "Vocabulary", "Matchen ${(match * 100).toInt()}% · Kiezen ${(choice * 100).toInt()}% · Typen ${(type * 100).toInt()}%", "Aa",
           Blue, vocabAverage.toFloat(), Alignment.Start, onVocabulary,
         )
         PathNode(

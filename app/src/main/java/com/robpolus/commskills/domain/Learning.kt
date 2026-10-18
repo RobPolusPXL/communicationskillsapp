@@ -61,7 +61,8 @@ class LevelView(
 object Learning {
 
   fun levelUnlocked(data: AppData, level: String): Boolean = when (level) {
-    Levels.VOCAB_TYPE -> Unlocking.nextLevelUnlocked(Levels.VOCAB_MATCH in data.examPassed)
+    Levels.VOCAB_CHOICE -> Unlocking.nextLevelUnlocked(Levels.VOCAB_MATCH in data.examPassed)
+    Levels.VOCAB_TYPE -> Unlocking.nextLevelUnlocked(Levels.VOCAB_CHOICE in data.examPassed)
     else -> true
   }
 
