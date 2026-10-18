@@ -181,6 +181,8 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onSubmit = practice::submitAnswer,
         onNext = practice::nextQuestion,
         onAccept = practice::acceptAnyway,
+        onTip = practice::requestTip,
+        onGiveUp = practice::giveUp,
         onQuit = { practice.abandon(); nav.popBackStack() },
         topExtra = { ExamHearts(examUi) },
       )

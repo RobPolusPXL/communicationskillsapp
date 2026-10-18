@@ -250,6 +250,44 @@ class FlowTest {
   }
 
   @Test
+  fun tipRevealsLettersAndHintedAnswerDoesNotCount() {
+    toHome()
+    rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("testlijst"), com.robpolus.commskills.domain.DirectionChoice.EN_NL) }
+    rule.runOnIdle { assertTrue(vm.type.value!!.canTip); assertEquals(null, vm.type.value!!.tip) }
+    rule.runOnIdle { vm.requestTip() }
+    rule.runOnIdle { assertTrue(vm.type.value!!.tip!!.isNotBlank()) }
+    val answer = correctAnswerForCurrent()
+    rule.runOnIdle { vm.submitAnswer(answer) }
+    rule.runOnIdle {
+      assertTrue(vm.type.value!!.feedback!!.correct)
+      assertTrue(com.robpolus.commskills.domain.Note.HINT in vm.type.value!!.feedback!!.notes)
+    }
+    assertTrue(dump(), data.progress.values.any { it.streak == 0 && it.wrong == 1 })
+  }
+
+  @Test
+  fun giveUpShowsAnswerAndCountsWrong() {
+    toHome()
+    rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("testlijst"), com.robpolus.commskills.domain.DirectionChoice.EN_NL) }
+    rule.runOnIdle { vm.giveUp() }
+    rule.runOnIdle {
+      val f = vm.type.value!!.feedback!!
+      assertTrue(!f.correct && f.correctAnswer.isNotBlank())
+    }
+    assertTrue(data.progress.values.any { it.wrong == 1 })
+  }
+
+  @Test
+  fun noTipsInExam() {
+    toHome()
+    makeExamEligible(Levels.VOCAB_TYPE)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
+    rule.runOnIdle { assertTrue(!vm.type.value!!.canTip); vm.requestTip(); assertEquals(null, vm.type.value!!.tip) }
+    rule.runOnIdle { vm.giveUp() }
+    rule.runOnIdle { assertEquals(2, vm.exam.value!!.lives) }
+  }
+
+  @Test
   fun typingSessionPerfect() {
     toHome()
     rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("trolley_problem"), com.robpolus.commskills.domain.DirectionChoice.MIXED) }

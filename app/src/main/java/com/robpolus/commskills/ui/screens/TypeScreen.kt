@@ -55,6 +55,7 @@ fun noteText(note: Note): String = when (note) {
   Note.MISSING_TO -> "Voor 100% correct moet het ‘to …’ zijn."
   Note.SYNONYM -> "Ook goed: een ander woord met dezelfde vertaling."
   Note.PARTIAL -> "Let op: dit is een deel van de volledige vertaling."
+  Note.HINT -> "Juist met tip: dit woord komt nog terug."
 }
 
 @Composable
@@ -64,6 +65,8 @@ fun TypeScreen(
   onNext: () -> Unit,
   onQuit: () -> Unit,
   onAccept: () -> Unit = {},
+  onTip: () -> Unit = {},
+  onGiveUp: () -> Unit = {},
   topExtra: @Composable () -> Unit = {},
 ) {
   var confirmQuit by remember { mutableStateOf(false) }
@@ -107,6 +110,15 @@ fun TypeScreen(
       }
     }
 
+    ui.tip?.let {
+      Text(
+        it,
+        style = MaterialTheme.typography.headlineSmall,
+        fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+      )
+    }
     OutlinedTextField(
       value = text,
       onValueChange = { text = it },
@@ -121,6 +133,10 @@ fun TypeScreen(
     val feedback = ui.feedback
     if (feedback == null) {
       ChunkyButton("Controleren", onClick = { onSubmit(text) }, enabled = text.isNotBlank())
+      Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        if (ui.canTip) ChunkyOutlineButton("Tip", onClick = onTip, modifier = Modifier.weight(1f))
+        ChunkyOutlineButton("Ik weet het niet", onClick = onGiveUp, modifier = Modifier.weight(1f))
+      }
     } else {
       FeedbackCard(feedback)
       if (feedback.canAccept) ChunkyOutlineButton("Toch juist", onClick = onAccept)
@@ -156,7 +172,7 @@ private fun FeedbackCard(f: TypeFeedback) {
       Text(if (f.correct) "Juist!" else "Fout", style = MaterialTheme.typography.titleMedium, color = color)
       f.notes.forEach { Text(noteText(it), style = MaterialTheme.typography.bodyMedium) }
       if (!f.correct) {
-        Text("Jouw antwoord: ${f.given}", style = MaterialTheme.typography.bodyMedium)
+        Text("Jouw antwoord: ${f.given.ifBlank { "(geen)" }}", style = MaterialTheme.typography.bodyMedium)
         Text("Juiste antwoord: ${f.correctAnswer}", style = MaterialTheme.typography.titleSmall)
       } else if (f.correctAnswer.isNotBlank()) {
         Text("Antwoord: ${f.correctAnswer}", style = MaterialTheme.typography.bodyMedium)

@@ -5,6 +5,9 @@ import kotlin.math.abs
 
 /** Meldingen bij een juist antwoord. */
 enum class Note {
+  /** Juist, maar met een tip: telt niet als gekend. */
+  HINT,
+
   /** Eén letter vervangen door een naburige toets (AZERTY). */
   TYPO,
 

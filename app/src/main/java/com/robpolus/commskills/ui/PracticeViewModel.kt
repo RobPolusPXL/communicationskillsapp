@@ -76,6 +76,10 @@ data class TypeUi(
   val answerLabel: String,
   val feedback: TypeFeedback?,
   val grammar: Boolean,
+  /** Patroon met onthulde letters; `null` zolang er geen tip gevraagd is. */
+  val tip: String? = null,
+  /** Tips zijn er enkel bij oefenen, niet in een examen. */
+  val canTip: Boolean = false,
 )
 
 data class MistakeLine(val key: String, val title: String, val detail: String)
@@ -420,9 +424,10 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val session = typing ?: return
     if (_type.value?.feedback != null) return
     touch()
-    val outcome = session.answer(checker, answer) ?: return
+    val hinted = hintLevel > 0
+    val outcome = session.answer(checker, answer, hinted) ?: return
     val q = outcome.question
-    val correct = outcome.result.isCorrect
+    val correct = outcome.counts
     lastPrior = null
     if (outcome.firstTry) {
       if (q is VocabQuestion) lastPrior = AppData.progressKey(level, q.group, q.id) to data.value.progress[AppData.progressKey(level, q.group, q.id)]
@@ -439,18 +444,37 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     publishExam()
     publishType(
       TypeFeedback(
-        correct = correct,
+        correct = outcome.result.isCorrect,
         notes = (outcome.result as? AnswerResult.Correct)?.notes.orEmpty(),
         given = answer,
         correctAnswer = q.correctText,
         explanation = q.explanation,
-        canAccept = !correct && q is VocabQuestion,
+        canAccept = !outcome.result.isCorrect && q is VocabQuestion,
       ),
       q,
     )
   }
 
   private var lastPrior: Pair<String, WordProgress?>? = null
+
+  /** Aantal gevraagde tips bij de huidige vraag. */
+  private var hintLevel = 0
+
+  /** Tip: onthult één letter meer van het antwoord (enkel bij oefenen). */
+  fun requestTip() {
+    val session = typing ?: return
+    val ui = _type.value ?: return
+    if (ui.feedback != null || session.exam != null) return
+    val q = session.current() ?: return
+    touch()
+    hintLevel = minOf(hintLevel + 1, Tips.maxReveal(q.correctText).coerceAtLeast(1))
+    _type.value = ui.copy(tip = Tips.pattern(q.correctText, hintLevel))
+  }
+
+  /** "Ik weet het niet": telt als fout, de oplossing wordt getoond. */
+  fun giveUp() {
+    submitAnswer("")
+  }
 
   /** "Toch juist": het antwoord telt als juist (ook in een examen) en wordt bij dit woord onthouden. */
   fun acceptAnyway() {
@@ -504,7 +528,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       _type.value = _type.value?.copy(feedback = feedback ?: _type.value?.feedback, completed = session.completed)
       return
     }
-    if (feedback == null) serial++
+    if (feedback == null) { serial++; hintLevel = 0 }
     _type.value = TypeUi(
       serial = serial,
       completed = session.completed,
@@ -515,6 +539,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       answerLabel = q.answerLabel,
       feedback = feedback,
       grammar = q is GrammarQuestion,
+      canTip = feedback == null && session.exam == null,
     )
   }
 
