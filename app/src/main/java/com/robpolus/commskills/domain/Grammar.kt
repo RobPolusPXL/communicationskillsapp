@@ -20,22 +20,26 @@ data class GrammarExercise(
 }
 
 object Grammar {
-  val types = listOf(0, 1, 2, 3)
+  /** 0–3: if-zinnen; 4: actief naar passief. */
+  val types = listOf(0, 1, 2, 3, 4)
 
   fun groupId(type: Int) = "type$type"
 
-  fun title(type: Int) = "Type $type"
+  fun title(type: Int) = if (type == PASSIVE) "Passief" else "Type $type"
+
+  const val PASSIVE = 4
 
   fun subtitle(type: Int) = when (type) {
     0 -> "altijd waar (if + present, present)"
     1 -> "waarschijnlijk (if + present, will)"
     2 -> "onwaarschijnlijk (if + past, would)"
+    PASSIVE -> "actief naar passief (to be + voltooid deelwoord)"
     else -> "onmogelijk, verleden (if + past perfect, would have)"
   }
 
-  /** Per if-type de ids van de oefeningen. Alle vier de types staan er altijd in. */
+  /** Per type de ids van de oefeningen. De vier if-types staan er altijd in, passief enkel met oefeningen. */
   fun groups(exercises: List<GrammarExercise>): Map<String, List<String>> =
-    types.associate { t -> groupId(t) to exercises.filter { it.type == t }.map { it.id } }
+    types.filter { t -> t != PASSIVE || exercises.any { it.type == t } }.associate { t -> groupId(t) to exercises.filter { it.type == t }.map { it.id } }
 
   fun view(data: AppData, exercises: List<GrammarExercise>) = LevelView(Levels.GRAMMAR, groups(exercises), data)
 

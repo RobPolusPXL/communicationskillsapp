@@ -164,6 +164,8 @@ Trofeeën:
 ## 11. Grammar-oefeningen bijmaken 🔶
 Aantal: **25 oefenzinnen per if-type** (100 in totaal), zelf geschreven, in dezelfde stijl als de cursus: invullen van een werkwoordsvorm met het werkwoord tussen haakjes. Alle zinnen worden door Rob nagelezen vóór ze in de app komen; elke zin krijgt een correcte antwoordenlijst (varianten zoals `'d`/`would`) en een korte uitleg.
 
+Daarnaast een vijfde groep **Passief** (actief naar passief): 30 zinnen over present/past simple, present perfect, will, modals en continuous. De actieve zin staat in de opgave, het passieve werkwoord wordt ingevuld. Examen, medailles en voortgang werken zoals bij de if-types.
+
 ## 12. Testen en kwaliteit
 - Unit tests voor `AnswerChecker` (alle regels van § 4), `Scoring`, `Unlocking`, `ExamEngine`, `SessionBuilder` en `DocxListImporter` (met een klein synthetisch testbestand, geen cursusmateriaal).
 - Instrumentatietests voor de belangrijkste flows (login stub, sessie spelen).
