@@ -7,7 +7,12 @@ import kotlin.random.Random
  * Wachtrij van een oefensessie. Een fout beantwoord item komt 3 à 5 posities verder in dezelfde
  * sessie opnieuw, tot het één keer juist is. Alleen het eerste antwoord telt als fout voor de score.
  */
-class SessionQueue<T>(items: List<T>, private val random: Random = Random.Default) {
+class SessionQueue<T>(
+  items: List<T>,
+  private val random: Random = Random.Default,
+  /** `false`: een fout item telt als afgewerkt en komt niet terug. */
+  private val repeatMistakes: Boolean = true,
+) {
 
   private val queue = ArrayDeque(items)
   private val seen = mutableSetOf<T>()
@@ -50,6 +55,10 @@ class SessionQueue<T>(items: List<T>, private val random: Random = Random.Defaul
       completed++
     } else {
       if (firstTry) wrongFirstTry.add(item)
+      if (!repeatMistakes) {
+        completed++
+        return
+      }
       lastWrong = item
       lastWrongWasFirst = firstTry
       val position = random.nextInt(3, 6).coerceAtMost(queue.size)

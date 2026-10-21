@@ -115,7 +115,7 @@ Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De
 
 **Medailles:** per deel en per niveau (Matchen, Kiezen, Typen, Grammar-type) bewaren we 0–3 (brons, zilver, goud). Elk geslaagd examen geeft de volgende medaille. Het eerste geslaagde Matchen-examen ontgrendelt Kiezen, het eerste geslaagde Kiezen-examen ontgrendelt Typen.
 
-**Herhaling binnen een sessie:** een fout woord komt 3 à 5 posities verder opnieuw, tot het één keer juist is. Met "Toch juist" haal je die herhaling weg.
+**Herhaling binnen een sessie:** een fout woord komt 3 à 5 posities verder opnieuw, tot het één keer juist is. Met "Toch juist" haal je die herhaling weg. Bij Grammar-oefenen geldt dat niet: een foute zin telt meteen als afgewerkt en komt niet terug, zodat een sessie altijd na 10 zinnen klaar is.
 
 **Antwoorden die "toch juist" zijn:** de knop "Toch juist" (ook in examens) bewaart je antwoord blijvend bij het woord (`extraAnswers`, per richting). Het telt daarna meteen juist en je kan het in het woordenoverzicht (info-icoon) verwijderen. Een reset per lijst laat deze antwoorden staan.
 

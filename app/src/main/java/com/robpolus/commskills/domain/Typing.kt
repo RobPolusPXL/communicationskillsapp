@@ -127,8 +127,10 @@ class TypingSession<Q : Question>(
   questions: List<Q>,
   val exam: ExamEngine? = null,
   random: Random = Random.Default,
+  /** `false` (grammar): een foute zin telt als afgewerkt en komt niet terug. */
+  repeatMistakes: Boolean = true,
 ) {
-  private val queue = SessionQueue(questions, random)
+  private val queue = SessionQueue(questions, random, repeatMistakes)
   private val examQuestions = questions
   private var examIndex = 0
   private val attempted = mutableSetOf<Q>()

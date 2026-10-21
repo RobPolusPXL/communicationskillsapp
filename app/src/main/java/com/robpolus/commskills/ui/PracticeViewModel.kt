@@ -194,7 +194,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   fun startGrammar(groupIds: List<String>?) {
     begin(Levels.GRAMMAR)
     val questions = Grammar.sessionExercises(data.value, grammar, groupIds).take(SessionBuilder.SESSION_SIZE).map { GrammarQuestion(it) }
-    typing = TypingSession(questions)
+    typing = TypingSession(questions, repeatMistakes = false)
     publishType(null)
   }
 

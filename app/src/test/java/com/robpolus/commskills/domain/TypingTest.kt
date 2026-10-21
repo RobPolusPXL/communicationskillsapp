@@ -127,6 +127,19 @@ class TypingTest {
   }
 
   @Test
+  fun grammarMistakeCountsAsDoneAndIsNotRepeated() {
+    val qs = (1..3).map { GrammarQuestion(GrammarExercise("c2-0$it", 2, "x ___", "(h)", listOf("a"), "")) }
+    val s = TypingSession(qs, repeatMistakes = false)
+    s.answer(checker, "zzz")
+    assertEquals(1, s.completed)
+    s.answer(checker, "a")
+    s.answer(checker, "zzz")
+    assertTrue(s.finished)
+    assertEquals(3, s.completed)
+    assertEquals(2, s.mistakes.size)
+  }
+
+  @Test
   fun grammarGroupsAlwaysHaveAllTypes() {
     val g = Grammar.groups(listOf(ex))
     assertEquals(listOf("type0", "type1", "type2", "type3"), g.keys.toList())
