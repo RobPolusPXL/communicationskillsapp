@@ -261,7 +261,7 @@ class FlowTest {
   fun grammarSessionMixedUnlockAndExam() {
     toHome()
     // Elk type één keer spelen; daarna gaat "Gemixt" open.
-    for (t in 0..3) {
+    for (t in 0..4) {
       rule.runOnIdle { vm.startGrammar(listOf("type$t")) }
       typeUntilDone()
       rule.runOnIdle { assertEquals("Foutloos!", vm.result.value!!.title); vm.clearResult() }
@@ -269,7 +269,7 @@ class FlowTest {
     val view = com.robpolus.commskills.domain.Grammar.view(data, app.grammar)
     assertTrue(dump() + " sessions=" + data.sessions, view.mixedUnlocked())
     assertTrue("niveau moet 70% halen na 4 perfecte sessies is niet gegarandeerd", view.percentage() > 0.05)
-    assertEquals(4, data.sessions.values.count { it.perfectCount == 1 })
+    assertEquals(5, data.sessions.values.count { it.perfectCount == 1 })
     // Examen: eerst voldoende voortgang opbouwen.
     app.repository.update { d ->
       var next = d

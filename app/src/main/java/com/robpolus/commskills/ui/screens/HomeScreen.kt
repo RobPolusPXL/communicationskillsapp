@@ -90,7 +90,7 @@ fun HomeScreen(
           Blue, vocabAverage.toFloat(), Alignment.Start, onVocabulary,
         )
         PathNode(
-          "Grammar", "Type 0 t/m 3 · ${(grammarPercentage * 100).toInt()}%", "If",
+          "Grammar", "Type 0 t/m 3 + passief · ${(grammarPercentage * 100).toInt()}%", "If",
           Orange2, grammarPercentage.toFloat(), Alignment.End, onGrammar,
         )
       }

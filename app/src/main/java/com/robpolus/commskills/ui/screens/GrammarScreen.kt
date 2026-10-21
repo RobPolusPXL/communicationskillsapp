@@ -57,7 +57,7 @@ import com.robpolus.commskills.ui.theme.Wrong
 
 private val OrangeLight = Color(0xFFFFF0DB)
 private val TealLight = Color(0xFFDCF4F1)
-private val typeColors = listOf(Correct, Blue, Orange2, Wrong)
+private val typeColors = listOf(Correct, Blue, Orange2, Wrong, Color(0xFF8E5CF7))
 
 @Composable
 fun GrammarScreen(
@@ -92,7 +92,7 @@ fun GrammarScreen(
               Box(
                 Modifier.size(42.dp).clip(RoundedCornerShape(14.dp)).background(typeColors[type]),
                 contentAlignment = Alignment.Center,
-              ) { Text("$type", color = Color.White, fontWeight = FontWeight.Black, fontSize = 22.sp) }
+              ) { Text(if (type == Grammar.PASSIVE) "P" else "$type", color = Color.White, fontWeight = FontWeight.Black, fontSize = 22.sp) }
               Column(Modifier.weight(1f).padding(horizontal = 12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Text(Grammar.title(type), style = MaterialTheme.typography.titleSmall)
                 Text(
@@ -133,7 +133,7 @@ fun GrammarScreen(
               Column(Modifier.weight(1f)) {
                 Text("Gemixt", style = MaterialTheme.typography.titleSmall)
                 Text(
-                  if (open) "Alle types door elkaar (het moeilijkste)" else "Speel eerst alle vier de types minstens één keer",
+                  if (open) "Alle types door elkaar (het moeilijkste)" else "Speel eerst alle types minstens één keer",
                   style = MaterialTheme.typography.bodySmall,
                   color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )

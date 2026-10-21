@@ -20,8 +20,9 @@ class GrammarContentTest {
 
   @Test
   fun hasTwentyFivePerType() {
-    for (t in Grammar.types) assertEquals("type $t", 25, exercises.count { it.type == t })
-    assertEquals(100, exercises.size)
+    for (t in 0..3) assertEquals("type $t", 25, exercises.count { it.type == t })
+    assertEquals(39, exercises.count { it.type == Grammar.PASSIVE })
+    assertEquals(139, exercises.size)
   }
 
   @Test
@@ -62,6 +63,7 @@ class GrammarContentTest {
         3 -> assertTrue(e.id + ": " + full, Regex("\\b(had|hadn't|would have|wouldn't have|'d have)\\b|'d ", RegexOption.IGNORE_CASE).containsMatchIn(full))
         2 -> assertTrue(e.id + ": " + full, Regex("\\b(would|wouldn't|could)\\b|'d ", RegexOption.IGNORE_CASE).containsMatchIn(full))
         1 -> assertTrue(e.id + ": " + full, Regex("\\b(will|won't)\\b|'ll", RegexOption.IGNORE_CASE).containsMatchIn(full))
+        4 -> assertTrue(e.id + ": " + full, Regex("\\b(is|are|was|were|been|being|be|isn.t|aren.t|wasn.t|weren.t)\\b", RegexOption.IGNORE_CASE).containsMatchIn(full))
         0 -> assertFalse(e.id + ": " + full, modal.containsMatchIn(full))
       }
     }
