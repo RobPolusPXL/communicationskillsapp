@@ -47,7 +47,7 @@ class SmokeTest {
       lists.map { it.title }.toSet(),
     )
     assertEquals(571, lists.sumOf { it.words.size })
-    assertEquals(130, app.grammar.size)
+    assertEquals(139, app.grammar.size)
   }
 
   @Test

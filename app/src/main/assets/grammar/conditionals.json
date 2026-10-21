@@ -1061,305 +1061,402 @@
   {
    "id": "p4-01",
    "type": 4,
-   "text": "The chef cooks the meal. → The meal ___ by the chef.",
-   "hint": "(to cook)",
+   "text": "They send the invoices by email. → The invoices ___ by email.",
+   "hint": "(to send)",
    "answers": [
-    "is cooked"
+    "are sent"
    ],
-   "explain": "Actief naar passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord."
   },
   {
    "id": "p4-02",
    "type": 4,
-   "text": "Millions of people speak English. → English ___ by millions of people.",
-   "hint": "(to speak)",
+   "text": "They are interviewing the new nurse. → The new nurse ___.",
+   "hint": "(to interview)",
    "answers": [
-    "is spoken"
+    "is being interviewed"
    ],
-   "explain": "Actief naar passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present continuous): het lijdend voorwerp wordt onderwerp, daarna am/is/are being + voltooid deelwoord."
   },
   {
    "id": "p4-03",
    "type": 4,
-   "text": "They build houses here. → Houses ___ here.",
-   "hint": "(to build)",
+   "text": "They aren't preparing the soup. → The soup ___.",
+   "hint": "(to NOT prepare)",
    "answers": [
-    "are built"
+    "isn't being prepared",
+    "is not being prepared"
    ],
-   "explain": "Actief naar passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present continuous, ontkenning): het lijdend voorwerp wordt onderwerp, daarna am/is/are + not + being + voltooid deelwoord."
   },
   {
    "id": "p4-04",
    "type": 4,
-   "text": "The teacher corrects the tests every week. → The tests ___ by the teacher every week.",
-   "hint": "(to correct)",
+   "text": "Is the mechanic checking the brakes? → ___",
+   "hint": "(vraag: begin met Are)",
    "answers": [
-    "are corrected"
+    "are the brakes being checked"
    ],
-   "explain": "Actief naar passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present continuous, vraag): het lijdend voorwerp wordt onderwerp, daarna am/is/are + onderwerp + being + voltooid deelwoord."
   },
   {
    "id": "p4-05",
    "type": 4,
-   "text": "Someone cleans the office every evening. → The office ___ every evening.",
-   "hint": "(to clean)",
+   "text": "They don't make these shoes in Spain anymore. → These shoes ___ in Spain anymore.",
+   "hint": "(to NOT make)",
    "answers": [
-    "is cleaned"
+    "aren't made",
+    "are not made"
    ],
-   "explain": "Actief naar passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present simple, ontkenning): het lijdend voorwerp wordt onderwerp, daarna am/is/are + not + voltooid deelwoord."
   },
   {
    "id": "p4-06",
    "type": 4,
-   "text": "Farmers grow rice in Asia. → Rice ___ in Asia by farmers.",
-   "hint": "(to grow)",
+   "text": "People speak many dialects in this region. → Many dialects ___ in this region.",
+   "hint": "(to speak)",
    "answers": [
-    "is grown"
+    "are spoken"
    ],
-   "explain": "Actief naar passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord."
   },
   {
    "id": "p4-07",
    "type": 4,
-   "text": "Shakespeare wrote Hamlet. → Hamlet ___ by Shakespeare.",
-   "hint": "(to write)",
+   "text": "They are building a bridge near the harbour. → A bridge ___ near the harbour.",
+   "hint": "(to build)",
    "answers": [
-    "was written"
+    "is being built"
    ],
-   "explain": "Actief naar passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present continuous): het lijdend voorwerp wordt onderwerp, daarna am/is/are being + voltooid deelwoord."
   },
   {
    "id": "p4-08",
    "type": 4,
-   "text": "The thief stole my bike. → My bike ___ by the thief.",
-   "hint": "(to steal)",
+   "text": "Somebody recommended that restaurant. → That restaurant ___.",
+   "hint": "(to recommend)",
    "answers": [
-    "was stolen"
+    "was recommended"
    ],
-   "explain": "Actief naar passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord."
   },
   {
    "id": "p4-09",
    "type": 4,
-   "text": "They opened the new library last year. → The new library ___ last year.",
-   "hint": "(to open)",
-   "answers": [
-    "was opened"
-   ],
-   "explain": "Actief naar passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-10",
-   "type": 4,
-   "text": "The police arrested two men. → Two men ___ by the police.",
-   "hint": "(to arrest)",
-   "answers": [
-    "were arrested"
-   ],
-   "explain": "Actief naar passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-11",
-   "type": 4,
-   "text": "The storm destroyed many houses. → Many houses ___ by the storm.",
-   "hint": "(to destroy)",
-   "answers": [
-    "were destroyed"
-   ],
-   "explain": "Actief naar passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-12",
-   "type": 4,
-   "text": "My parents paid the bill. → The bill ___ by my parents.",
-   "hint": "(to pay)",
-   "answers": [
-    "was paid"
-   ],
-   "explain": "Actief naar passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-13",
-   "type": 4,
-   "text": "Someone has broken the window. → The window ___.",
-   "hint": "(to break)",
-   "answers": [
-    "has been broken"
-   ],
-   "explain": "Actief naar passief (present perfect): het lijdend voorwerp wordt onderwerp, daarna has/have been + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-14",
-   "type": 4,
-   "text": "They have cancelled the meeting. → The meeting ___.",
-   "hint": "(to cancel)",
-   "answers": [
-    "has been cancelled",
-    "has been canceled"
-   ],
-   "explain": "Actief naar passief (present perfect): het lijdend voorwerp wordt onderwerp, daarna has/have been + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-15",
-   "type": 4,
-   "text": "The company has sold thousands of cars. → Thousands of cars ___ by the company.",
-   "hint": "(to sell)",
-   "answers": [
-    "have been sold"
-   ],
-   "explain": "Actief naar passief (present perfect): het lijdend voorwerp wordt onderwerp, daarna has/have been + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-16",
-   "type": 4,
-   "text": "Tom has finished the report. → The report ___ by Tom.",
-   "hint": "(to finish)",
-   "answers": [
-    "has been finished"
-   ],
-   "explain": "Actief naar passief (present perfect): het lijdend voorwerp wordt onderwerp, daarna has/have been + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-17",
-   "type": 4,
-   "text": "The manager will sign the contract. → The contract ___ by the manager.",
-   "hint": "(to sign)",
-   "answers": [
-    "will be signed"
-   ],
-   "explain": "Actief naar passief (will-future): het lijdend voorwerp wordt onderwerp, daarna will be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-18",
-   "type": 4,
-   "text": "They will announce the results tomorrow. → The results ___ tomorrow.",
-   "hint": "(to announce)",
-   "answers": [
-    "will be announced"
-   ],
-   "explain": "Actief naar passief (will-future): het lijdend voorwerp wordt onderwerp, daarna will be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-19",
-   "type": 4,
-   "text": "We will deliver the package on Monday. → The package ___ on Monday.",
-   "hint": "(to deliver)",
-   "answers": [
-    "will be delivered"
-   ],
-   "explain": "Actief naar passief (will-future): het lijdend voorwerp wordt onderwerp, daarna will be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-20",
-   "type": 4,
-   "text": "The students will write the exam in June. → The exam ___ by the students in June.",
-   "hint": "(to write)",
-   "answers": [
-    "will be written"
-   ],
-   "explain": "Actief naar passief (will-future): het lijdend voorwerp wordt onderwerp, daarna will be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-21",
-   "type": 4,
-   "text": "You must send the form today. → The form ___ today.",
-   "hint": "(must + to send)",
-   "answers": [
-    "must be sent"
-   ],
-   "explain": "Actief naar passief (modal): het lijdend voorwerp wordt onderwerp, daarna modal + be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-22",
-   "type": 4,
-   "text": "You can see the mountains from here. → The mountains ___ from here.",
-   "hint": "(can + to see)",
-   "answers": [
-    "can be seen"
-   ],
-   "explain": "Actief naar passief (modal): het lijdend voorwerp wordt onderwerp, daarna modal + be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-23",
-   "type": 4,
-   "text": "They should repair the road. → The road ___.",
-   "hint": "(should + to repair)",
-   "answers": [
-    "should be repaired"
-   ],
-   "explain": "Actief naar passief (modal): het lijdend voorwerp wordt onderwerp, daarna modal + be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-24",
-   "type": 4,
-   "text": "You may not use phones in the exam. → Phones ___ in the exam.",
-   "hint": "(may not + to use)",
-   "answers": [
-    "may not be used"
-   ],
-   "explain": "Actief naar passief (modal): het lijdend voorwerp wordt onderwerp, daarna modal + be + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-25",
-   "type": 4,
-   "text": "They are painting the house. → The house ___.",
-   "hint": "(to paint)",
-   "answers": [
-    "is being painted"
-   ],
-   "explain": "Actief naar passief (present continuous): het lijdend voorwerp wordt onderwerp, daarna am/is/are being + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-26",
-   "type": 4,
-   "text": "The engineers were testing the machine. → The machine ___ by the engineers.",
-   "hint": "(to test)",
-   "answers": [
-    "was being tested"
-   ],
-   "explain": "Actief naar passief (past continuous): het lijdend voorwerp wordt onderwerp, daarna was/were being + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-27",
-   "type": 4,
-   "text": "Someone is cleaning the room. → The room ___ at the moment.",
-   "hint": "(to clean)",
-   "answers": [
-    "is being cleaned"
-   ],
-   "explain": "Actief naar passief (present continuous): het lijdend voorwerp wordt onderwerp, daarna am/is/are being + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
-  },
-  {
-   "id": "p4-28",
-   "type": 4,
-   "text": "They were repairing the bridge when I arrived. → The bridge ___ when I arrived.",
+   "text": "They were repairing the road when the rain started. → The road ___ when the rain started.",
    "hint": "(to repair)",
    "answers": [
     "was being repaired"
    ],
-   "explain": "Actief naar passief (past continuous): het lijdend voorwerp wordt onderwerp, daarna was/were being + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (past continuous): het lijdend voorwerp wordt onderwerp, daarna was/were being + voltooid deelwoord."
   },
   {
-   "id": "p4-29",
+   "id": "p4-10",
    "type": 4,
-   "text": "They didn't invite me to the party. → I ___ to the party.",
-   "hint": "(to NOT invite)",
+   "text": "They didn't teach us that at school. → We ___ that at school.",
+   "hint": "(to NOT teach)",
    "answers": [
-    "wasn't invited",
-    "was not invited"
+    "weren't taught",
+    "were not taught"
    ],
-   "explain": "Actief naar passief (past simple, ontkenning): het lijdend voorwerp wordt onderwerp, daarna was/were + not + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (past simple, ontkenning): het lijdend voorwerp wordt onderwerp, daarna was/were + not + voltooid deelwoord. De persoon (us) wordt onderwerp."
   },
   {
-   "id": "p4-30",
+   "id": "p4-11",
    "type": 4,
-   "text": "Nobody has seen him since Monday. → He ___ since Monday.",
+   "text": "No one has seen him lately. → He ___ lately.",
    "hint": "(to NOT see)",
    "answers": [
     "hasn't been seen",
     "has not been seen"
    ],
-   "explain": "Actief naar passief (present perfect, ontkenning): het lijdend voorwerp wordt onderwerp, daarna has/have + not + been + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by."
+   "explain": "Passief (present perfect, ontkenning): het lijdend voorwerp wordt onderwerp, daarna has/have + not + been + voltooid deelwoord."
+  },
+  {
+   "id": "p4-12",
+   "type": 4,
+   "text": "Did they clean the office? → ___",
+   "hint": "(vraag: begin met Was)",
+   "answers": [
+    "was the office cleaned"
+   ],
+   "explain": "Passief (past simple, vraag): het lijdend voorwerp wordt onderwerp, daarna was/were + onderwerp + voltooid deelwoord."
+  },
+  {
+   "id": "p4-13",
+   "type": 4,
+   "text": "Nobody noticed the mistake. → The mistake ___.",
+   "hint": "(to NOT notice)",
+   "answers": [
+    "wasn't noticed",
+    "was not noticed"
+   ],
+   "explain": "Passief (past simple, ontkenning): het lijdend voorwerp wordt onderwerp, daarna was/were + not + voltooid deelwoord. Nobody/no one → gewoon een ontkenning in het passief."
+  },
+  {
+   "id": "p4-14",
+   "type": 4,
+   "text": "They have promised us a pay rise. → We ___ a pay rise.",
+   "hint": "(to promise)",
+   "answers": [
+    "have been promised"
+   ],
+   "explain": "Passief (present perfect): het lijdend voorwerp wordt onderwerp, daarna has/have been + voltooid deelwoord. Bij twee voorwerpen (persoon + zaak) kan de persoon onderwerp worden."
+  },
+  {
+   "id": "p4-15",
+   "type": 4,
+   "text": "The storm blew the roof off the barn. → The roof ___ off the barn by the storm.",
+   "hint": "(to blow)",
+   "answers": [
+    "was blown"
+   ],
+   "explain": "Passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by (weglaten als dat niet belangrijk is)."
+  },
+  {
+   "id": "p4-16",
+   "type": 4,
+   "text": "They haven't found the keys yet. → The keys ___ yet.",
+   "hint": "(to NOT find)",
+   "answers": [
+    "haven't been found",
+    "have not been found"
+   ],
+   "explain": "Passief (present perfect, ontkenning): het lijdend voorwerp wordt onderwerp, daarna has/have + not + been + voltooid deelwoord."
+  },
+  {
+   "id": "p4-17",
+   "type": 4,
+   "text": "Someone will tell him the rules. → ___",
+   "hint": "(begin met He)",
+   "answers": [
+    "he will be told the rules",
+    "the rules will be told to him"
+   ],
+   "explain": "Passief (will-future, twee voorwerpen): het lijdend voorwerp wordt onderwerp, daarna will be + voltooid deelwoord. Twee voorwerpen: het passief kan met de persoon (He will be told …) of met de zaak (The rules will be told to him) beginnen."
+  },
+  {
+   "id": "p4-18",
+   "type": 4,
+   "text": "They showed the visitors the castle. → ___",
+   "hint": "(begin met The visitors)",
+   "answers": [
+    "the visitors were shown the castle"
+   ],
+   "explain": "Passief (past simple, twee voorwerpen): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Twee voorwerpen: het passief kan met de persoon of met de zaak beginnen."
+  },
+  {
+   "id": "p4-19",
+   "type": 4,
+   "text": "They promised me a new bicycle. → ___",
+   "hint": "(begin met I)",
+   "answers": [
+    "i was promised a new bicycle"
+   ],
+   "explain": "Passief (past simple, twee voorwerpen): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Twee voorwerpen: het passief kan met de persoon of met de zaak beginnen."
+  },
+  {
+   "id": "p4-20",
+   "type": 4,
+   "text": "They gave her an expensive present. → ___",
+   "hint": "(begin met She)",
+   "answers": [
+    "she was given an expensive present"
+   ],
+   "explain": "Passief (past simple, twee voorwerpen): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Twee voorwerpen: het passief kan met de persoon of met de zaak beginnen."
+  },
+  {
+   "id": "p4-21",
+   "type": 4,
+   "text": "What questions did they ask him? → ___",
+   "hint": "(begin met What)",
+   "answers": [
+    "what questions was he asked"
+   ],
+   "explain": "Passief (past simple, vraag): het lijdend voorwerp wordt onderwerp, daarna was/were + onderwerp + voltooid deelwoord."
+  },
+  {
+   "id": "p4-22",
+   "type": 4,
+   "text": "People never spoke to me like that. → ___",
+   "hint": "(begin met I)",
+   "answers": [
+    "i was never spoken to like that"
+   ],
+   "explain": "Passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Een voorzetsel (to) blijft bij het werkwoord staan."
+  },
+  {
+   "id": "p4-23",
+   "type": 4,
+   "text": "The committee will approve the plan next week. → The plan ___ next week.",
+   "hint": "(to approve)",
+   "answers": [
+    "will be approved"
+   ],
+   "explain": "Passief (will-future): het lijdend voorwerp wordt onderwerp, daarna will be + voltooid deelwoord."
+  },
+  {
+   "id": "p4-24",
+   "type": 4,
+   "text": "You must not park cars here. → Cars ___ here.",
+   "hint": "(must NOT + to park)",
+   "answers": [
+    "mustn't be parked",
+    "must not be parked"
+   ],
+   "explain": "Passief (modal, ontkenning): het lijdend voorwerp wordt onderwerp, daarna modal + be + voltooid deelwoord."
+  },
+  {
+   "id": "p4-25",
+   "type": 4,
+   "text": "You should open the wine three hours before dinner. → The wine ___ three hours before dinner.",
+   "hint": "(should + to open)",
+   "answers": [
+    "should be opened"
+   ],
+   "explain": "Passief (modal): het lijdend voorwerp wordt onderwerp, daarna modal + be + voltooid deelwoord."
+  },
+  {
+   "id": "p4-26",
+   "type": 4,
+   "text": "Previous climbers had cut steps in the ice. → Steps ___ in the ice by previous climbers.",
+   "hint": "(to cut)",
+   "answers": [
+    "had been cut"
+   ],
+   "explain": "Passief (past perfect): het lijdend voorwerp wordt onderwerp, daarna had been + voltooid deelwoord."
+  },
+  {
+   "id": "p4-27",
+   "type": 4,
+   "text": "Somebody must have taken my umbrella. → My umbrella ___.",
+   "hint": "(must + to take)",
+   "answers": [
+    "must have been taken"
+   ],
+   "explain": "Passief (modal perfect): het lijdend voorwerp wordt onderwerp, daarna modal + have been + voltooid deelwoord."
+  },
+  {
+   "id": "p4-28",
+   "type": 4,
+   "text": "I would love someone to take me to the concert. → I would love ___ to the concert.",
+   "hint": "(passieve infinitief: to take)",
+   "answers": [
+    "to be taken"
+   ],
+   "explain": "Passief (passieve infinitief): het lijdend voorwerp wordt onderwerp, daarna to be + voltooid deelwoord."
+  },
+  {
+   "id": "p4-29",
+   "type": 4,
+   "text": "We use this room only for meetings. → This room ___ only for meetings.",
+   "hint": "(to use)",
+   "answers": [
+    "is used"
+   ],
+   "explain": "Passief (present simple): het lijdend voorwerp wordt onderwerp, daarna am/is/are + voltooid deelwoord."
+  },
+  {
+   "id": "p4-30",
+   "type": 4,
+   "text": "They are going to demolish the old cinema. → The old cinema ___.",
+   "hint": "(to demolish)",
+   "answers": [
+    "is going to be demolished"
+   ],
+   "explain": "Passief (going to-future): het lijdend voorwerp wordt onderwerp, daarna am/is/are going to be + voltooid deelwoord."
+  },
+  {
+   "id": "p4-31",
+   "type": 4,
+   "text": "Somebody had cleaned my shoes before I woke up. → My shoes ___ before I woke up.",
+   "hint": "(to clean)",
+   "answers": [
+    "had been cleaned"
+   ],
+   "explain": "Passief (past perfect): het lijdend voorwerp wordt onderwerp, daarna had been + voltooid deelwoord."
+  },
+  {
+   "id": "p4-32",
+   "type": 4,
+   "text": "Why didn't they fix the roof before winter? → Why ___ before winter?",
+   "hint": "(to NOT fix)",
+   "answers": [
+    "wasn't the roof fixed",
+    "was the roof not fixed"
+   ],
+   "explain": "Passief (past simple, vraag met ontkenning): het lijdend voorwerp wordt onderwerp, daarna was/were + onderwerp + voltooid deelwoord."
+  },
+  {
+   "id": "p4-33",
+   "type": 4,
+   "text": "Have they paid the staff yet? → ___",
+   "hint": "(vraag: begin met Have)",
+   "answers": [
+    "have the staff been paid yet"
+   ],
+   "explain": "Passief (present perfect, vraag): het lijdend voorwerp wordt onderwerp, daarna has/have + onderwerp + been + voltooid deelwoord."
+  },
+  {
+   "id": "p4-34",
+   "type": 4,
+   "text": "The director said that they were closing the shop because customers weren't coming. → The director said that the shop ___ because customers weren't coming.",
+   "hint": "(to close)",
+   "answers": [
+    "was being closed"
+   ],
+   "explain": "Passief (past continuous in indirecte rede): het lijdend voorwerp wordt onderwerp, daarna was/were being + voltooid deelwoord."
+  },
+  {
+   "id": "p4-35",
+   "type": 4,
+   "text": "They have to look up the words in a dictionary. → The words ___ in a dictionary.",
+   "hint": "(have to + to look up)",
+   "answers": [
+    "have to be looked up"
+   ],
+   "explain": "Passief (modal (have to), geen agent): het lijdend voorwerp wordt onderwerp, daarna have to be + voltooid deelwoord. Het werkwoord look up blijft samen (look up → looked up)."
+  },
+  {
+   "id": "p4-36",
+   "type": 4,
+   "text": "A famous architect designed the station. → The station ___ by a famous architect.",
+   "hint": "(to design)",
+   "answers": [
+    "was designed"
+   ],
+   "explain": "Passief (past simple): het lijdend voorwerp wordt onderwerp, daarna was/were + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by (weglaten als dat niet belangrijk is)."
+  },
+  {
+   "id": "p4-37",
+   "type": 4,
+   "text": "Heavy rain has damaged the crops. → The crops ___ by heavy rain.",
+   "hint": "(to damage)",
+   "answers": [
+    "have been damaged"
+   ],
+   "explain": "Passief (present perfect): het lijdend voorwerp wordt onderwerp, daarna has/have been + voltooid deelwoord. Wie de handeling doet, komt eventueel achter by (weglaten als dat niet belangrijk is)."
+  },
+  {
+   "id": "p4-38",
+   "type": 4,
+   "text": "They were selling tickets at the door. → Tickets ___ at the door.",
+   "hint": "(to sell)",
+   "answers": [
+    "were being sold"
+   ],
+   "explain": "Passief (past continuous): het lijdend voorwerp wordt onderwerp, daarna was/were being + voltooid deelwoord."
+  },
+  {
+   "id": "p4-39",
+   "type": 4,
+   "text": "They don't allow dogs in the shop. → Dogs ___ in the shop.",
+   "hint": "(to NOT allow)",
+   "answers": [
+    "aren't allowed",
+    "are not allowed"
+   ],
+   "explain": "Passief (present simple, ontkenning): het lijdend voorwerp wordt onderwerp, daarna am/is/are + not + voltooid deelwoord."
   }
  ]
 }
