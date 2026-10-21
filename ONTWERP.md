@@ -32,12 +32,13 @@ Login ─► Home ─┬─► Vocabulary-route ─► Lijst kiezen/combineren �
 | Scherm | Inhoud |
 |---|---|
 | **Home** | Leerpad met Vocabulary- en Grammar-knoop, weekkaart met dagbolletjes en dagdoelbalk ("Vandaag x van 10:00 min"), streak, onderbalk Start / Trofeeën / Instellingen |
-| **Route** | Niveaupad (Matchen → Typen; Grammar: één niveau). Vergrendelde niveaus met slotje. Lijsttegels in rood/groen/goud. Meerdere lijsten aanvinken om te combineren. Tegel "Gemixt" vergrendeld tot alle lijsten gespeeld zijn. Knop "Examen" actief vanaf 70%. |
+| **Route** | Niveaupad (Matchen → Kiezen → Typen; Grammar: één niveau). Vergrendelde niveaus met slotje. Lijsttegels in rood/groen/goud. Meerdere lijsten aanvinken om te combineren. Tegel "Gemixt" vergrendeld tot alle lijsten gespeeld zijn. Knop "Examen" actief vanaf 70%. |
 | **Woordenoverzicht** | Per lijst alle woorden, per woord rood of groen |
 | **Matchen** | 6 Engelse + 6 Nederlandse woorden, tikken om te verbinden, kleurt meteen groen/rood. Knop (i) toont de Engelse uitleg. |
+| **Kiezen** | Meerkeuze: één woord, vijf opties, beide richtingen door elkaar. Oefenen: geen levens, een fout woord komt één keer terug. |
 | **Typen** | Prompt, invoerveld, controleren, feedback (juist / typo / "to"-melding / accentmelding / fout + juiste oplossing + uitleg) |
 | **Grammar** | Zin met opening, ontbrekend stuk typen, feedback zoals bij Typen + korte uitleg van de regel |
-| **Examen** | Voortgang (n/totaal), levens volgens de medaille (§ 7), meerkeuze bij Matchen, getypt bij Typen en Grammar |
+| **Examen** | Voortgang (n/totaal), levens volgens de medaille (§ 7), koppelen bij Matchen, meerkeuze bij Kiezen, getypt bij Typen en Grammar |
 | **Resultaat** | Score, foute woorden met juiste oplossing, nieuwe trofeeën |
 | **Trofeeën** | Alle trofeeën, behaalde in kleur, met tellers waar van toepassing |
 | **Instellingen** | Herinneringsuur, lijst importeren, uitloggen |
@@ -112,7 +113,7 @@ Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De
 
 **Kleur van een deel:** wit met zwarte rand en ring = bezig · grijs = nog niet gespeeld · rood = alle woorden gespeeld maar minder dan 70% gekend · **groen = minstens 70% gekend** (examen open) · brons / zilver / goud = behaalde medaille (de hele kaart krijgt die kleur).
 
-**Medailles:** per deel en per niveau (Matchen, Typen, Grammar-type) bewaren we 0–3 (brons, zilver, goud). Elk geslaagd examen geeft de volgende medaille. Het eerste geslaagde Matchen-examen ontgrendelt Typen.
+**Medailles:** per deel en per niveau (Matchen, Kiezen, Typen, Grammar-type) bewaren we 0–3 (brons, zilver, goud). Elk geslaagd examen geeft de volgende medaille. Het eerste geslaagde Matchen-examen ontgrendelt Kiezen, het eerste geslaagde Kiezen-examen ontgrendelt Typen.
 
 **Herhaling binnen een sessie:** een fout woord komt 3 à 5 posities verder opnieuw, tot het één keer juist is. Met "Toch juist" haal je die herhaling weg.
 
@@ -127,7 +128,8 @@ Resultaattypes: `Correct`, `CorrectWithNotes(notes)`, `Wrong(correctAnswer)`. De
 
 ## 7. Examen
 - Een examen hoort bij **één deel** (of één Grammar-type) en opent bij **70% gekend**, of zodra er al een medaille is. Bij Grammar volstaat **één keer juist** per zin (de moeilijkheid zit in het mixen), dus 70% van de zinnen met een juist laatste antwoord.
-- **Matchen-niveau:** meerkeuze, één woord per vraag, 5 opties, Engels→Nederlands en Nederlands→Engels door elkaar, over alle woorden van het deel.
+- **Matchen-niveau:** alle woorden van het deel koppelen in rondes van 5; een foute koppeling kost een leven.
+- **Kiezen-niveau:** meerkeuze, één woord per vraag, 5 opties, Engels→Nederlands en Nederlands→Engels door elkaar, over alle woorden van het deel.
 - **Typen-niveau en Grammar:** getypt, willekeurige selectie van **hoogstens 15 vragen** uit het deel (Typen: richtingen gemixt).
 - **Toegestane fouten volgens de medaille die je probeert te halen:** brons 2, zilver 1, goud 0 (levens 3 / 2 / 1; de laatste fout is meteen game over).
 - Geslaagd = alle vragen beantwoord zonder alle levens te verliezen → volgende medaille. Mislukt → opnieuw proberen, zonder wachttijd. Bij goud is er niets meer te winnen.

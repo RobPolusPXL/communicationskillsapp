@@ -85,16 +85,37 @@ class PartsTest {
   fun medalsClimbToGoldAndUnlockNextLevel() {
     var d = AppData(lists = listOf(list("a", 10)))
     val part = Parts.all(d).single()
-    assertFalse(Learning.levelUnlocked(d, Levels.VOCAB_TYPE))
+    assertFalse(Learning.levelUnlocked(d, Levels.VOCAB_CHOICE))
     d = Learning.awardMedal(d, Levels.VOCAB_MATCH, part.id)
     assertEquals(PartColor.BRONZE, Parts.color(d, Levels.VOCAB_MATCH, part))
-    assertTrue(Learning.levelUnlocked(d, Levels.VOCAB_TYPE))
+    assertTrue(Learning.levelUnlocked(d, Levels.VOCAB_CHOICE))
+    assertFalse(Learning.levelUnlocked(d, Levels.VOCAB_TYPE))
     d = Learning.awardMedal(d, Levels.VOCAB_MATCH, part.id)
     assertEquals(PartColor.SILVER, Parts.color(d, Levels.VOCAB_MATCH, part))
     d = Learning.awardMedal(d, Levels.VOCAB_MATCH, part.id)
     d = Learning.awardMedal(d, Levels.VOCAB_MATCH, part.id)
     assertEquals(PartColor.GOLD, Parts.color(d, Levels.VOCAB_MATCH, part))
+    assertEquals(PartColor.GREY, Parts.color(d, Levels.VOCAB_CHOICE, part))
     assertEquals(PartColor.GREY, Parts.color(d, Levels.VOCAB_TYPE, part))
+  }
+
+  @Test
+  fun choicePracticeRepeatsAMistakeOnceAndDoesNotUseLives() {
+    val d = AppData(lists = listOf(list("a", 6)))
+    val part = Parts.all(d).single()
+    val pool = d.lists.flatMap { l -> l.words.map { Entry(l.id, it) } }
+    val qs = ChoiceBuilder.build(part.words.map { Entry(part.listId, it) }, pool, Random(5))
+    val s = ChoiceExamSession(qs, ExamEngine(qs.size, qs.size + 1), practice = true)
+    val first = s.question!!
+    assertEquals(false, s.pick((first.correctIndex + 1) % 5))
+    var guard = 0
+    while (!s.finished && guard++ < 50) {
+      s.next()
+      s.pick(s.question!!.correctIndex)
+    }
+    assertEquals(7, s.total)
+    assertEquals(first, s.all.last())
+    assertTrue(s.finished)
   }
 
   @Test

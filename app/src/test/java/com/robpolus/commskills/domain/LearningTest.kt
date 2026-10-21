@@ -52,11 +52,15 @@ class LearningTest {
   }
 
   @Test
-  fun typeLevelLocksUntilMatchExamPassed() {
+  fun levelsUnlockOneByOneThroughExams() {
     var d = sampleData()
     assertTrue(Learning.levelUnlocked(d, Levels.VOCAB_MATCH))
+    assertFalse(Learning.levelUnlocked(d, Levels.VOCAB_CHOICE))
     assertFalse(Learning.levelUnlocked(d, Levels.VOCAB_TYPE))
     d = Learning.markExamPassed(d, Levels.VOCAB_MATCH)
+    assertTrue(Learning.levelUnlocked(d, Levels.VOCAB_CHOICE))
+    assertFalse(Learning.levelUnlocked(d, Levels.VOCAB_TYPE))
+    d = Learning.markExamPassed(d, Levels.VOCAB_CHOICE)
     assertTrue(Learning.levelUnlocked(d, Levels.VOCAB_TYPE))
   }
 

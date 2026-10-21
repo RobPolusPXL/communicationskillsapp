@@ -228,6 +228,26 @@ class TypingTest {
   }
 
   @Test
+  fun hintedCorrectAnswerIsShownCorrectButDoesNotCount() {
+    val s = TypingSession(listOf(vq("one", "een")), random = Random(1))
+    val o = s.answer(checker, "een", hinted = true)!!
+    assertTrue(o.result.isCorrect)
+    assertFalse(o.counts)
+    assertTrue(o.result is AnswerResult.Correct && Note.HINT in (o.result as AnswerResult.Correct).notes)
+    assertFalse(s.finished)
+    assertTrue(s.mistakes.isNotEmpty())
+    val again = s.answer(checker, "een")!!
+    assertTrue(again.counts)
+    assertTrue(s.finished)
+  }
+
+  @Test
+  fun blankAnswerIsWrong() {
+    val s = TypingSession(listOf(vq("one", "een")), random = Random(1))
+    assertFalse(s.answer(checker, "")!!.result.isCorrect)
+  }
+
+  @Test
   fun examCorrectAnswerCannotBeForgiven() {
     val s = TypingSession(listOf(vq("one", "een")), ExamEngine(1, 3))
     s.answer(checker, "een")

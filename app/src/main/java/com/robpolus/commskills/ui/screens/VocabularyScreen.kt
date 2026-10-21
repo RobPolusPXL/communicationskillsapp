@@ -50,6 +50,7 @@ import com.robpolus.commskills.ui.theme.Teal
 
 private val levelTitles = mapOf(
   Levels.VOCAB_MATCH to "Matchen",
+  Levels.VOCAB_CHOICE to "Kiezen",
   Levels.VOCAB_TYPE to "Typen",
 )
 

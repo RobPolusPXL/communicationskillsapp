@@ -80,7 +80,13 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
 
   fun startPartExam(level: String, partId: String) {
     practice.startPartExam(level, partId)
-    nav.navigate(if (level == Levels.VOCAB_TYPE) Routes.TYPE else Routes.CHOICE)
+    nav.navigate(
+      when (level) {
+        Levels.VOCAB_TYPE -> Routes.TYPE
+        Levels.VOCAB_MATCH -> Routes.MATCH
+        else -> Routes.CHOICE
+      },
+    )
   }
 
   // Zodra een sessie klaar is, naar het resultaat.
@@ -149,6 +155,9 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
           if (level == Levels.VOCAB_MATCH) {
             practice.startMatch(level, groups)
             nav.navigate(Routes.MATCH)
+          } else if (level == Levels.VOCAB_CHOICE) {
+            practice.startChoice(level, groups)
+            nav.navigate(Routes.CHOICE)
           } else {
             practice.startType(level, groups, direction)
             nav.navigate(Routes.TYPE)
@@ -181,6 +190,8 @@ fun AppNavHost(nav: NavHostController = rememberNavController()) {
         onSubmit = practice::submitAnswer,
         onNext = practice::nextQuestion,
         onAccept = practice::acceptAnyway,
+        onTip = practice::requestTip,
+        onGiveUp = practice::giveUp,
         onQuit = { practice.abandon(); nav.popBackStack() },
         topExtra = { ExamHearts(examUi) },
       )

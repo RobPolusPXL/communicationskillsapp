@@ -115,6 +115,8 @@ data class TypedOutcome<Q : Question>(
   val result: AnswerResult,
   /** Alleen het eerste antwoord op een vraag telt voor de score. */
   val firstTry: Boolean,
+  /** Telt dit antwoord als juist voor score en wachtrij? Niet bij een antwoord na een tip. */
+  val counts: Boolean = result.isCorrect,
 )
 
 /**
@@ -161,11 +163,13 @@ class TypingSession<Q : Question>(
     if (exam != null) examQuestions.getOrNull(examIndex).takeIf { exam.status == ExamStatus.IN_PROGRESS }
     else queue.current()
 
-  fun answer(checker: AnswerChecker, given: String): TypedOutcome<Q>? {
+  fun answer(checker: AnswerChecker, given: String, hinted: Boolean = false): TypedOutcome<Q>? {
     val q = current() ?: return null
     lastQuestionAnswered = q
-    val result = q.check(checker, given)
-    val correct = result.isCorrect
+    val result = q.check(checker, given).let { r ->
+      if (hinted && r is AnswerResult.Correct) AnswerResult.Correct(r.notes + Note.HINT) else r
+    }
+    val correct = result.isCorrect && !hinted
     val firstTry = attempted.add(q)
     if (firstTry && !correct) wrongFirstTry += q
     if (!correct) { lastWrongQuestion = q; lastWrongFirst = firstTry }
@@ -175,7 +179,7 @@ class TypingSession<Q : Question>(
     } else {
       queue.answer(correct)
     }
-    return TypedOutcome(q, result, firstTry)
+    return TypedOutcome(q, result, firstTry, correct)
   }
 
   /** Vragen die bij de eerste poging fout waren. */

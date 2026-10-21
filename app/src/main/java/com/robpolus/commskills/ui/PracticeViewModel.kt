@@ -28,6 +28,7 @@ import com.robpolus.commskills.domain.Question
 import com.robpolus.commskills.domain.SessionBuilder
 import com.robpolus.commskills.domain.Side
 import com.robpolus.commskills.domain.Stats
+import com.robpolus.commskills.domain.Tips
 import com.robpolus.commskills.domain.Trophies
 import com.robpolus.commskills.domain.TrophyStatus
 import com.robpolus.commskills.domain.TypingSession
@@ -76,6 +77,10 @@ data class TypeUi(
   val answerLabel: String,
   val feedback: TypeFeedback?,
   val grammar: Boolean,
+  /** Patroon met onthulde letters; `null` zolang er geen tip gevraagd is. */
+  val tip: String? = null,
+  /** Tips zijn er enkel bij oefenen, niet in een examen. */
+  val canTip: Boolean = false,
 )
 
 data class MistakeLine(val key: String, val title: String, val detail: String)
@@ -108,6 +113,8 @@ data class ChoiceUi(
   val picked: Int?,
   val correctIndex: Int?,
   val targetMedal: Int,
+  /** `false` bij oefenen: geen levens, geen medaille. */
+  val exam: Boolean = true,
 )
 
 class PracticeViewModel(application: Application) : AndroidViewModel(application) {
@@ -153,6 +160,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   private var choiceSession: ChoiceExamSession? = null
   private var choicePart: Part? = null
   private var choiceMedal = 0
+  private val choiceSeen = mutableSetOf<String>()
 
   private val examEngine: ExamEngine? get() = choiceSession?.engine ?: typing?.exam ?: matchExam
 
@@ -171,6 +179,16 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val questions = VocabQuestion.from(entries, choice, pool = allWords(), extras = data.value.extraAnswers)
     typing = TypingSession(questions)
     publishType(null)
+  }
+
+  /** Kiezen oefenen: meerkeuze zonder levens; een fout woord komt één keer terug. */
+  fun startChoice(level: String, groupIds: List<String>?) {
+    begin(level)
+    val entries = SessionBuilder.vocabularySession(data.value, level, groupIds)
+    val pool = data.value.lists.flatMap { l -> l.words.map { Entry(l.id, it) } }
+    val questions = ChoiceBuilder.build(entries, pool)
+    choiceSession = ChoiceExamSession(questions, ExamEngine(questions.size, questions.size + 1), practice = true)
+    publishChoice()
   }
 
   fun startGrammar(groupIds: List<String>?) {
@@ -200,6 +218,15 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val pool = data.value.lists.flatMap { l -> l.words.map { Entry(l.id, it) } }
     val total = if (level == Levels.VOCAB_TYPE) minOf(part.words.size, SessionBuilder.TYPE_SESSION_SIZE) else part.words.size
     val engine = ExamEngine(total, ChoiceBuilder.lives(choiceMedal))
+    if (level == Levels.VOCAB_MATCH) {
+      // Matchen: alle woorden van het deel koppelen; een foute koppeling kost een leven.
+      matchEntries = part.words.map { Entry(part.listId, it) }
+      matchSession = MatchSession(matchEntries, repeatMistakes = false)
+      matchExam = engine
+      publishMatch()
+      publishExam()
+      return
+    }
     if (level == Levels.VOCAB_TYPE) {
       // Typen: getypt examen over een willekeurige selectie van het deel.
       val entries = part.words.map { Entry(part.listId, it) }.shuffled().take(total)
@@ -218,11 +245,14 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val q = session.question ?: return
     touch()
     val ok = session.pick(option) ?: return
-    repository.update { d ->
-      Stats.registerExercise(Learning.recordAnswer(d, level, q.group, q.id, ok), today())
+    // Bij oefenen telt enkel het eerste antwoord per woord; de herhaling niet.
+    if (choiceSeen.add(q.group + "/" + q.id)) {
+      repository.update { d ->
+        Stats.registerExercise(Learning.recordAnswer(d, level, q.group, q.id, ok), today())
+      }
+      if (!ok) noteChoiceMistake(q)
     }
-    if (!ok) noteChoiceMistake(q)
-    publishExam()
+    if (!session.practice) publishExam()
     publishChoice()
   }
 
@@ -239,6 +269,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
   }
 
   private fun noteChoiceMistake(q: ChoiceQuestion) {
+    mistakeGroups += q.group
     mistakes.getOrPut(q.group + "/" + q.id) {
       MistakeLine(q.group + "/" + q.id, q.entry.word.en + (q.entry.word.type?.let { " ($it)" } ?: ""), q.entry.word.nl.joinToString(", "))
     }
@@ -258,11 +289,17 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       picked = picked,
       correctIndex = if (picked != null) q.correctIndex else null,
       targetMedal = minOf(3, choiceMedal + 1),
+      exam = !session.practice,
     )
   }
 
   private fun finishChoiceExam() {
     val session = choiceSession ?: return
+    if (session.practice) {
+      val groups = session.all.map { it.group }.distinct().associateWith { it !in mistakeGroups }
+      finishPractice(groups, mistakeGroups.isEmpty(), choiceSeen.size)
+      return
+    }
     val part = choicePart ?: return
     val passed = session.engine.status == ExamStatus.PASSED
     val replay = choiceMedal >= 3
@@ -280,14 +317,24 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       examAvailable = false,
       message = when {
         passed && replay -> "Je hebt dit deel al met goud afgerond."
-        passed && level == Levels.VOCAB_MATCH && choiceMedal == 0 -> "Medaille $medalName behaald. Het niveau Typen is ontgrendeld."
-        passed -> "Medaille $medalName behaald voor ${part.title}."
+        passed -> "Medaille $medalName behaald voor ${part.title}." + unlockNote()
+
         session.engine.lives == 1 -> "Goud: één fout is meteen game over. Probeer opnieuw."
         else -> "Te veel fouten voor $medalName. Oefen nog even en probeer opnieuw."
       },
       isExam = true,
     )
     clearSession()
+  }
+
+  /** Eerste geslaagde examen van een niveau ontgrendelt het volgende. */
+  private fun unlockNote(): String {
+    if (choiceMedal != 0 || before.medals.keys.any { it.startsWith("$level|") }) return ""
+    return when (level) {
+      Levels.VOCAB_MATCH -> " Het niveau Kiezen is ontgrendeld."
+      Levels.VOCAB_CHOICE -> " Het niveau Typen is ontgrendeld."
+      else -> ""
+    }
   }
 
   private fun begin(level: String) {
@@ -306,6 +353,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     choiceSession = null
     choicePart = null
     choiceMedal = 0
+    choiceSeen.clear()
     matchSession = null
     matchExam = null
     matchEntries = emptyList()
@@ -420,9 +468,10 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     val session = typing ?: return
     if (_type.value?.feedback != null) return
     touch()
-    val outcome = session.answer(checker, answer) ?: return
+    val hinted = hintLevel > 0
+    val outcome = session.answer(checker, answer, hinted) ?: return
     val q = outcome.question
-    val correct = outcome.result.isCorrect
+    val correct = outcome.counts
     lastPrior = null
     if (outcome.firstTry) {
       if (q is VocabQuestion) lastPrior = AppData.progressKey(level, q.group, q.id) to data.value.progress[AppData.progressKey(level, q.group, q.id)]
@@ -439,18 +488,37 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
     publishExam()
     publishType(
       TypeFeedback(
-        correct = correct,
+        correct = outcome.result.isCorrect,
         notes = (outcome.result as? AnswerResult.Correct)?.notes.orEmpty(),
         given = answer,
         correctAnswer = q.correctText,
         explanation = q.explanation,
-        canAccept = !correct && q is VocabQuestion,
+        canAccept = !outcome.result.isCorrect && q is VocabQuestion,
       ),
       q,
     )
   }
 
   private var lastPrior: Pair<String, WordProgress?>? = null
+
+  /** Aantal gevraagde tips bij de huidige vraag. */
+  private var hintLevel = 0
+
+  /** Tip: onthult één letter meer van het antwoord (enkel bij oefenen). */
+  fun requestTip() {
+    val session = typing ?: return
+    val ui = _type.value ?: return
+    if (ui.feedback != null || session.exam != null) return
+    val q = session.current() ?: return
+    touch()
+    hintLevel = minOf(hintLevel + 1, Tips.maxReveal(q.correctText).coerceAtLeast(1))
+    _type.value = ui.copy(tip = Tips.pattern(q.correctText, hintLevel))
+  }
+
+  /** "Ik weet het niet": telt als fout, de oplossing wordt getoond. */
+  fun giveUp() {
+    submitAnswer("")
+  }
 
   /** "Toch juist": het antwoord telt als juist (ook in een examen) en wordt bij dit woord onthouden. */
   fun acceptAnyway() {
@@ -504,7 +572,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       _type.value = _type.value?.copy(feedback = feedback ?: _type.value?.feedback, completed = session.completed)
       return
     }
-    if (feedback == null) serial++
+    if (feedback == null) { serial++; hintLevel = 0 }
     _type.value = TypeUi(
       serial = serial,
       completed = session.completed,
@@ -515,6 +583,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       answerLabel = q.answerLabel,
       feedback = feedback,
       grammar = q is GrammarQuestion,
+      canTip = feedback == null && session.exam == null,
     )
   }
 
@@ -568,7 +637,7 @@ class PracticeViewModel(application: Application) : AndroidViewModel(application
       examAvailable = false,
       message = when {
         passed && part != null && choiceMedal >= 3 -> "Je hebt dit deel al met goud afgerond."
-        passed && part != null -> "Medaille $medalName behaald voor ${part.title}."
+        passed && part != null -> "Medaille $medalName behaald voor ${part.title}." + unlockNote()
         passed -> "Gefeliciteerd, dit niveau is afgerond."
         part != null && engine.lives == 1 -> "Goud: één fout is meteen game over. Probeer opnieuw."
         part != null -> "Te veel fouten voor $medalName. Oefen nog even en probeer opnieuw."

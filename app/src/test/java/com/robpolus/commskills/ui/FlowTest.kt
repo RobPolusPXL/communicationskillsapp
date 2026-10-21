@@ -167,23 +167,48 @@ class FlowTest {
   }
 
   @Test
-  fun partExamPassUnlocksTypingLevelAndGivesBronze() {
+  fun matchExamPassUnlocksChoiceLevelAndGivesBronze() {
     toHome()
     makeExamEligible(Levels.VOCAB_MATCH)
-    assertFalse(Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
+    assertFalse(Learning.levelUnlocked(data, Levels.VOCAB_CHOICE))
     rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives); assertEquals(12, vm.exam.value!!.total); assertTrue(vm.match.value != null) }
+    solveMatch()
+    rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
+    assertTrue(Learning.levelUnlocked(data, Levels.VOCAB_CHOICE))
+    assertEquals(1, data.medals[com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_MATCH, "testlijst")])
+  }
+
+  @Test
+  fun choicePracticeHasNoLivesAndRepeatsMistakes() {
+    toHome()
+    rule.runOnIdle { vm.startChoice(Levels.VOCAB_CHOICE, listOf("testlijst")) }
+    rule.runOnIdle { assertTrue(vm.exam.value == null); assertFalse(vm.choice.value!!.exam); assertEquals(12, vm.choice.value!!.total) }
+    answerChoices(wrong = 2)
+    rule.runOnIdle { assertEquals("Sessie klaar", vm.result.value!!.title); assertEquals(2, vm.result.value!!.mistakes.size) }
+    assertTrue(data.medals.isEmpty())
+    val view = Learning.vocabularyView(data, Levels.VOCAB_CHOICE)
+    assertEquals(10.0 / 12, com.robpolus.commskills.domain.Parts.percent(view, com.robpolus.commskills.domain.Parts.all(data).first { it.listId == "testlijst" }), 1e-9)
+  }
+
+  @Test
+  fun partExamPassUnlocksTypingLevelAndGivesBronze() {
+    toHome()
+    makeExamEligible(Levels.VOCAB_CHOICE)
+    assertFalse(Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_CHOICE, "testlijst") }
     rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives); assertEquals(5, vm.choice.value!!.options.size) }
     answerChoices()
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
     assertTrue(dump(), Learning.levelUnlocked(data, Levels.VOCAB_TYPE))
-    assertEquals(1, data.medals[com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_MATCH, "testlijst")])
+    assertEquals(1, data.medals[com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_CHOICE, "testlijst")])
   }
 
   @Test
   fun partExamAllowsTwoMistakesForBronze() {
     toHome()
-    makeExamEligible(Levels.VOCAB_MATCH)
-    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    makeExamEligible(Levels.VOCAB_CHOICE)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_CHOICE, "testlijst") }
     answerChoices(wrong = 2)
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
   }
@@ -212,15 +237,15 @@ class FlowTest {
   @Test
   fun goldExamFailsOnFirstMistakeAndPassesWhenPerfect() {
     toHome()
-    makeExamEligible(Levels.VOCAB_MATCH)
-    val key = com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_MATCH, "testlijst")
+    makeExamEligible(Levels.VOCAB_CHOICE)
+    val key = com.robpolus.commskills.domain.AppData.medalKey(Levels.VOCAB_CHOICE, "testlijst")
     app.repository.update { it.copy(medals = it.medals + (key to 2)) }
-    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_CHOICE, "testlijst") }
     rule.runOnIdle { assertEquals(1, vm.exam.value!!.lives) }
     answerChoices(wrong = 1)
     rule.runOnIdle { assertEquals("Examen niet gehaald", vm.result.value!!.title) }
     assertEquals(2, data.medals[key])
-    rule.runOnIdle { vm.clearResult(); vm.startPartExam(Levels.VOCAB_MATCH, "testlijst") }
+    rule.runOnIdle { vm.clearResult(); vm.startPartExam(Levels.VOCAB_CHOICE, "testlijst") }
     answerChoices()
     rule.runOnIdle { assertEquals("Examen geslaagd!", vm.result.value!!.title) }
     assertEquals(3, data.medals[key])
@@ -247,6 +272,44 @@ class FlowTest {
     rule.runOnIdle { assertEquals(2, vm.exam.value!!.lives); assertTrue(vm.type.value!!.feedback!!.canAccept) }
     rule.runOnIdle { vm.acceptAnyway() }
     rule.runOnIdle { assertEquals(3, vm.exam.value!!.lives); assertTrue(vm.type.value!!.feedback!!.correct) }
+  }
+
+  @Test
+  fun tipRevealsLettersAndHintedAnswerDoesNotCount() {
+    toHome()
+    rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("testlijst"), com.robpolus.commskills.domain.DirectionChoice.EN_NL) }
+    rule.runOnIdle { assertTrue(vm.type.value!!.canTip); assertEquals(null, vm.type.value!!.tip) }
+    rule.runOnIdle { vm.requestTip() }
+    rule.runOnIdle { assertTrue(vm.type.value!!.tip!!.isNotBlank()) }
+    val answer = correctAnswerForCurrent()
+    rule.runOnIdle { vm.submitAnswer(answer) }
+    rule.runOnIdle {
+      assertTrue(vm.type.value!!.feedback!!.correct)
+      assertTrue(com.robpolus.commskills.domain.Note.HINT in vm.type.value!!.feedback!!.notes)
+    }
+    assertTrue(dump(), data.progress.values.any { it.streak == 0 && it.wrong == 1 })
+  }
+
+  @Test
+  fun giveUpShowsAnswerAndCountsWrong() {
+    toHome()
+    rule.runOnIdle { vm.startType(Levels.VOCAB_TYPE, listOf("testlijst"), com.robpolus.commskills.domain.DirectionChoice.EN_NL) }
+    rule.runOnIdle { vm.giveUp() }
+    rule.runOnIdle {
+      val f = vm.type.value!!.feedback!!
+      assertTrue(!f.correct && f.correctAnswer.isNotBlank())
+    }
+    assertTrue(data.progress.values.any { it.wrong == 1 })
+  }
+
+  @Test
+  fun noTipsInExam() {
+    toHome()
+    makeExamEligible(Levels.VOCAB_TYPE)
+    rule.runOnIdle { vm.startPartExam(Levels.VOCAB_TYPE, "testlijst") }
+    rule.runOnIdle { assertTrue(!vm.type.value!!.canTip); vm.requestTip(); assertEquals(null, vm.type.value!!.tip) }
+    rule.runOnIdle { vm.giveUp() }
+    rule.runOnIdle { assertEquals(2, vm.exam.value!!.lives) }
   }
 
   @Test
